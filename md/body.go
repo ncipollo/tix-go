@@ -5,5 +5,5 @@ import (
 )
 
 type BodySegmentParser interface {
-	Parse(state *State, node ast.Node)
+	Parse(state *State, node ast.Node) error
 }
