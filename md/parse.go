@@ -2,6 +2,7 @@ package md
 
 import (
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
 	"tix/ticket"
 )
@@ -21,12 +22,24 @@ type markdownParser struct {
 }
 
 func (m *markdownParser) Parse(source []byte) ([]*ticket.Ticket, error) {
-	reader := text.NewReader(source)
-	parser := goldmark.DefaultParser()
-	rootNode := parser.Parse(reader)
-	state := newState(source)
+	state, rootNode := setupParser(source)
 
 	err := m.ticketParser.Parse(state, rootNode)
 
 	return state.RootTickets, err
+}
+
+func setupParser(source []byte) (*State, ast.Node) {
+	state := newState(source)
+
+	reader := text.NewReader(source)
+	parser := goldmark.DefaultParser()
+	rootNode := parser.Parse(reader)
+
+	return state, rootNode
+}
+
+func setupTextParser(text string)  (*State, ast.Node) {
+	source := []byte(text)
+	return setupParser(source)
 }
