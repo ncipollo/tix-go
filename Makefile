@@ -13,7 +13,7 @@ clean:
 	go clean
 	rm -rf build
 deps:
-	go get ./...
+	go get -v -t -d ./...
 build-linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO_BUILD) $(LINUX_64_OUTPUT)
 build-mac:
