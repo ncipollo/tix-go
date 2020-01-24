@@ -9,15 +9,9 @@ import (
 const md = `
 # Epic Name
 
-Epic descriptions
-
-## Issue 1
-
-Text 1
-
-## Issue 2
-
-Text 2
+- List item 1
+   - Nested Item
+- List item 2
 `
 
 func main() {
@@ -28,9 +22,9 @@ func main() {
 	ast.Walk(node, func(visited ast.Node, entering bool) (ast.WalkStatus, error) {
 		status := ast.WalkStatus(ast.WalkContinue)
 		kind := visited.Kind()
-		println(kind.String())
+		if entering {
+			println(kind.String())
+		}
 		return status, nil
 	})
-
-	println(node)
 }
