@@ -24,6 +24,10 @@ func (s *State) CurrentTicket() *ticket.Ticket {
 	return s.TicketPath[index]
 }
 
+func (s *State) TicketLevel() int {
+	return len(s.TicketPath)
+}
+
 func (s *State) NeedsTicketTitle() bool {
 	currentTicket := s.CurrentTicket()
 	if currentTicket == nil {

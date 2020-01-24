@@ -106,3 +106,11 @@ func Test_state_StartTicket_LinksTickets(t *testing.T) {
 	assert.Equal(t, &ticket.Ticket{Title: "1"}, rootTicket.Subtickets[0])
 	assert.Equal(t, &ticket.Ticket{Title: "2"}, rootTicket.Subtickets[1])
 }
+
+func TestState_TicketLevel(t *testing.T) {
+	state := newState()
+	state.StartTicket()
+	state.StartTicket()
+
+	assert.Equal(t, 2, state.TicketLevel())
+}

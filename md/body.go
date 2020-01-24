@@ -1,10 +1,9 @@
-package segment
+package md
 
 import (
 	"github.com/yuin/goldmark/ast"
-	"tix/md"
 )
 
 type BodySegmentParser interface {
-	Parse(state *md.State, node ast.Node)
+	Parse(state *State, node ast.Node)
 }
