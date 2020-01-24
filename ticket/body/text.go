@@ -4,6 +4,10 @@ type TextSegment struct {
 	text string
 }
 
+func NewTextSegment() *TextSegment {
+	return &TextSegment{}
+}
+
 func (t TextSegment) Attributes() Attributes {
 	return Attributes{}
 }
