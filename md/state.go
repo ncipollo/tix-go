@@ -6,13 +6,14 @@ import (
 )
 
 type State struct {
+	SourceData  []byte
 	RootTickets []*ticket.Ticket
 	TicketPath  []*ticket.Ticket
-	WorkingBody  body.Segment
+	WorkingBody body.Segment
 }
 
-func newState() *State {
-	return &State{}
+func newState(sourceData []byte) *State {
+	return &State{SourceData: sourceData}
 }
 
 func (s *State) CurrentTicket() *ticket.Ticket {

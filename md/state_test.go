@@ -7,7 +7,7 @@ import (
 )
 
 func Test_state_CompleteTicket_AddsToRootTickets(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.CurrentTicket().Title = "1"
 	state.CompleteTicket()
@@ -21,7 +21,7 @@ func Test_state_CompleteTicket_AddsToRootTickets(t *testing.T) {
 }
 
 func Test_state_CompleteTicket_PopsAllTickets(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	for i := 0; i < 10; i++ {
 		state.StartTicket()
 	}
@@ -33,7 +33,7 @@ func Test_state_CompleteTicket_PopsAllTickets(t *testing.T) {
 }
 
 func Test_state_CurrentTicket_ReturnsNilWhenEmpty(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 
 	currentTicket := state.CurrentTicket()
 
@@ -41,7 +41,7 @@ func Test_state_CurrentTicket_ReturnsNilWhenEmpty(t *testing.T) {
 }
 
 func Test_state_CurrentTicket_ReturnsSubticket(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.StartTicket()
 	state.TicketPath[1].Title = "subticket"
@@ -52,7 +52,7 @@ func Test_state_CurrentTicket_ReturnsSubticket(t *testing.T) {
 }
 
 func Test_state_CurrentTicket_ReturnsTicket(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.TicketPath[0].Title = "ticket"
 
@@ -62,13 +62,13 @@ func Test_state_CurrentTicket_ReturnsTicket(t *testing.T) {
 }
 
 func Test_state_NeedsTicketTitle_FalseWhenNoTicket(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 
 	assert.False(t, state.NeedsTicketTitle())
 }
 
 func Test_state_NeedsTicketTitle_FalseTicketHasTitle(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.CurrentTicket().Title = "title"
 
@@ -76,14 +76,14 @@ func Test_state_NeedsTicketTitle_FalseTicketHasTitle(t *testing.T) {
 }
 
 func Test_state_NeedsTicketTitle_TrueWhenTicketMissingTitle(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 
 	assert.True(t, state.NeedsTicketTitle())
 }
 
 func Test_state_StartTicket_AddsTickets(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.StartTicket()
 	state.StartTicket()
@@ -92,7 +92,7 @@ func Test_state_StartTicket_AddsTickets(t *testing.T) {
 }
 
 func Test_state_StartTicket_LinksTickets(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.CurrentTicket().Title = "root ticket"
 	state.StartTicket()
@@ -108,7 +108,7 @@ func Test_state_StartTicket_LinksTickets(t *testing.T) {
 }
 
 func TestState_TicketLevel(t *testing.T) {
-	state := newState()
+	state := newState(nil)
 	state.StartTicket()
 	state.StartTicket()
 
