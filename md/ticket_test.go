@@ -18,6 +18,30 @@ func TestTicketParser_Parse_ErrorWhenHeadingLevelSkipped(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestTicketParser_Parse_ErrorWhenTitleMissing(t *testing.T) {
+	text := `
+#
+`
+	parser := NewTicketParser()
+	state, node := setupTextParser(text)
+
+	err := parser.Parse(state, node)
+
+	assert.Error(t, err)
+}
+
+func TestTicketParser_Parse_ErrorWhenTitleNonText(t *testing.T) {
+	text := `
+#  **foo**
+`
+	parser := NewTicketParser()
+	state, node := setupTextParser(text)
+
+	err := parser.Parse(state, node)
+
+	assert.Error(t, err)
+}
+
 func TestTicketParser_Parse_ErrorWhenTextOutsideOfHeading(t *testing.T) {
 	text := `
 Hello, I'm an issue!
