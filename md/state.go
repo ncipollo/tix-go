@@ -5,17 +5,17 @@ import (
 	"tix/ticket/body"
 )
 
-type state struct {
+type State struct {
 	RootTickets []*ticket.Ticket
 	TicketPath  []*ticket.Ticket
 	WorkingBody  body.Segment
 }
 
-func newState() *state {
-	return &state{}
+func newState() *State {
+	return &State{}
 }
 
-func (s *state) CurrentTicket() *ticket.Ticket {
+func (s *State) CurrentTicket() *ticket.Ticket {
 	index := len(s.TicketPath) - 1
 	if index < 0 {
 		return nil
@@ -24,7 +24,7 @@ func (s *state) CurrentTicket() *ticket.Ticket {
 	return s.TicketPath[index]
 }
 
-func (s *state) NeedsTicketTitle() bool {
+func (s *State) NeedsTicketTitle() bool {
 	currentTicket := s.CurrentTicket()
 	if currentTicket == nil {
 		return false
@@ -32,7 +32,7 @@ func (s *state) NeedsTicketTitle() bool {
 	return currentTicket.Title == ""
 }
 
-func (s *state) StartTicket() {
+func (s *State) StartTicket() {
 	currentTicket := s.CurrentTicket()
 	newTicket := ticket.NewTicket()
 
@@ -43,7 +43,7 @@ func (s *state) StartTicket() {
 	s.TicketPath = append(s.TicketPath, newTicket)
 }
 
-func (s *state) CompleteTicket() {
+func (s *State) CompleteTicket() {
 	index := len(s.TicketPath) - 1
 
 	if index > 0 {

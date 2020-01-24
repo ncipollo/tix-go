@@ -8,7 +8,7 @@ import (
 )
 
 type Parser interface {
-	Parse(source []byte) []ticket.Ticket
+	Parse(source []byte) ([]ticket.Ticket, error)
 }
 
 func NewParser() Parser {
@@ -17,17 +17,36 @@ func NewParser() Parser {
 
 type markdownParser struct{}
 
-func (m markdownParser) Parse(source []byte) []ticket.Ticket {
+func (m markdownParser) Parse(source []byte) ([]ticket.Ticket, error) {
 	reader := text.NewReader(source)
 	parser := goldmark.DefaultParser()
-	node := parser.Parse(reader)
-	ast.Walk(node, func(visited ast.Node, entering bool) (ast.WalkStatus, error) {
-		status := ast.WalkStatus(ast.WalkContinue)
-		kind := visited.Kind()
-		if entering {
-			println(kind.String())
+	rootNode := parser.Parse(reader)
+	state := newState()
+
+	for node := rootNode.FirstChild(); node != nil; node = node.NextSibling() {
+		kind := node.Kind()
+		if shouldSkip(state, node) {
+			continue
 		}
-		return status, nil
-	})
-	return make([]ticket.Ticket, 1)
+		println(kind.String())
+	}
+
+	return make([]ticket.Ticket, 1), nil
+}
+
+func shouldSkip(state *State, node ast.Node) bool {
+	if state.CurrentTicket() != nil {
+		return false
+	}
+
+	if node.Kind() == ast.KindHeading {
+		heading := node.(*ast.Heading)
+		if heading.Level == 1 {
+			return false
+		} else {
+			return true
+		}
+	} else {
+		return true
+	}
 }
