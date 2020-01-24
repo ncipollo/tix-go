@@ -29,8 +29,8 @@ func (p *TicketParser) Parse(state *State, rootNode ast.Node) error {
 		}
 	}
 
-	// Complete the last ticket
-	state.CompleteTicket()
+	// Complete remaining open tickets
+	state.CompleteAllTickets()
 
 	return nil
 }

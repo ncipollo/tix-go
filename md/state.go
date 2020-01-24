@@ -58,3 +58,10 @@ func (s *State) CompleteTicket() {
 		s.TicketPath = s.TicketPath[:index]
 	}
 }
+
+func (s *State) CompleteAllTickets() {
+	ticketCount := len(s.TicketPath)
+	for ii := 0; ii < ticketCount ; ii++ {
+		s.CompleteTicket()
+	}
+}

@@ -6,6 +6,17 @@ import (
 	"tix/ticket"
 )
 
+func Test_state_CompleteAllTickets(t *testing.T) {
+	state := newState(nil)
+	state.StartTicket()
+	state.StartTicket()
+	state.StartTicket()
+
+	state.CompleteAllTickets()
+
+	assert.Empty(t, state.TicketPath)
+}
+
 func Test_state_CompleteTicket_AddsToRootTickets(t *testing.T) {
 	state := newState(nil)
 	state.StartTicket()
