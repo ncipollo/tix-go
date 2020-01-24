@@ -61,6 +61,27 @@ func Test_state_CurrentTicket_ReturnsTicket(t *testing.T) {
 	assert.Equal(t, state.TicketPath[0], currentTicket)
 }
 
+func Test_state_NeedsTicketTitle_FalseWhenNoTicket(t *testing.T) {
+	state := newState()
+
+	assert.False(t, state.NeedsTicketTitle())
+}
+
+func Test_state_NeedsTicketTitle_FalseTicketHasTitle(t *testing.T) {
+	state := newState()
+	state.StartTicket()
+	state.CurrentTicket().Title = "title"
+
+	assert.False(t, state.NeedsTicketTitle())
+}
+
+func Test_state_NeedsTicketTitle_TrueWhenTicketMissingTitle(t *testing.T) {
+	state := newState()
+	state.StartTicket()
+
+	assert.True(t, state.NeedsTicketTitle())
+}
+
 func Test_state_StartTicket_AddsTickets(t *testing.T) {
 	state := newState()
 	state.StartTicket()

@@ -24,6 +24,14 @@ func (s *state) CurrentTicket() *ticket.Ticket {
 	return s.TicketPath[index]
 }
 
+func (s *state) NeedsTicketTitle() bool {
+	currentTicket := s.CurrentTicket()
+	if currentTicket == nil {
+		return false
+	}
+	return currentTicket.Title == ""
+}
+
 func (s *state) StartTicket() {
 	currentTicket := s.CurrentTicket()
 	newTicket := ticket.NewTicket()
