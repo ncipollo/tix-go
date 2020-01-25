@@ -2,18 +2,17 @@ package md
 
 import (
 	"tix/ticket"
-	"tix/ticket/body"
 )
 
 type State struct {
-	SourceData  []byte
+	ListState   *ListState
 	RootTickets []*ticket.Ticket
+	SourceData  []byte
 	TicketPath  []*ticket.Ticket
-	WorkingBody body.Segment
 }
 
 func newState(sourceData []byte) *State {
-	return &State{SourceData: sourceData}
+	return &State{ListState: NewListState(), SourceData: sourceData}
 }
 
 func (s *State) CurrentTicket() *ticket.Ticket {
@@ -61,7 +60,7 @@ func (s *State) CompleteTicket() {
 
 func (s *State) CompleteAllTickets() {
 	ticketCount := len(s.TicketPath)
-	for ii := 0; ii < ticketCount ; ii++ {
+	for ii := 0; ii < ticketCount; ii++ {
 		s.CompleteTicket()
 	}
 }
