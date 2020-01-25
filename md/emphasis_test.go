@@ -6,7 +6,7 @@ import (
 	"tix/ticket/body"
 )
 
-func TestEmphasisSegmentParser_Emphasis(t *testing.T) {
+func TestEmphasisParser_Parse_Emphasis(t *testing.T) {
 	text := `
 *text*
 `
