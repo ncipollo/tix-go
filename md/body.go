@@ -28,6 +28,8 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 		return NewParagraphSegmentParser(), nil
 	case ast.KindText:
 		return NewTextSegmentParser(), nil
+	case ast.KindTextBlock:
+		return NewTextBlockSegmentParser(), nil
 	default:
 		message := fmt.Sprintf("no body parser for markdown element type %v", kind)
 		return nil, errors.New(message)
@@ -39,8 +41,6 @@ func UnsupportedMarkdownKinds() []ast.NodeKind {
 		ast.KindBlockquote,
 		ast.KindHTMLBlock,
 		ast.KindList,
-		ast.KindListItem,
-		ast.KindTextBlock,
 		ast.KindThematicBreak,
 		ast.KindAutoLink,
 		ast.KindImage,

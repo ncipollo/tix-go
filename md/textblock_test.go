@@ -6,7 +6,7 @@ import (
 	"tix/ticket/body"
 )
 
-func TestListItemSegmentParser_Parse(t *testing.T) {
+func TestTextBlockSegmentParser_Parse(t *testing.T) {
 	text := `
 - Item 1
 `
