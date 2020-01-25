@@ -8,8 +8,9 @@ import (
 
 func TestParagraphSegmentParser_Parse(t *testing.T) {
 	text := `
-line1
-line2
+text1
+*emphasis*
+text2
 `
 	parser := NewParagraphSegmentParser()
 	state, rootNode := setupTextParser(text)
@@ -20,9 +21,12 @@ line2
 
 	expectedBody := []body.Segment{
 		body.NewLineBreakSegment(),
-		body.NewTextSegment("line1"),
+		body.NewTextSegment("text1"),
 		body.NewLineBreakSegment(),
-		body.NewTextSegment("line2"),
+		body.NewEmphasisSegment("emphasis"),
+		body.NewTextSegment(""),
+		body.NewLineBreakSegment(),
+		body.NewTextSegment("text2"),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

@@ -12,6 +12,8 @@ type BodySegmentParser interface {
 
 func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 	switch kind {
+	case ast.KindEmphasis:
+		return NewEmphasisSegmentParser(), nil
 	case ast.KindText:
 		return NewTextSegmentParser(), nil
 	case ast.KindParagraph:
