@@ -20,12 +20,14 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 		return NewCodeSpanSegmentParser(), nil
 	case ast.KindEmphasis:
 		return NewEmphasisSegmentParser(), nil
-	case ast.KindText:
-		return NewTextSegmentParser(), nil
 	case ast.KindLink:
 		return NewLinkSegmentParser(), nil
+	case ast.KindListItem:
+		return nil, errors.New("list item must be a child of a list")
 	case ast.KindParagraph:
 		return NewParagraphSegmentParser(), nil
+	case ast.KindText:
+		return NewTextSegmentParser(), nil
 	default:
 		message := fmt.Sprintf("no body parser for markdown element type %v", kind)
 		return nil, errors.New(message)
