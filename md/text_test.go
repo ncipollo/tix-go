@@ -6,7 +6,7 @@ import (
 	"tix/ticket/body"
 )
 
-func TestTextSegmentParser_Parse(t *testing.T) {
+func TestTextSegmentParser_Parse_NoLineBreak(t *testing.T) {
 	text := `
 text
 `
@@ -17,8 +17,31 @@ text
 
 	err := parser.Parse(state, node.FirstChild())
 
-	bodySegment := state.CurrentTicket().Body[0]
+	expectedBody := []body.Segment{
+		body.NewTextSegment("text"),
+	}
+	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
-	assert.IsType(t, &body.TextSegment{}, bodySegment)
-	assert.Equal(t, "text", bodySegment.Value())
+	assert.Equal(t, expectedBody, ticketBody)
+}
+
+func TestTextSegmentParser_Parse_WithLineBreak(t *testing.T) {
+	text := `
+text
+text
+`
+	parser := NewTextSegmentParser()
+	state, rootNode := setupTextParser(text)
+	state.StartTicket()
+	node := rootNode.FirstChild()
+
+	err := parser.Parse(state, node.FirstChild())
+
+	expectedBody := []body.Segment{
+		body.NewTextSegment("text"),
+		body.NewLineBreakSegment(),
+	}
+	ticketBody := state.CurrentTicket().Body
+	assert.NoError(t, err)
+	assert.Equal(t, expectedBody, ticketBody)
 }

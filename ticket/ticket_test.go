@@ -8,7 +8,7 @@ import (
 
 func TestTicket_AddBodySegment(t *testing.T) {
 	ticket := NewTicket()
-	segment := body.NewTextSegment()
+	segment := body.NewTextSegment("")
 
 	ticket.AddBodySegment(segment)
 
