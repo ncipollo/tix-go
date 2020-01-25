@@ -52,11 +52,11 @@ func ParseBodyChildren(state *State, rootNode ast.Node) error {
 		kind := node.Kind()
 		parser,err := BodyParserForKind(kind)
 		if err != nil {
-			return nil
+			return err
 		}
 		err = parser.Parse(state, node)
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil

@@ -1,11 +1,11 @@
 package body
 
 type BulletListItemSegment struct {
-	level  uint
+	level  int
 	marker string
 }
 
-func NewBulletListItemSegment(level uint, marker string) *BulletListItemSegment {
+func NewBulletListItemSegment(level int, marker string) *BulletListItemSegment {
 	return &BulletListItemSegment{level: level, marker: marker}
 }
 

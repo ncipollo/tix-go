@@ -3,11 +3,11 @@ package body
 import "strconv"
 
 type OrderedListItemSegment struct {
-	level  uint
+	level  int
 	number int
 }
 
-func NewOrderedListItemSegment(level uint, number int) *OrderedListItemSegment {
+func NewOrderedListItemSegment(level int, number int) *OrderedListItemSegment {
 	return &OrderedListItemSegment{level: level, number: number}
 }
 

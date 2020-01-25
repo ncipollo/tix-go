@@ -1,7 +1,7 @@
 package body
 
 type Attributes struct {
-	Level uint
+	Level int
 	Language string
 	Number int
 	Url string
