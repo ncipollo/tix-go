@@ -32,6 +32,21 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 	}
 }
 
+func UnsupportedMarkdownKinds() []ast.NodeKind {
+	return []ast.NodeKind {
+		ast.KindBlockquote,
+		ast.KindHTMLBlock,
+		ast.KindList,
+		ast.KindListItem,
+		ast.KindTextBlock,
+		ast.KindThematicBreak,
+		ast.KindAutoLink,
+		ast.KindImage,
+		ast.KindRawHTML,
+		ast.KindString,
+	}
+}
+
 func ParseBodyChildren(state *State, rootNode ast.Node) error {
 	for node := rootNode.FirstChild(); node != nil; node = node.NextSibling() {
 		kind := node.Kind()
