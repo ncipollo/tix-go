@@ -6,9 +6,9 @@ import (
 	"tix/ticket/body"
 )
 
-func TestCodeSpanSegmentParser_Parse(t *testing.T) {
-	text := "`code`"
-	parser := NewCodeSpanSegmentParser()
+func TestLinkSegmentParser_Parse(t *testing.T) {
+	text := "[link](http://api.example.com)"
+	parser := NewLinkSegmentParser()
 	state, rootNode := setupTextParser(text)
 	state.StartTicket()
 	node := rootNode.FirstChild()
@@ -16,7 +16,7 @@ func TestCodeSpanSegmentParser_Parse(t *testing.T) {
 	err := parser.Parse(state, node.FirstChild())
 
 	expectedBody := []body.Segment{
-		body.NewCodeSpanSegment("code"),
+		body.NewLinkSegment("link", "http://api.example.com"),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

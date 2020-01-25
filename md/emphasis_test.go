@@ -6,7 +6,7 @@ import (
 	"tix/ticket/body"
 )
 
-func TestEmphasisParser_Parse_Emphasis(t *testing.T) {
+func TestEmphasisSegmentParser_Parse_Emphasis(t *testing.T) {
 	text := `
 *text*
 `
@@ -25,7 +25,7 @@ func TestEmphasisParser_Parse_Emphasis(t *testing.T) {
 	assert.Equal(t, expectedBody, ticketBody)
 }
 
-func  TestEmphasisParser_Parse_StrongEmphasis(t *testing.T) {
+func  TestEmphasisSegmentParser_Parse_StrongEmphasis(t *testing.T) {
 	text := `
 **text**
 `
