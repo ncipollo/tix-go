@@ -12,10 +12,18 @@ type BodySegmentParser interface {
 
 func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 	switch kind {
+	case ast.KindCodeBlock:
+		return NewCodeBlockSegmentParser(false), nil
+	case ast.KindFencedCodeBlock:
+		return NewCodeBlockSegmentParser(true), nil
+	case ast.KindCodeSpan:
+		return NewCodeSpanSegmentParser(), nil
 	case ast.KindEmphasis:
 		return NewEmphasisSegmentParser(), nil
 	case ast.KindText:
 		return NewTextSegmentParser(), nil
+	case ast.KindLink:
+		return NewLinkSegmentParser(), nil
 	case ast.KindParagraph:
 		return NewParagraphSegmentParser(), nil
 	default:
