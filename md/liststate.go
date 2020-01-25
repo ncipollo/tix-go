@@ -44,3 +44,10 @@ func (ls *ListState) CompleteList() {
 		ls.ListPath = ls.ListPath[:index]
 	}
 }
+
+func (ls *ListState) CompleteAllLists() {
+	listCount := len(ls.ListPath)
+	for ii := 0; ii < listCount; ii++ {
+		ls.CompleteList()
+	}
+}
