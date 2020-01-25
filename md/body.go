@@ -23,7 +23,7 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 	case ast.KindLink:
 		return NewLinkSegmentParser(), nil
 	case ast.KindListItem:
-		return nil, errors.New("list item must be a child of a list")
+		return NewListItemSegmentParser(), nil
 	case ast.KindParagraph:
 		return NewParagraphSegmentParser(), nil
 	case ast.KindText:

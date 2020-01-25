@@ -56,16 +56,6 @@ func TestListState_CurrentList_ReturnsSublist(t *testing.T) {
 	assert.Equal(t, state.ListPath[1], currentList)
 }
 
-func TestListState_StartBulletList(t *testing.T) {
-	state := NewListState()
-	state.StartBulletList("-")
-	state.StartBulletList("-")
-	state.StartBulletList("-")
-
-	assert.Len(t, state.ListPath, 3)
-}
-
-
 func TestListState_ListLevel(t *testing.T) {
 	state := NewListState()
 	state.StartBulletList("-")
@@ -73,4 +63,24 @@ func TestListState_ListLevel(t *testing.T) {
 	state.StartBulletList("-")
 
 	assert.Equal(t, 3, state.ListLevel())
+}
+
+func TestListState_StartBulletList(t *testing.T) {
+	state := NewListState()
+	state.StartBulletList("-")
+	state.StartBulletList("-")
+	state.StartBulletList("-")
+
+	assert.Equal(t, &ListInfo{Marker: "-"}, state.CurrentList())
+	assert.Len(t, state.ListPath, 3)
+}
+
+func TestListState_StartOrderedList(t *testing.T) {
+	state := NewListState()
+	state.StartOrderedList(1)
+	state.StartOrderedList(1)
+	state.StartOrderedList(1)
+
+	assert.Equal(t, &ListInfo{CurrentNumber: 1, IsOrdered: true}, state.CurrentList())
+	assert.Len(t, state.ListPath, 3)
 }

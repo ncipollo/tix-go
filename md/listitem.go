@@ -1,30 +1,34 @@
 package md
 
 import (
+	"errors"
 	"github.com/yuin/goldmark/ast"
 	"tix/ticket/body"
 )
 
-type ListItemSegmentParser struct {
-	isOrdered bool
-	level     int
-	marker    string
-	number    int
-}
+type ListItemSegmentParser struct{}
 
-func NewListItemSegmentParser(isOrdered bool, level int, marker string, number int) *ListItemSegmentParser {
-	return &ListItemSegmentParser{isOrdered: isOrdered, level: level, marker: marker, number: number}
+func NewListItemSegmentParser() *ListItemSegmentParser {
+	return &ListItemSegmentParser{}
 }
 
 func (l ListItemSegmentParser) Parse(state *State, node ast.Node) error {
+	currentList := state.ListState.CurrentList()
+	if currentList == nil {
+		return errors.New("a list item must be within a list")
+	}
+
 	currentTicket := state.CurrentTicket()
+	currentLevel := state.ListState.ListLevel()
+
 	listItemNode := node.(*ast.ListItem)
 
-	if l.isOrdered {
-		listItem := body.NewOrderedListItemSegment(l.level, l.number)
+	if currentList.IsOrdered {
+		listItem := body.NewOrderedListItemSegment(currentLevel, currentList.CurrentNumber)
 		currentTicket.AddBodySegment(listItem)
+		currentList.CurrentNumber++
 	} else {
-		listItem := body.NewBulletListItemSegment(l.level, l.marker)
+		listItem := body.NewBulletListItemSegment(currentLevel, currentList.Marker)
 		currentTicket.AddBodySegment(listItem)
 	}
 

@@ -10,9 +10,10 @@ func TestListItemSegmentParser_Parse(t *testing.T) {
 	text := `
 - Item 1
 `
-	parser := NewListItemSegmentParser(false, 1, "-", 0)
+	parser := NewListItemSegmentParser()
 	state, rootNode := setupTextParser(text)
 	state.StartTicket()
+	state.ListState.StartBulletList("-")
 	node := rootNode.FirstChild()
 
 	err := parser.Parse(state, node.FirstChild())
