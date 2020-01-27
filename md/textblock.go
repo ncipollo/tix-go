@@ -14,11 +14,13 @@ func NewTextBlockSegmentParser() *TextBlockSegmentParser {
 
 func (t TextBlockSegmentParser) Parse(state *State, node ast.Node) error {
 	currentTicket := state.CurrentTicket()
-	paragraph := node.(*ast.TextBlock)
+	textBlock := node.(*ast.TextBlock)
 
 	block := body.NewTextBlockSegment()
 	currentTicket.AddBodySegment(block)
-	err := ParseBodyChildren(state, paragraph)
-
+	err := ParseBodyChildren(state, textBlock)
+	if textBlock.HasChildren() {
+		currentTicket.AddBodyLineBreak()
+	}
 	return err
 }

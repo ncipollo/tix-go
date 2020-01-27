@@ -22,6 +22,8 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 		return NewEmphasisSegmentParser(), nil
 	case ast.KindLink:
 		return NewLinkSegmentParser(), nil
+	case ast.KindList:
+		return NewListSegmentParser(), nil
 	case ast.KindListItem:
 		return NewListItemSegmentParser(), nil
 	case ast.KindParagraph:
@@ -40,7 +42,6 @@ func UnsupportedMarkdownKinds() []ast.NodeKind {
 	return []ast.NodeKind {
 		ast.KindBlockquote,
 		ast.KindHTMLBlock,
-		ast.KindList,
 		ast.KindThematicBreak,
 		ast.KindAutoLink,
 		ast.KindImage,

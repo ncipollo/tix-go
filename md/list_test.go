@@ -10,24 +10,40 @@ func TestListSegmentParser_Parse_BulletList(t *testing.T) {
 	text := `
 - Root
 	- Sub 1
-		- Deep
+		+ Deep
 	- Sub 2
 `
-	parser := NewListItemSegmentParser()
+	parser := NewListSegmentParser()
 	state, rootNode := setupTextParser(text)
 	state.StartTicket()
-	state.ListState.StartBulletList("-")
 	node := rootNode.FirstChild()
 
-	err := parser.Parse(state, node.FirstChild())
+	err := parser.Parse(state, node)
 
-	expectedBody := []body.Segment{
-		body.NewBulletListItemSegment(1, "-"),
-		body.NewLineBreakSegment(),
-		body.NewTextBlockSegment(),
-		body.NewTextSegment("Item 1"),
-	}
+	var expectedBody []body.Segment
+	expectedBody = appendBulletList(expectedBody, 1, "-")
+	expectedBody = appendBulletLineSegments(expectedBody, 1, "-", "Root")
+	expectedBody = appendBulletList(expectedBody, 2, "-")
+	expectedBody = appendBulletLineSegments(expectedBody, 2, "-", "Sub 1")
+	expectedBody = appendBulletList(expectedBody, 3, "+")
+	expectedBody = appendBulletLineSegments(expectedBody, 3, "+", "Deep")
+	expectedBody = appendBulletLineSegments(expectedBody, 2, "-", "Sub 2")
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
 	assert.Equal(t, expectedBody, ticketBody)
+}
+
+func appendBulletList(expectedBody []body.Segment, level int, marker string) []body.Segment {
+	list := body.NewBulletListStartSegment(level, marker)
+	return append(expectedBody, list)
+}
+
+func appendBulletLineSegments(expectedBody []body.Segment, level int, marker string, text string) []body.Segment {
+	segments := []body.Segment{
+		body.NewBulletListItemSegment(level, marker),
+		body.NewTextBlockSegment(),
+		body.NewTextSegment(text),
+		body.NewLineBreakSegment(),
+	}
+	return append(expectedBody, segments...)
 }

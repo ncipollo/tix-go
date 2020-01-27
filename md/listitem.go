@@ -33,7 +33,6 @@ func (l ListItemSegmentParser) Parse(state *State, node ast.Node) error {
 	}
 
 	err := ParseBodyChildren(state, listItemNode)
-	currentTicket.AddBodyLineBreak()
 
 	return err
 }

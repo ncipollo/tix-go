@@ -38,9 +38,9 @@ func (l ListSegmentParser) parseBulletList(state *State, node *ast.List) error {
 	currentTicket := state.CurrentTicket()
 	listState := state.ListState
 	marker := string(node.Marker)
-	list := body.NewBulletListItemSegment(listState.ListLevel(), marker)
 
 	listState.StartBulletList(marker)
+	list := body.NewBulletListStartSegment(listState.ListLevel(), marker)
 	currentTicket.AddBodySegment(list)
 	err := ParseBodyChildren(state, node)
 	listState.CompleteList()
