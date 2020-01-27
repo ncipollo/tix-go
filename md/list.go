@@ -24,9 +24,9 @@ func (l ListSegmentParser) Parse(state *State, node ast.Node) error {
 func (l ListSegmentParser) parseOrderedList(state *State, node *ast.List) error {
 	currentTicket := state.CurrentTicket()
 	listState := state.ListState
-	list := body.NewOrderedListStartSegment(listState.ListLevel(), node.Start)
 
 	listState.StartOrderedList(node.Start)
+	list := body.NewOrderedListStartSegment(listState.ListLevel(), node.Start)
 	currentTicket.AddBodySegment(list)
 	err := ParseBodyChildren(state, node)
 	listState.CompleteList()
