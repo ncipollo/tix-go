@@ -3,6 +3,7 @@ package md
 import (
 	"bytes"
 	"github.com/yuin/goldmark/ast"
+	"strings"
 	"tix/ticket/body"
 )
 
@@ -20,27 +21,23 @@ func (c CodeBlockSegmentParser) Parse(state *State, node ast.Node) error {
 	} else {
 		return c.parseNormalBlock(state, node.(*ast.CodeBlock))
 	}
+}
+
+func (c CodeBlockSegmentParser) parseFencedBlock(state *State, node *ast.FencedCodeBlock) error {
+	code := c.textFromBlock(state, node.BaseBlock)
+	languageData := node.Language(state.SourceData)
+	language := string(languageData)
+	if strings.ToLower(language) == "tix" {
+		c.addTicketMetadata(state, code)
+	} else {
+		c.addCodeBlockSegment(state, code, language)
+	}
 	return nil
 }
 
 func (c CodeBlockSegmentParser) parseNormalBlock(state *State, node *ast.CodeBlock) error {
-	currentTicket := state.CurrentTicket()
-
-	code  := c.textFromBlock(state, node.BaseBlock)
-	codeSpan := body.NewCodeBlockSegment(code, "")
-	currentTicket.AddBodySegment(codeSpan)
-
-	return nil
-}
-
-func (c CodeBlockSegmentParser) parseFencedBlock(state *State, node *ast.FencedCodeBlock) error {
-	currentTicket := state.CurrentTicket()
-
-	code  := c.textFromBlock(state, node.BaseBlock)
-	languageData := node.Language(state.SourceData)
-	codeSpan := body.NewCodeBlockSegment(code, string(languageData))
-	currentTicket.AddBodySegment(codeSpan)
-
+	code := c.textFromBlock(state, node.BaseBlock)
+	c.addCodeBlockSegment(state, code, "")
 	return nil
 }
 
@@ -55,4 +52,15 @@ func (c CodeBlockSegmentParser) textFromBlock(state *State, node ast.BaseBlock) 
 	data := buffer.Bytes()
 
 	return string(data)
+}
+
+func (c CodeBlockSegmentParser) addCodeBlockSegment(state *State, code string, language string) {
+	currentTicket := state.CurrentTicket()
+	codeBlock := body.NewCodeBlockSegment(code, language)
+	currentTicket.AddBodySegment(codeBlock)
+}
+
+func (c CodeBlockSegmentParser) addTicketMetadata(state *State, code string) {
+	currentTicket := state.CurrentTicket()
+	currentTicket.Metadata = code
 }

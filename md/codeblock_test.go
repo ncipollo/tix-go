@@ -46,6 +46,25 @@ func TestCodeBlockSegmentParser_Parse_Fenced(t *testing.T) {
 	assert.Equal(t, expectedBody, ticketBody)
 }
 
+func TestCodeBlockSegmentParser_Parse_TicketMetadata(t *testing.T) {
+	text := "```tix\n" +
+		"meta\n" +
+		"```"
+	parser := NewCodeBlockSegmentParser(true)
+	state, rootNode := setupTextParser(text)
+	state.StartTicket()
+	node := rootNode.FirstChild()
+
+	err := parser.Parse(state, node)
+
+	expectedMetadata := "meta\n"
+	ticketBody := state.CurrentTicket().Body
+	ticketMetadata := state.CurrentTicket().Metadata
+	assert.NoError(t, err)
+	assert.Empty(t, ticketBody)
+	assert.Equal(t, expectedMetadata, ticketMetadata)
+}
+
 func TestCodeBlockSegmentParser_Parse_No_Language(t *testing.T) {
 	text := "```\n" +
 		"code1\n" +
