@@ -30,6 +30,6 @@ func (t TextSegmentParser) Parse(state *State, node ast.Node) error {
 
 func (t TextSegmentParser) AddLineBreaks(currentTicket *ticket.Ticket, text *ast.Text) {
 	if text.SoftLineBreak() || text.HardLineBreak() {
-		currentTicket.AddBodySegment(body.NewLineBreakSegment())
+		currentTicket.AddBodyLineBreak()
 	}
 }

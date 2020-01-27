@@ -20,13 +20,13 @@ text2
 	err := parser.Parse(state, node)
 
 	expectedBody := []body.Segment{
-		body.NewLineBreakSegment(),
 		body.NewTextSegment("text1"),
 		body.NewLineBreakSegment(),
 		body.NewEmphasisSegment("emphasis"),
 		body.NewTextSegment(""),
 		body.NewLineBreakSegment(),
 		body.NewTextSegment("text2"),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

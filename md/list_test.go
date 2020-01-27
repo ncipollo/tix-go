@@ -6,9 +6,12 @@ import (
 	"tix/ticket/body"
 )
 
-func TestTextBlockSegmentParser_Parse(t *testing.T) {
+func TestListSegmentParser_Parse_BulletList(t *testing.T) {
 	text := `
-- Item 1
+- Root
+	- Sub 1
+		- Deep
+	- Sub 2
 `
 	parser := NewListItemSegmentParser()
 	state, rootNode := setupTextParser(text)
@@ -20,9 +23,9 @@ func TestTextBlockSegmentParser_Parse(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewBulletListItemSegment(1, "-"),
+		body.NewLineBreakSegment(),
 		body.NewTextBlockSegment(),
 		body.NewTextSegment("Item 1"),
-		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

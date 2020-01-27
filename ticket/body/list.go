@@ -7,8 +7,12 @@ type ListStartSegment struct {
 	startingNumber int
 }
 
-func NewListStartSegment(isOrdered bool, level int, marker string, startingNumber int) *ListStartSegment {
-	return &ListStartSegment{isOrdered: isOrdered, level: level, marker: marker, startingNumber: startingNumber}
+func NewBulletListStartSegment(level int, marker string) *ListStartSegment {
+	return &ListStartSegment{level: level, marker: marker}
+}
+
+func NewOrderedListStartSegment(level int, startingNumber int) *ListStartSegment {
+	return &ListStartSegment{isOrdered: true, level: level, startingNumber: startingNumber}
 }
 
 func (l ListStartSegment) Attributes() Attributes {

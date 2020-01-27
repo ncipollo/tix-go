@@ -15,6 +15,14 @@ func TestTicket_AddBodySegment(t *testing.T) {
 	assert.Equal(t, []body.Segment{segment}, ticket.Body)
 }
 
+func TestTicket_AddLineBreakSegment(t *testing.T) {
+	ticket := NewTicket()
+
+	ticket.AddBodyLineBreak()
+
+	assert.Equal(t, []body.Segment{body.NewLineBreakSegment()}, ticket.Body)
+}
+
 func TestTicket_AddSubticket(t *testing.T) {
 	ticket := NewTicket()
 	subticket := NewTicket()

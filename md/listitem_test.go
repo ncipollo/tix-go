@@ -20,9 +20,9 @@ func TestListItemSegmentParser_Parse_BulletList(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewBulletListItemSegment(1, "-"),
-		body.NewLineBreakSegment(),
 		body.NewTextBlockSegment(),
 		body.NewTextSegment("Item 1"),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
@@ -57,9 +57,9 @@ func TestListItemSegmentParser_Parse_OrderedList(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewOrderedListItemSegment(1, 1),
-		body.NewLineBreakSegment(),
 		body.NewTextBlockSegment(),
 		body.NewTextSegment("First"),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

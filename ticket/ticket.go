@@ -17,6 +17,11 @@ func (t *Ticket) AddBodySegment(segment body.Segment) {
 	t.Body = append(t.Body, segment)
 }
 
+func (t *Ticket) AddBodyLineBreak() {
+	lineBreak := body.NewLineBreakSegment()
+	t.Body = append(t.Body, lineBreak)
+}
+
 func (t *Ticket) AddSubticket(ticket *Ticket) {
 	t.Subtickets = append(t.Subtickets, ticket)
 }
