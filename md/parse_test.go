@@ -1,35 +1,43 @@
 package md
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+	"tix/ticket"
+	"tix/ticket/body"
+)
 
 const md = `
-# Epic Name
+# Epic 1
 
-- List item 1
-   - Nested Item
-- List item 2
+Body 1
 
-## Issue 1
+# Epic 2
 
-The first issue
-
-### Subissue 1
-
-Sub issue!
-
-### Subissue 2
-
-Sub issue!
-
-## Issue 2
-
-The second issue
-
+Body 2
 `
 
 func TestParse(t *testing.T) {
 	source := []byte(md)
 	parser := NewParser()
-	parser.Parse(source)
-}
+	tickets, err := parser.Parse(source)
 
+	expectedTickets := []*ticket.Ticket{
+		{
+			Title: "Epic 1",
+			Body: []body.Segment{
+				body.NewTextSegment("Body 1"),
+				body.NewLineBreakSegment(),
+			},
+		},
+		{
+			Title: "Epic 2",
+			Body: []body.Segment{
+				body.NewTextSegment("Body 2"),
+				body.NewLineBreakSegment(),
+			},
+		},
+	}
+	assert.NoError(t, err)
+	assert.Equal(t, expectedTickets, tickets)
+}

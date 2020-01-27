@@ -26,6 +26,7 @@ func (p *TicketParser) Parse(state *State, rootNode ast.Node) error {
 			if state.TicketLevel() == 0 {
 				return errors.New("ticket information must be under a heading")
 			}
+			ParseBody(state, node)
 		}
 	}
 
