@@ -58,6 +58,7 @@ func (c CodeBlockSegmentParser) addCodeBlockSegment(state *State, code string, l
 	currentTicket := state.CurrentTicket()
 	codeBlock := body.NewCodeBlockSegment(code, language)
 	currentTicket.AddBodySegment(codeBlock)
+	currentTicket.AddBodyLineBreak()
 }
 
 func (c CodeBlockSegmentParser) addTicketMetadata(state *State, code string) {

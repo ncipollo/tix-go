@@ -8,34 +8,40 @@ import (
 
 type JiraBodyRenderer struct{}
 
+func NewJiraBodyRenderer() *JiraBodyRenderer {
+	return &JiraBodyRenderer{}
+}
+
 func (j JiraBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 	switch segment := bodySegment.(type) {
-	case body.BulletListItemSegment:
+	case *body.BulletListItemSegment:
 		return j.renderBulletListItem(segment)
-	case body.CodeBlockSegment:
+	case *body.CodeBlockSegment:
 		return j.renderCodeBlock(segment)
-	case body.EmphasisSegment:
+	case *body.CodeSpanSegment:
+		return j.renderCodeSpan(segment)
+	case *body.EmphasisSegment:
 		return j.renderEmphasis(segment)
-	case body.LinkSegment:
+	case *body.LinkSegment:
 		return j.renderLink(segment)
-	case body.ListStartSegment:
+	case *body.ListStartSegment:
 		return segment.Value()
-	case body.LineBreakSegment:
+	case *body.LineBreakSegment:
 		return segment.Value()
-	case body.OrderedListItemSegment:
+	case *body.OrderedListItemSegment:
 		return j.renderOrderedListItem(segment)
-	case body.StrongEmphasisSegment:
+	case *body.StrongEmphasisSegment:
 		return j.renderStrongEmphasis(segment)
-	case body.TextBlockSegment:
+	case *body.TextBlockSegment:
 		return segment.Value()
-	case body.TextSegment:
+	case *body.TextSegment:
 		return segment.Value()
 	default:
 		return segment.Value()
 	}
 }
 
-func (j JiraBodyRenderer) renderBulletListItem(segment body.BulletListItemSegment) string {
+func (j JiraBodyRenderer) renderBulletListItem(segment *body.BulletListItemSegment) string {
 	var builder strings.Builder
 	level := segment.Attributes().Level
 
@@ -47,15 +53,15 @@ func (j JiraBodyRenderer) renderBulletListItem(segment body.BulletListItemSegmen
 	return builder.String()
 }
 
-func (j JiraBodyRenderer) renderCodeBlock(segment body.CodeBlockSegment) string {
+func (j JiraBodyRenderer) renderCodeBlock(segment *body.CodeBlockSegment) string {
 	var builder strings.Builder
 	lang := segment.Attributes().Language
 
 	if len(lang) > 0 {
-		marker := fmt.Sprintf("{code:%s}", lang)
+		marker := fmt.Sprintf("{code:%s}\n", lang)
 		builder.WriteString(marker)
 	} else {
-		builder.WriteString("{code}")
+		builder.WriteString("{code}\n")
 	}
 	builder.WriteString(segment.Value())
 	builder.WriteString("{code}")
@@ -63,16 +69,20 @@ func (j JiraBodyRenderer) renderCodeBlock(segment body.CodeBlockSegment) string 
 	return builder.String()
 }
 
-func (j JiraBodyRenderer) renderEmphasis(segment body.EmphasisSegment) string {
+func (j JiraBodyRenderer) renderCodeSpan(segment *body.CodeSpanSegment) string {
+	return fmt.Sprintf("{{%s}}", segment.Value())
+}
+
+func (j JiraBodyRenderer) renderEmphasis(segment *body.EmphasisSegment) string {
 	return fmt.Sprintf("_%s_", segment.Value())
 }
 
-func (j JiraBodyRenderer) renderLink(segment body.LinkSegment) string {
+func (j JiraBodyRenderer) renderLink(segment *body.LinkSegment) string {
 	url := segment.Attributes().Url
 	return fmt.Sprintf("[%s|%s]", segment.Value(), url)
 }
 
-func (j JiraBodyRenderer) renderOrderedListItem(segment body.OrderedListItemSegment) string {
+func (j JiraBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemSegment) string {
 	var builder strings.Builder
 	level := segment.Attributes().Level
 
@@ -84,6 +94,6 @@ func (j JiraBodyRenderer) renderOrderedListItem(segment body.OrderedListItemSegm
 	return builder.String()
 }
 
-func (j JiraBodyRenderer) renderStrongEmphasis(segment body.StrongEmphasisSegment) string {
+func (j JiraBodyRenderer) renderStrongEmphasis(segment *body.StrongEmphasisSegment) string {
 	return fmt.Sprintf("*%s*", segment.Value())
 }

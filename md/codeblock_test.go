@@ -20,6 +20,7 @@ func TestCodeBlockSegmentParser_Parse_Normal(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewCodeBlockSegment("code1\ncode2\n", ""),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
@@ -40,6 +41,7 @@ func TestCodeBlockSegmentParser_Parse_Fenced(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewCodeBlockSegment("code1\ncode2\n", "go"),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
@@ -79,6 +81,7 @@ func TestCodeBlockSegmentParser_Parse_No_Language(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewCodeBlockSegment("code1\ncode2\n", ""),
+		body.NewLineBreakSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
