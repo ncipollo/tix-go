@@ -3,14 +3,19 @@ package ticket
 import "tix/ticket/body"
 
 type Ticket struct {
+	Fields     map[string]interface{}
 	Metadata   interface{}
 	Title      string
 	Body       []body.Segment
 	Subtickets []*Ticket
 }
 
+func NewTicketWithFields(fields map[string]interface{}) *Ticket {
+	return &Ticket{Fields: fields}
+}
+
 func NewTicket() *Ticket {
-	return &Ticket{}
+	return NewTicketWithFields(nil)
 }
 
 func (t *Ticket) AddBodySegment(segment body.Segment) {

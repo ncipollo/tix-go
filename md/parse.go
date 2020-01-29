@@ -30,7 +30,7 @@ func (m *markdownParser) Parse(source []byte) ([]*ticket.Ticket, error) {
 }
 
 func setupParser(source []byte) (*State, ast.Node) {
-	state := newState(source)
+	state := newState(source, nil)
 
 	reader := text.NewReader(source)
 	parser := goldmark.DefaultParser()
