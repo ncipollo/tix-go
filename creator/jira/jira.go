@@ -10,22 +10,20 @@ import (
 )
 
 type Creator struct {
-	api *jiraApi
+	api Api
 }
 
-func NewCreator(api *jiraApi) *Creator {
+func NewCreator(api Api) *Creator {
 	return &Creator{api: api}
 }
 
-func (j Creator) CreateTickets(tickets []*ticket.Ticket) error {
+func (j Creator) CreateTickets(tickets []*ticket.Ticket) {
 	issues, err := j.createIssues()
 	if err != nil {
 		logger.Error("%v", err)
-		return err
+	} else {
+		j.createTicketsForLevel(tickets, issues, 1, "")
 	}
-
-	j.createTicketsForLevel(tickets, issues, 1, "")
-	return nil
 }
 
 func (j Creator) createIssues() (*Issues, error) {
@@ -43,19 +41,20 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 		issue := issues.FromTicket(currentTicket, parentId, level)
 		resultIssue, err := j.api.CreateIssue(issue)
 		if err != nil {
-			logger.Error("%v", err)
+			j.reportFailedTicketCreate(err, level)
 		} else {
 			j.reportSuccessfulTicketCreate(resultIssue, level)
+			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue.Key)
 		}
-		j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue.Key)
 	}
 }
 
 func (j Creator) reportFailedTicketCreate(err error, level int) {
 	var builder strings.Builder
-	for ii := 0; ii < level; ii++ {
-		builder.WriteString("-")
+	for ii := 0; ii < level-1; ii++ {
+		builder.WriteString("\t")
 	}
+	builder.WriteString("- ")
 	builder.WriteString(err.Error())
 
 	logger.Error(builder.String())
@@ -63,10 +62,10 @@ func (j Creator) reportFailedTicketCreate(err error, level int) {
 
 func (j Creator) reportSuccessfulTicketCreate(issue *jira.Issue, level int) {
 	var builder strings.Builder
-	for ii := 0; ii < level; ii++ {
-		builder.WriteString("-")
+	for ii := 0; ii < level-1; ii++ {
+		builder.WriteString("\t")
 	}
-	message := fmt.Sprintf(":celebration: %v created", issue.Key)
+	message := fmt.Sprintf("- :tada: %v created", issue.Key)
 	builder.WriteString(message)
 
 	logger.Message(builder.String())

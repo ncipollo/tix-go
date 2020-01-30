@@ -5,22 +5,55 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"tix/logger"
+	jira2 "tix/creator/jira"
+	"tix/env"
+	md2 "tix/md"
 )
 
 const md = `
-# Epic Name
+# Android:: Test Epic
 
 - List item 1
-   - Nested Item
-- List item 2
+   - List item 2
+
+## Test Ticket 1
+
+A test ticket
+
+## Test Ticket 2
+
+A test ticket
+
+### Subtask
+
+Maybe
+
 `
 
 func main() {
-	logger.Message("Test %s :scream:", "test")
+	withMarkDown()
 }
 
-func dontRun()  {
+func withMarkDown() {
+	ticketFields := map[string]interface{}{
+		"components": []string{"Android SDK"},
+		"labels":     []string{"higgs-pod"},
+		"project":    "SDK",
+	}
+
+	parser := md2.NewParser(ticketFields)
+	tickets, _ := parser.Parse([]byte(md))
+
+	envMap := env.Map()
+	userName := envMap["AGENCY_BOT_USERNAME"]
+	password := envMap["AGENCY_BOT_API_TOKEN"]
+
+	api := jira2.NewApi(userName, password, "https://levelup.atlassian.net/")
+	tixCreator := jira2.NewCreator(api)
+	tixCreator.CreateTickets(tickets)
+}
+
+func oldJiraStuff() {
 	envMap := make(map[string]string)
 	for _, env := range os.Environ() {
 		pair := strings.SplitN(env, "=", 2)

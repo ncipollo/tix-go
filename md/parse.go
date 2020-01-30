@@ -11,26 +11,28 @@ type Parser interface {
 	Parse(source []byte) ([]*ticket.Ticket, error)
 }
 
-func NewParser() Parser {
+func NewParser(ticketFields map[string]interface{}) Parser {
 	return &markdownParser{
+		ticketFields: ticketFields,
 		ticketParser: NewTicketParser(),
 	}
 }
 
 type markdownParser struct {
+	ticketFields map[string]interface{}
 	ticketParser *TicketParser
 }
 
 func (m *markdownParser) Parse(source []byte) ([]*ticket.Ticket, error) {
-	state, rootNode := setupParser(source)
+	state, rootNode := setupParser(source, m.ticketFields)
 
 	err := m.ticketParser.Parse(state, rootNode)
 
 	return state.RootTickets, err
 }
 
-func setupParser(source []byte) (*State, ast.Node) {
-	state := newState(source, nil)
+func setupParser(source []byte, ticketFields map[string]interface{}) (*State, ast.Node) {
+	state := newState(source, ticketFields)
 
 	reader := text.NewReader(source)
 	parser := goldmark.DefaultParser()
@@ -39,7 +41,7 @@ func setupParser(source []byte) (*State, ast.Node) {
 	return state, rootNode
 }
 
-func setupTextParser(text string)  (*State, ast.Node) {
+func setupTextParser(text string) (*State, ast.Node) {
 	source := []byte(text)
-	return setupParser(source)
+	return setupParser(source, nil)
 }

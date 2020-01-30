@@ -51,10 +51,10 @@ func (j *jiraApi) generateError(preamble string, original error, response *jira.
 	body, _ := ioutil.ReadAll(response.Body)
 	if body != nil {
 		bodyStr := string(body)
-		errStr := fmt.Sprintf("%v\n Error: %v\nAPI Message: %v", preamble, original, bodyStr)
+		errStr := fmt.Sprintf("%v\nError: %v\nAPI Message: %v", preamble, original, bodyStr)
 		return errors.New(errStr)
 	} else {
-		errStr := fmt.Sprintf("%v\n Error: %v", preamble, original)
+		errStr := fmt.Sprintf("%v\nError: %v", preamble, original)
 		return errors.New(errStr)
 	}
 }
