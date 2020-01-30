@@ -17,34 +17,7 @@ const md = `
 `
 
 func main() {
-	logger.Message("Test %s :beer:", "test")
-
-	envMap := make(map[string]string)
-	for _, env := range os.Environ() {
-		pair := strings.SplitN(env, "=", 2)
-		envMap[pair[0]] = pair[1]
-	}
-
-	userName := envMap["AGENCY_BOT_USERNAME"]
-	password := envMap["AGENCY_BOT_API_TOKEN"]
-
-	tp := jira.BasicAuthTransport{
-		Username: userName,
-		Password: password,
-	}
-
-	client, err := jira.NewClient(tp.Client(), "https://levelup.atlassian.net/")
-	if err != nil {
-		panic(err)
-	}
-
-	fields, _, err := client.Field.GetList()
-
-	for _, field := range fields {
-		if field.ID == "customfield_13615" {
-			println("here")
-		}
-	}
+	logger.Message("Test %s :scream:", "test")
 }
 
 func dontRun()  {
