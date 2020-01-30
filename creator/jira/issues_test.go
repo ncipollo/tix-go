@@ -11,9 +11,9 @@ import (
 
 func TestIssues_FromTicket_Epic(t *testing.T) {
 	issues := createIssues()
-	ticket := createTicket()
+	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(ticket, "", 1)
+	newIssue := issues.FromTicket(newTicket, "", 1)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -38,9 +38,9 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 
 func TestIssues_FromTicket_Story(t *testing.T) {
 	issues := createIssues()
-	ticket := createTicket()
+	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(ticket, "parent", 2)
+	newIssue := issues.FromTicket(newTicket, "parent", 2)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -66,9 +66,9 @@ func TestIssues_FromTicket_Story(t *testing.T) {
 
 func TestIssues_FromTicket_Subtask(t *testing.T) {
 	issues := createIssues()
-	ticket := createTicket()
+	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(ticket, "parent", 3)
+	newIssue := issues.FromTicket(newTicket, "parent", 3)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
