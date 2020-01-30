@@ -30,6 +30,15 @@ func TestIssueFields_Components_WithComponents(t *testing.T) {
 	assert.Equal(t, expected, jiraComps)
 }
 
+func TestIssueFields_EpicLinkKey(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
+
+	key := issueFields.EpicLinkKey()
+	
+	assert.Equal(t, "field1", key)
+}
+
 func TestIssueFields_EpicType_DefinedType(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"type": "test",
@@ -98,8 +107,8 @@ func TestIssueFields_Unknowns(t *testing.T) {
 	unknowns := issueFields.Unknowns()
 
 	expected := map[string]interface{}{
-		"field1": "epic",
-		"field3": map[string]interface{}{
+		"field2": "epic",
+		"field4": map[string]interface{}{
 			"value": "option",
 		},
 		"Random": "random",
@@ -109,8 +118,9 @@ func TestIssueFields_Unknowns(t *testing.T) {
 
 func createJiraFields() []jira.Field {
 	return []jira.Field{
-		{ID: "field1", Name: "Epic Name"},
-		{ID: "field2", Name: "Type"},
-		{ID: "field3", Name: "Option", Schema: jira.FieldSchema{Type: "option"}},
+		{ID: "field1", Name: "Epic Link"},
+		{ID: "field2", Name: "Epic Name"},
+		{ID: "field3", Name: "Type"},
+		{ID: "field4", Name: "Option", Schema: jira.FieldSchema{Type: "option"}},
 	}
 }
