@@ -20,10 +20,6 @@ const md = `
 
 A test ticket
 
-## Test Ticket 2
-
-A test ticket
-
 ### Subtask
 
 Maybe

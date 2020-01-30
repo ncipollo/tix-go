@@ -30,7 +30,8 @@ func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
 	// Add epic name if missing
-	//unknowns := issueFields.Unknowns()
+	unknowns := issueFields.Unknowns()
+	issueFields.AddDefaultEpicName(unknowns, ticket.Title)
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -40,7 +41,7 @@ func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 			Type:        issueFields.EpicType(),
 			Project:     issueFields.Project(),
 			Summary:     ticket.Title,
-			Unknowns:    issueFields.Unknowns(),
+			Unknowns:    unknowns,
 		},
 	}
 }
@@ -57,7 +58,7 @@ func (i *Issues) story(ticket *ticket.Ticket, parentTicketId string) *jira.Issue
 			Components:  issueFields.Components(),
 			Description: description,
 			Labels:      issueFields.Labels(),
-			Type:        issueFields.EpicType(),
+			Type:        issueFields.IssueType(),
 			Project:     issueFields.Project(),
 			Summary:     ticket.Title,
 			Unknowns:    unknowns,

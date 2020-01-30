@@ -7,6 +7,49 @@ import (
 	"tix/ticket"
 )
 
+func TestIssueFields_AddDefaultEpicName_AddDefaultIfEpicEmpty(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"field2": "",
+	}
+	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
+
+	unknowns := issueFields.Unknowns()
+	issueFields.AddDefaultEpicName(unknowns, "new name")
+
+	expected := map[string]interface{}{
+		"field2": "new name",
+	}
+	assert.Equal(t, expected, unknowns)
+}
+
+func TestIssueFields_AddDefaultEpicName_AddDefaultIfEpicMissing(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
+
+	unknowns := issueFields.Unknowns()
+	issueFields.AddDefaultEpicName(unknowns, "new name")
+
+	expected := map[string]interface{}{
+		"field2": "new name",
+	}
+	assert.Equal(t, expected, unknowns)
+}
+
+func TestIssueFields_AddDefaultEpicName_DoNothingIfEpicNameExists(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"field2": "epic",
+	}
+	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
+
+	unknowns := issueFields.Unknowns()
+	issueFields.AddDefaultEpicName(unknowns, "new name")
+
+	expected := map[string]interface{}{
+		"field2": "epic",
+	}
+	assert.Equal(t, expected, unknowns)
+}
+
 func TestIssueFields_Components_EmptyForInvalidType(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"components": "lol nope",

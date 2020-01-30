@@ -45,6 +45,14 @@ func NewIssueFields(jiraFields []jira.Field, ticket *ticket.Ticket) *IssueFields
 	}
 }
 
+func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name string) {
+	epicNameKey := i.fieldInfo["epic name"].ID
+	epicName, ok := unknowns[epicNameKey].(string)
+	if !ok ||  len(epicName) == 0 {
+		unknowns[epicNameKey] = name
+	}
+}
+
 func (i *IssueFields) Components() []*jira.Component {
 	components, ok := i.ticket.Fields[KeyComponents].([]string)
 	if !ok {

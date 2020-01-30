@@ -36,6 +36,34 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 	assert.Equal(t, expected, newIssue)
 }
 
+func TestIssues_FromTicket_Epic_DefaultEpicName(t *testing.T) {
+	issues := createIssues()
+	newTicket := createTicket()
+	newTicket.Fields["epic name"] = ""
+
+	newIssue := issues.FromTicket(newTicket, "", 1)
+
+	expected := &jira.Issue{
+		Fields: &jira.IssueFields{
+			Components: []*jira.Component{
+				{Name: "component1"},
+				{Name: "component2"},
+			},
+			Description: "body",
+			Labels:      []string{"label1", "label2"},
+			Type:        jira.IssueType{Name: "type"},
+			Project:     jira.Project{Key: "project"},
+			Summary:     "title",
+			Unknowns: map[string]interface{}{
+				"field2": "title",
+				"field3": "random",
+			},
+		},
+	}
+
+	assert.Equal(t, expected, newIssue)
+}
+
 func TestIssues_FromTicket_Story(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
