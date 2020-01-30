@@ -1,7 +1,10 @@
 package jira
 
 import (
+	"errors"
+	"fmt"
 	"github.com/andygrunwald/go-jira"
+	"io/ioutil"
 	"tix/logger"
 )
 
@@ -31,15 +34,27 @@ func NewApi(userName string, apiToken string, baseUrl string) Api {
 func (j *jiraApi) CreateIssue(issue *jira.Issue) (*jira.Issue, error) {
 	issue, response, err := j.client.Issue.Create(issue)
 	if err != nil {
-		return nil, j.generateError(err, response)
+		return nil, j.generateError("unable to create jira issue", err, response)
 	}
 	return issue, nil
 }
 
 func (j *jiraApi) GetIssueFieldList() ([]jira.Field, error) {
-	panic("implement me")
+	fields, response, err := j.client.Field.GetList()
+	if err != nil {
+		return nil, j.generateError("unable to fetch jira fields", err, response)
+	}
+	return fields, nil
 }
 
-func (j *jiraApi) generateError(original error, responose *jira.Response) error {
-	panic("implement me")
+func (j *jiraApi) generateError(preamble string, original error, response *jira.Response) error {
+	body, _ := ioutil.ReadAll(response.Body)
+	if body != nil {
+		bodyStr := string(body)
+		errStr := fmt.Sprintf("%v\n Error: %v\nAPI Message: %v", preamble, original, bodyStr)
+		return errors.New(errStr)
+	} else {
+		errStr := fmt.Sprintf("%v\n Error: %v", preamble, original)
+		return errors.New(errStr)
+	}
 }
