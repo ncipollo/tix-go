@@ -7,12 +7,12 @@ import (
 )
 
 type Issues struct {
-	renderer    render.BodyRenderer
-	issueFields IssueFields
+	jiraFields []jira.Field
+	renderer   render.BodyRenderer
 }
 
-func NewIssues(renderer render.BodyRenderer, issueFields IssueFields) *Issues {
-	return &Issues{renderer: renderer, issueFields: issueFields}
+func NewIssues(jiraFields []jira.Field, renderer render.BodyRenderer) *Issues {
+	return &Issues{jiraFields: jiraFields, renderer: renderer}
 }
 
 func (i *Issues) FromTicket(ticket *ticket.Ticket, parentTicketId string, ticketLevel int) *jira.Issue {
@@ -28,32 +28,34 @@ func (i *Issues) FromTicket(ticket *ticket.Ticket, parentTicketId string, ticket
 
 func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 	description := i.renderBody(ticket)
+	issueFields := NewIssueFields(i.jiraFields, ticket)
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Components:  i.issueFields.Components(),
+			Components:  issueFields.Components(),
 			Description: description,
-			Labels:      i.issueFields.Labels(),
-			Type:        i.issueFields.EpicType(),
-			Project:     i.issueFields.Project(),
+			Labels:      issueFields.Labels(),
+			Type:        issueFields.EpicType(),
+			Project:     issueFields.Project(),
 			Summary:     ticket.Title,
-			Unknowns:    i.issueFields.Unknowns(),
+			Unknowns:    issueFields.Unknowns(),
 		},
 	}
 }
 
 func (i *Issues) story(ticket *ticket.Ticket, parentTicketId string) *jira.Issue {
 	description := i.renderBody(ticket)
+	issueFields := NewIssueFields(i.jiraFields, ticket)
 	// Add epic link to unknowns
-	unknowns := i.issueFields.Unknowns()
-	unknowns[i.issueFields.EpicLinkKey()] = parentTicketId
+	unknowns := issueFields.Unknowns()
+	unknowns[issueFields.EpicLinkKey()] = parentTicketId
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Components:  i.issueFields.Components(),
+			Components:  issueFields.Components(),
 			Description: description,
-			Labels:      i.issueFields.Labels(),
-			Type:        i.issueFields.EpicType(),
-			Project:     i.issueFields.Project(),
+			Labels:      issueFields.Labels(),
+			Type:        issueFields.EpicType(),
+			Project:     issueFields.Project(),
 			Summary:     ticket.Title,
 			Unknowns:    unknowns,
 		},
@@ -62,17 +64,18 @@ func (i *Issues) story(ticket *ticket.Ticket, parentTicketId string) *jira.Issue
 
 func (i *Issues) subtask(ticket *ticket.Ticket, parentTicketId string) *jira.Issue {
 	description := i.renderBody(ticket)
+	issueFields := NewIssueFields(i.jiraFields, ticket)
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Components:  i.issueFields.Components(),
+			Components:  issueFields.Components(),
 			Description: description,
-			Labels:      i.issueFields.Labels(),
-			Type:        i.issueFields.EpicType(),
-			Project:     i.issueFields.Project(),
+			Labels:      issueFields.Labels(),
+			Type:        issueFields.EpicType(),
+			Project:     issueFields.Project(),
 			Parent:      &jira.Parent{Key: parentTicketId},
 			Summary:     ticket.Title,
-			Unknowns:    i.issueFields.Unknowns(),
+			Unknowns:    issueFields.Unknowns(),
 		},
 	}
 }
