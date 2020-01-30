@@ -36,6 +36,62 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 	assert.Equal(t, expected, newIssue)
 }
 
+func TestIssues_FromTicket_Story(t *testing.T) {
+	issues := createIssues()
+	ticket := createTicket()
+
+	newIssue := issues.FromTicket(ticket, "parent", 2)
+
+	expected := &jira.Issue{
+		Fields: &jira.IssueFields{
+			Components: []*jira.Component{
+				{Name: "component1"},
+				{Name: "component2"},
+			},
+			Description: "body",
+			Labels:      []string{"label1", "label2"},
+			Type:        jira.IssueType{Name: "type"},
+			Project:     jira.Project{Key: "project"},
+			Summary:     "title",
+			Unknowns: map[string]interface{}{
+				"field1": "parent",
+				"field2": "epic",
+				"field3": "random",
+			},
+		},
+	}
+
+	assert.Equal(t, expected, newIssue)
+}
+
+func TestIssues_FromTicket_Subtask(t *testing.T) {
+	issues := createIssues()
+	ticket := createTicket()
+
+	newIssue := issues.FromTicket(ticket, "parent", 3)
+
+	expected := &jira.Issue{
+		Fields: &jira.IssueFields{
+			Components: []*jira.Component{
+				{Name: "component1"},
+				{Name: "component2"},
+			},
+			Description: "body",
+			Labels:      []string{"label1", "label2"},
+			Type:        jira.IssueType{Name: "type"},
+			Parent:      &jira.Parent{Key: "parent"},
+			Project:     jira.Project{Key: "project"},
+			Summary:     "title",
+			Unknowns: map[string]interface{}{
+				"field2": "epic",
+				"field3": "random",
+			},
+		},
+	}
+
+	assert.Equal(t, expected, newIssue)
+}
+
 func createIssues() *Issues {
 	jiraFields := []jira.Field{
 		{ID: "field1", Name: "Epic Link"},
