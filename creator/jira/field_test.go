@@ -35,7 +35,7 @@ func TestIssueFields_EpicLinkKey(t *testing.T) {
 	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
 
 	key := issueFields.EpicLinkKey()
-	
+
 	assert.Equal(t, "field1", key)
 }
 
@@ -73,14 +73,27 @@ func TestIssueFields_IssueType_DefinedType(t *testing.T) {
 	assert.Equal(t, expected, issueType)
 }
 
-func TestIssueFields_Labels(t *testing.T) {
-	ticketFields := map[string]interface{}{}
+func TestIssueFields_Labels_EmptyForInvalidType(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"labels" : 42,
+	}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
-	issueType := issueFields.IssueType()
+	labels := issueFields.Labels()
 
-	expected := jira.IssueType{Name: "Story"}
-	assert.Equal(t, expected, issueType)
+	assert.Empty(t, labels)
+}
+
+func TestIssueFields_Labels_WithLabels(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"labels" : []string {"label1", "label2"},
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	labels := issueFields.Labels()
+
+	expected := []string {"label1", "label2"}
+	assert.Equal(t, expected, labels)
 }
 
 func TestIssueFields_Project(t *testing.T) {

@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	KeyComponents  = "components"
-	KeyLabels      = "labels"
-	KeyProject     = "project"
-	KeyType        = "type"
+	KeyComponents = "components"
+	KeyLabels     = "labels"
+	KeyProject    = "project"
+	KeyType       = "type"
 )
 
 type FieldInfo struct {
@@ -50,7 +50,7 @@ func (i *IssueFields) Components() []*jira.Component {
 	if !ok {
 		components = make([]string, 0)
 	}
-	var jiraComps []*jira.Component
+	jiraComps := make([]*jira.Component, 0)
 	for _, component := range components {
 		jiraComp := &jira.Component{Name: component}
 		jiraComps = append(jiraComps, jiraComp)
@@ -73,7 +73,12 @@ func (i *IssueFields) EpicType() jira.IssueType {
 }
 
 func (i *IssueFields) Labels() []string {
-	return i.ticket.Fields[KeyLabels].([]string)
+	labels, ok := i.ticket.Fields[KeyLabels].([]string)
+	if ok {
+		return labels
+	} else {
+		return make([]string, 0)
+	}
 }
 
 func (i *IssueFields) IssueType() jira.IssueType {
@@ -95,10 +100,10 @@ func (i *IssueFields) Project() jira.Project {
 
 func (i *IssueFields) Unknowns() map[string]interface{} {
 	keysToSkip := map[string]bool{
-		KeyComponents:  true,
-		KeyLabels:      true,
-		KeyProject:     true,
-		KeyType:        true,
+		KeyComponents: true,
+		KeyLabels:     true,
+		KeyProject:    true,
+		KeyType:       true,
 	}
 
 	unknown := make(map[string]interface{})
@@ -109,7 +114,7 @@ func (i *IssueFields) Unknowns() map[string]interface{} {
 		}
 
 		info := i.fieldInfo[lowerKey]
-		if info != nil{
+		if info != nil {
 			if info.UseValueKey {
 				unknown[info.ID] = map[string]interface{}{"value": field}
 			} else {
