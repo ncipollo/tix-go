@@ -58,6 +58,10 @@ func (i *IssueFields) Components() []*jira.Component {
 	return jiraComps
 }
 
+func (i *IssueFields) EpicLinkKey() string {
+	return i.fieldInfo["epic link"].ID
+}
+
 func (i *IssueFields) EpicType() jira.IssueType {
 	issueType, ok := i.ticket.Fields[KeyType].(string)
 	if !ok {
