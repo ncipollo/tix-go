@@ -34,7 +34,7 @@ func NewApi(userName string, apiToken string, baseUrl string) Api {
 func (j *jiraApi) CreateIssue(issue *jira.Issue) (*jira.Issue, error) {
 	issue, response, err := j.client.Issue.Create(issue)
 	if err != nil {
-		return nil, j.generateError("unable to create jira issue", err, response)
+		return nil, j.generateError(":scream: unable to create jira issue", err, response)
 	}
 	return issue, nil
 }
@@ -42,7 +42,7 @@ func (j *jiraApi) CreateIssue(issue *jira.Issue) (*jira.Issue, error) {
 func (j *jiraApi) GetIssueFieldList() ([]jira.Field, error) {
 	fields, response, err := j.client.Field.GetList()
 	if err != nil {
-		return nil, j.generateError("unable to fetch jira fields", err, response)
+		return nil, j.generateError(":scream: unable to fetch jira fields", err, response)
 	}
 	return fields, nil
 }
