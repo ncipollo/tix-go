@@ -29,6 +29,9 @@ func (i *Issues) FromTicket(ticket *ticket.Ticket, parentTicketId string, ticket
 func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
+	// Add epic name if missing
+	//unknowns := issueFields.Unknowns()
+
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
 			Components:  issueFields.Components(),

@@ -19,18 +19,23 @@ Body 2
 
 func TestParse(t *testing.T) {
 	source := []byte(md)
-	parser := NewParser()
+	fields := map[string]interface{}{
+		"foo": "bar",
+	}
+	parser := NewParser(fields)
 	tickets, err := parser.Parse(source)
 
 	expectedTickets := []*ticket.Ticket{
 		{
-			Title: "Epic 1",
+			Fields: fields,
+			Title:  "Epic 1",
 			Body: []body.Segment{
 				body.NewTextSegment("Body 1"),
 				body.NewLineBreakSegment(),
 			},
 		},
 		{
+			Fields: fields,
 			Title: "Epic 2",
 			Body: []body.Segment{
 				body.NewTextSegment("Body 2"),
