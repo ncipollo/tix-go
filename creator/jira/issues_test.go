@@ -39,7 +39,7 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 func TestIssues_FromTicket_Epic_DefaultEpicName(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
-	newTicket.Fields["epic name"] = ""
+	newTicket.Fields("jira")["epic name"] = ""
 
 	newIssue := issues.FromTicket(newTicket, nil, 1)
 

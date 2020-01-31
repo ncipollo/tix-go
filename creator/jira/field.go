@@ -54,7 +54,7 @@ func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name s
 }
 
 func (i *IssueFields) Components() []*jira.Component {
-	components, ok := i.ticket.Fields[KeyComponents].([]string)
+	components, ok := i.ticket.Fields("jira")[KeyComponents].([]string)
 	if !ok {
 		components = make([]string, 0)
 	}
@@ -71,7 +71,7 @@ func (i *IssueFields) EpicLinkKey() string {
 }
 
 func (i *IssueFields) EpicType() jira.IssueType {
-	issueType, ok := i.ticket.Fields[KeyType].(string)
+	issueType, ok := i.ticket.Fields("jira")[KeyType].(string)
 	if !ok {
 		issueType = "Epic"
 	}
@@ -81,7 +81,7 @@ func (i *IssueFields) EpicType() jira.IssueType {
 }
 
 func (i *IssueFields) Labels() []string {
-	labels, ok := i.ticket.Fields[KeyLabels].([]string)
+	labels, ok := i.ticket.Fields("jira")[KeyLabels].([]string)
 	if ok {
 		return labels
 	} else {
@@ -90,7 +90,7 @@ func (i *IssueFields) Labels() []string {
 }
 
 func (i *IssueFields) IssueType() jira.IssueType {
-	issueType, ok := i.ticket.Fields[KeyType].(string)
+	issueType, ok := i.ticket.Fields("jira")[KeyType].(string)
 	if !ok {
 		issueType = "Story"
 	}
@@ -100,7 +100,7 @@ func (i *IssueFields) IssueType() jira.IssueType {
 }
 
 func (i *IssueFields) Project() jira.Project {
-	project, ok := i.ticket.Fields[KeyProject].(string)
+	project, ok := i.ticket.Fields("jira")[KeyProject].(string)
 	if !ok {
 		project = ""
 	}
@@ -110,7 +110,7 @@ func (i *IssueFields) Project() jira.Project {
 }
 
 func (i *IssueFields) TaskType() jira.IssueType {
-	issueType, ok := i.ticket.Fields[KeyType].(string)
+	issueType, ok := i.ticket.Fields("jira")[KeyType].(string)
 	if !ok {
 		issueType = "Task"
 	}
@@ -128,7 +128,7 @@ func (i *IssueFields) Unknowns() map[string]interface{} {
 	}
 
 	unknown := make(map[string]interface{})
-	for key, field := range i.ticket.Fields {
+	for key, field := range i.ticket.Fields("jira") {
 		lowerKey := strings.ToLower(key)
 		if keysToSkip[lowerKey] {
 			continue

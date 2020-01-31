@@ -29,16 +29,16 @@ func TestParse(t *testing.T) {
 
 	expectedTickets := []*ticket.Ticket{
 		{
-			Fields: fields,
-			Title:  "Epic 1",
+			DefaultFields: fields,
+			Title:         "Epic 1",
 			Body: []body.Segment{
 				body.NewTextSegment("Body 1"),
 				body.NewLineBreakSegment(),
 			},
 		},
 		{
-			Fields: fields,
-			Title: "Epic 2",
+			DefaultFields: fields,
+			Title:         "Epic 2",
 			Body: []body.Segment{
 				body.NewTextSegment("Body 2"),
 				body.NewLineBreakSegment(),
