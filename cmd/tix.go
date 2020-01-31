@@ -51,7 +51,7 @@ func (t TixCommand) loadSettings() (settings.Settings, error) {
 }
 
 func (t TixCommand) loadMarkDownData() ([]byte, error) {
-	return ioutil.ReadFile(t.settingsPath)
+	return ioutil.ReadFile(t.markdownPath)
 }
 
 func (t TixCommand) generateJiraTickets(markdownData []byte, settings settings.Settings) error {

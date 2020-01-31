@@ -41,7 +41,6 @@ func (parser *Parser) Parse() Command {
 			parser.printUsageAndExit()
 		}
 		path, _ := parser.localPath()
-
 		return NewTixCommand(env.Map(), path)
 	}
 }
@@ -59,6 +58,6 @@ func (parser *Parser) printUsageAndExit() {
 }
 
 func (parser *Parser) localPath() (string, error) {
-	relativePath := parser.flag.Arg(1)
+	relativePath := parser.flag.Arg(0)
 	return filepath.Abs(relativePath)
 }
