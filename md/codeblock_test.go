@@ -67,9 +67,9 @@ func TestCodeBlockSegmentParser_Parse_Fields_Default(t *testing.T) {
 	assert.Equal(t, expected, ticketFields)
 }
 
-func TestCodeBlockSegmentParser_Parse_Fields_Jira(t *testing.T) {
-	text := "```jira\n" +
-		"foo: bar\n" +
+func TestCodeBlockSegmentParser_Parse_Fields_Error(t *testing.T) {
+	text := "```github\n" +
+		"\t\t" +
 		"```"
 	parser := NewCodeBlockSegmentParser(true)
 	state, rootNode := setupTextParser(text)
@@ -77,13 +77,8 @@ func TestCodeBlockSegmentParser_Parse_Fields_Jira(t *testing.T) {
 	node := rootNode.FirstChild()
 
 	err := parser.Parse(state, node)
-
-	expected := map[string]interface{}{"foo" : "bar"}
-	ticketBody := state.CurrentTicket().Body
-	ticketFields := state.CurrentTicket().Fields("jira")
-	assert.NoError(t, err)
-	assert.Empty(t, ticketBody)
-	assert.Equal(t, expected, ticketFields)
+	
+	assert.Error(t, err)
 }
 
 func TestCodeBlockSegmentParser_Parse_Fields_Github(t *testing.T) {
@@ -100,6 +95,25 @@ func TestCodeBlockSegmentParser_Parse_Fields_Github(t *testing.T) {
 	expected := map[string]interface{}{"foo" : "bar"}
 	ticketBody := state.CurrentTicket().Body
 	ticketFields := state.CurrentTicket().Fields("github")
+	assert.NoError(t, err)
+	assert.Empty(t, ticketBody)
+	assert.Equal(t, expected, ticketFields)
+}
+
+func TestCodeBlockSegmentParser_Parse_Fields_Jira(t *testing.T) {
+	text := "```jira\n" +
+		"foo: bar\n" +
+		"```"
+	parser := NewCodeBlockSegmentParser(true)
+	state, rootNode := setupTextParser(text)
+	state.StartTicket()
+	node := rootNode.FirstChild()
+
+	err := parser.Parse(state, node)
+
+	expected := map[string]interface{}{"foo" : "bar"}
+	ticketBody := state.CurrentTicket().Body
+	ticketFields := state.CurrentTicket().Fields("jira")
 	assert.NoError(t, err)
 	assert.Empty(t, ticketBody)
 	assert.Equal(t, expected, ticketFields)
