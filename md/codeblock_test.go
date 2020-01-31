@@ -77,7 +77,7 @@ func TestCodeBlockSegmentParser_Parse_Fields_Error(t *testing.T) {
 	node := rootNode.FirstChild()
 
 	err := parser.Parse(state, node)
-	
+
 	assert.Error(t, err)
 }
 

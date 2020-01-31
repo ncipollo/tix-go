@@ -24,7 +24,7 @@ func NewApi(userName string, apiToken string, baseUrl string) Api {
 	}
 	client, err := jira.NewClient(tp.Client(), baseUrl)
 	if err != nil {
-		logger.Error("Unable to create Jira client :scream: \n Error: %v", err)
+		logger.Error(":scream: unable to create Jira client\n Error: %v", err)
 		panic(err)
 	}
 

@@ -2,10 +2,8 @@ BINARY_NAME=tix
 BUILD_FOLDER=build/release
 LINUX_64_OUTPUT=$(BUILD_FOLDER)/linux64/$(BINARY_NAME)
 MAC_64_OUTPUT=$(BUILD_FOLDER)/mac64/$(BINARY_NAME)
-VERSION=$(shell git describe --abbrev=0)
 
 GO_BUILD=go build -ldflags "-X main.version=${VERSION}" -o
-
 
 all: deps test build tar
 build: build-linux build-mac
