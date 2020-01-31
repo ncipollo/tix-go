@@ -92,7 +92,7 @@ func TestIssues_FromTicket_Story(t *testing.T) {
 	assert.Equal(t, expected, newIssue)
 }
 
-func TestIssues_FromTicket_Subtask(t *testing.T) {
+func TestIssues_FromTicket_Task(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 

@@ -22,7 +22,7 @@ func (i *Issues) FromTicket(ticket *ticket.Ticket, parentIssue *jira.Issue, tick
 	case 2:
 		return i.story(ticket, parentIssue)
 	default:
-		return i.subtask(ticket, parentIssue)
+		return i.task(ticket, parentIssue)
 	}
 }
 
@@ -66,7 +66,7 @@ func (i *Issues) story(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Iss
 	}
 }
 
-func (i *Issues) subtask(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issue {
+func (i *Issues) task(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
 
