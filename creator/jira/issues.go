@@ -15,14 +15,14 @@ func NewIssues(jiraFields []jira.Field, renderer render.BodyRenderer) *Issues {
 	return &Issues{jiraFields: jiraFields, renderer: renderer}
 }
 
-func (i *Issues) FromTicket(ticket *ticket.Ticket, parentTicketId string, ticketLevel int) *jira.Issue {
+func (i *Issues) FromTicket(ticket *ticket.Ticket, parentIssue *jira.Issue, ticketLevel int) *jira.Issue {
 	switch ticketLevel {
 	case 1:
 		return i.epic(ticket)
 	case 2:
-		return i.story(ticket, parentTicketId)
+		return i.story(ticket, parentIssue)
 	default:
-		return i.subtask(ticket, parentTicketId)
+		return i.subtask(ticket, parentIssue)
 	}
 }
 
@@ -46,12 +46,12 @@ func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 	}
 }
 
-func (i *Issues) story(ticket *ticket.Ticket, parentTicketId string) *jira.Issue {
+func (i *Issues) story(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
 	// Add epic link to unknowns
 	unknowns := issueFields.Unknowns()
-	unknowns[issueFields.EpicLinkKey()] = parentTicketId
+	unknowns[issueFields.EpicLinkKey()] = parentIssue.Key
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -66,7 +66,7 @@ func (i *Issues) story(ticket *ticket.Ticket, parentTicketId string) *jira.Issue
 	}
 }
 
-func (i *Issues) subtask(ticket *ticket.Ticket, parentTicketId string) *jira.Issue {
+func (i *Issues) subtask(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
 
@@ -75,9 +75,9 @@ func (i *Issues) subtask(ticket *ticket.Ticket, parentTicketId string) *jira.Iss
 			Components:  issueFields.Components(),
 			Description: description,
 			Labels:      issueFields.Labels(),
-			Type:        issueFields.EpicType(),
+			Type:        issueFields.IssueType(),
 			Project:     issueFields.Project(),
-			Parent:      &jira.Parent{Key: parentTicketId},
+			Parent:      &jira.Parent{ID: parentIssue.ID},
 			Summary:     ticket.Title,
 			Unknowns:    issueFields.Unknowns(),
 		},

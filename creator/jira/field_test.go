@@ -151,6 +151,29 @@ func TestIssueFields_Project(t *testing.T) {
 	assert.Equal(t, expected, project)
 }
 
+func TestIssueFields_TaskType_DefinedType(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"type": "test",
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	issueType := issueFields.TaskType()
+
+	expected := jira.IssueType{Name: "test"}
+	assert.Equal(t, expected, issueType)
+}
+
+func TestIssueFields_TaskType_DefaultType(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	issueType := issueFields.TaskType()
+
+	expected := jira.IssueType{Name: "Task"}
+	assert.Equal(t, expected, issueType)
+}
+
+
 func TestIssueFields_Unknowns(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"epic name": "epic",

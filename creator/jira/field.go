@@ -106,6 +106,16 @@ func (i *IssueFields) Project() jira.Project {
 	}
 }
 
+func (i *IssueFields) TaskType() jira.IssueType {
+	issueType, ok := i.ticket.Fields[KeyType].(string)
+	if !ok {
+		issueType = "Task"
+	}
+	return jira.IssueType{
+		Name: issueType,
+	}
+}
+
 func (i *IssueFields) Unknowns() map[string]interface{} {
 	keysToSkip := map[string]bool{
 		KeyComponents: true,

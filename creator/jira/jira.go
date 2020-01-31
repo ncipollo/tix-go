@@ -22,7 +22,7 @@ func (j Creator) CreateTickets(tickets []*ticket.Ticket) {
 	if err != nil {
 		logger.Error("%v", err)
 	} else {
-		j.createTicketsForLevel(tickets, issues, 1, "")
+		j.createTicketsForLevel(tickets, issues, 1, nil)
 	}
 }
 
@@ -36,15 +36,15 @@ func (j Creator) createIssues() (*Issues, error) {
 	return NewIssues(fields, renderer), nil
 }
 
-func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues, level int, parentId string) {
+func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues, level int, parentIssue *jira.Issue) {
 	for _, currentTicket := range tickets {
-		issue := issues.FromTicket(currentTicket, parentId, level)
+		issue := issues.FromTicket(currentTicket, parentIssue, level)
 		resultIssue, err := j.api.CreateIssue(issue)
 		if err != nil {
 			j.reportFailedTicketCreate(err, level)
 		} else {
 			j.reportSuccessfulTicketCreate(resultIssue, level)
-			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue.Key)
+			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue)
 		}
 	}
 }

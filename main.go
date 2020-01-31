@@ -38,16 +38,19 @@ func withMarkDown() {
 	}
 	epicFields := map[string]interface{}{
 		"epic name": "Nick Test Epic",
-		"labels":     []string{"higgs-pod"},
-		"project":    "SDK",
+		"labels":    []string{"higgs-pod"},
 	}
 	issueFields := map[string]interface{}{
 		"design review type": "No design review required",
 	}
+	subtaskFields := map[string]interface{}{
+		"type": "Technical task",
+	}
 	fieldState := md2.NewFieldState()
 	fieldState.SetDefaultFields(defaultFields)
-	fieldState.SetFieldsForLevel(epicFields, 1)
-	fieldState.SetFieldsForLevel(issueFields, 2)
+	fieldState.SetFieldsForLevel(epicFields, 0)
+	fieldState.SetFieldsForLevel(issueFields, 1)
+	fieldState.SetFieldsForLevel(subtaskFields, 2)
 
 	parser := md2.NewParser(fieldState)
 	tickets, _ := parser.Parse([]byte(md))
@@ -59,6 +62,54 @@ func withMarkDown() {
 	api := jira2.NewApi(userName, password, "https://levelup.atlassian.net/")
 	tixCreator := jira2.NewCreator(api)
 	tixCreator.CreateTickets(tickets)
+}
+
+func subtask() {
+	envMap := make(map[string]string)
+	for _, env := range os.Environ() {
+		pair := strings.SplitN(env, "=", 2)
+		envMap[pair[0]] = pair[1]
+	}
+
+	userName := envMap["AGENCY_BOT_USERNAME"]
+	password := envMap["AGENCY_BOT_API_TOKEN"]
+
+	tp := jira.BasicAuthTransport{
+		Username: userName,
+		Password: password,
+	}
+
+	client, err := jira.NewClient(tp.Client(), "https://levelup.atlassian.net/")
+	if err != nil {
+		panic(err)
+	}
+
+	issue, _, err := client.Issue.Get("SDK-3550", nil)
+
+	i := jira.Issue{
+		Fields: &jira.IssueFields{
+			Components: []*jira.Component{
+				{Name: "Android SDK"},
+			},
+			Description: "Test Issue",
+			Labels:      []string{"higgs-pod"},
+			Type: jira.IssueType{
+				Name: "Technical task",
+			},
+			Project: jira.Project{
+				Key: "SDK",
+			},
+			Parent:  &jira.Parent{ID: "202317"},
+			Summary: "Android:: Test Subtask",
+			Unknowns: map[string]interface{}{},
+		},
+	}
+	issue, response, err := client.Issue.Create(&i)
+
+	body, err := ioutil.ReadAll(response.Body)
+	bodyStr := string(body)
+	println(issue)
+	println(bodyStr)
 }
 
 func oldJiraStuff() {
