@@ -68,3 +68,21 @@ func TestTicket_Fields_ReturnsTicketSystemSpecificFields(t *testing.T) {
 	}
 	assert.Equal(t, expected, combinedFields)
 }
+
+func TestTicket_UpdateDefaultFields(t *testing.T) {
+	defaultFields := map[string]interface{}{
+		"original": "foo",
+	}
+	updatedFields := map[string]interface{}{
+		"updated": "bar",
+	}
+	ticket := NewTicketWithFields(defaultFields)
+
+	ticket.UpdateDefaultFields(updatedFields)
+
+	expected := map[string]interface{}{
+		"original": "foo",
+		"updated": "bar",
+	}
+	assert.Equal(t, expected, ticket.DefaultFields)
+}

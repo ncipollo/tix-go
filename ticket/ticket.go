@@ -45,6 +45,11 @@ func (t *Ticket) Fields(ticketSystem string) map[string]interface{} {
 	return t.DefaultFields
 }
 
+func (t *Ticket) UpdateDefaultFields(fields map[string]interface{}) {
+	combinedFields := MergeFields(t.DefaultFields, fields)
+	t.DefaultFields = combinedFields
+}
+
 func MergeFields(
 	baseFields map[string]interface{},
 	overlayFields map[string]interface{}) map[string]interface{} {

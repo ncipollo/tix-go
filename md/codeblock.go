@@ -3,6 +3,7 @@ package md
 import (
 	"bytes"
 	"github.com/yuin/goldmark/ast"
+	"gopkg.in/yaml.v2"
 	"strings"
 	"tix/ticket/body"
 )
@@ -27,12 +28,20 @@ func (c CodeBlockSegmentParser) parseFencedBlock(state *State, node *ast.FencedC
 	code := c.textFromBlock(state, node.BaseBlock)
 	languageData := node.Language(state.SourceData)
 	language := string(languageData)
-	if strings.ToLower(language) == "tix" {
-		c.addTicketMetadata(state, code)
-	} else {
+
+	var err error
+	switch strings.ToLower(language) {
+	case "tix":
+		err = c.addDefaultFields(state, code)
+	case "jira":
+		err = c.addJiraFields(state, code)
+	case "github":
+		err = c.addGithubFields(state, code)
+	default:
 		c.addCodeBlockSegment(state, code, language)
 	}
-	return nil
+
+	return err
 }
 
 func (c CodeBlockSegmentParser) parseNormalBlock(state *State, node *ast.CodeBlock) error {
@@ -61,7 +70,35 @@ func (c CodeBlockSegmentParser) addCodeBlockSegment(state *State, code string, l
 	currentTicket.AddBodyLineBreak()
 }
 
-func (c CodeBlockSegmentParser) addTicketMetadata(state *State, code string) {
+func (c CodeBlockSegmentParser) addDefaultFields(state *State, code string) error {
 	currentTicket := state.CurrentTicket()
-	currentTicket.Metadata = code
+	fields, err := c.fieldsFromMetadata(code)
+	if err == nil {
+		currentTicket.UpdateDefaultFields(fields)
+	}
+	return err
+}
+
+func (c CodeBlockSegmentParser) addJiraFields(state *State, code string) error {
+	currentTicket := state.CurrentTicket()
+	fields, err := c.fieldsFromMetadata(code)
+	if err == nil {
+		currentTicket.AddFieldsForTicketSystem(fields, "jira")
+	}
+	return err
+}
+
+func (c CodeBlockSegmentParser) addGithubFields(state *State, code string) error {
+	currentTicket := state.CurrentTicket()
+	fields, err := c.fieldsFromMetadata(code)
+	if err == nil {
+		currentTicket.AddFieldsForTicketSystem(fields, "github")
+	}
+	return err
+}
+
+func (c CodeBlockSegmentParser) fieldsFromMetadata(code string) (map[string]interface{}, error) {
+	fields := make(map[string]interface{})
+	err := yaml.Unmarshal([]byte(code), fields)
+	return fields, err
 }
