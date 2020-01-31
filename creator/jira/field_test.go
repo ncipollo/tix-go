@@ -118,7 +118,7 @@ func TestIssueFields_IssueType_DefinedType(t *testing.T) {
 
 func TestIssueFields_Labels_EmptyForInvalidType(t *testing.T) {
 	ticketFields := map[string]interface{}{
-		"labels" : 42,
+		"labels": 42,
 	}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
@@ -129,17 +129,28 @@ func TestIssueFields_Labels_EmptyForInvalidType(t *testing.T) {
 
 func TestIssueFields_Labels_WithLabels(t *testing.T) {
 	ticketFields := map[string]interface{}{
-		"labels" : []string {"label1", "label2"},
+		"labels": []string{"label1", "label2"},
 	}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
 	labels := issueFields.Labels()
 
-	expected := []string {"label1", "label2"}
+	expected := []string{"label1", "label2"}
 	assert.Equal(t, expected, labels)
 }
 
-func TestIssueFields_Project(t *testing.T) {
+func TestIssueFields_Project_EmptyIfMissing(t *testing.T) {
+	ticketFields := map[string]interface{}{
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	project := issueFields.Project()
+
+	expected := jira.Project{Key: ""}
+	assert.Equal(t, expected, project)
+}
+
+func TestIssueFields_Project_WithProject(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"project": "test",
 	}
@@ -172,7 +183,6 @@ func TestIssueFields_TaskType_DefaultType(t *testing.T) {
 	expected := jira.IssueType{Name: "Task"}
 	assert.Equal(t, expected, issueType)
 }
-
 
 func TestIssueFields_Unknowns(t *testing.T) {
 	ticketFields := map[string]interface{}{

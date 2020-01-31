@@ -48,7 +48,7 @@ func NewIssueFields(jiraFields []jira.Field, ticket *ticket.Ticket) *IssueFields
 func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name string) {
 	epicNameKey := i.fieldInfo["epic name"].ID
 	epicName, ok := unknowns[epicNameKey].(string)
-	if !ok ||  len(epicName) == 0 {
+	if !ok || len(epicName) == 0 {
 		unknowns[epicNameKey] = name
 	}
 }
@@ -100,7 +100,10 @@ func (i *IssueFields) IssueType() jira.IssueType {
 }
 
 func (i *IssueFields) Project() jira.Project {
-	project := i.ticket.Fields[KeyProject].(string)
+	project, ok := i.ticket.Fields[KeyProject].(string)
+	if !ok {
+		project = ""
+	}
 	return jira.Project{
 		Key: project,
 	}
