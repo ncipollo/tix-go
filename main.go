@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"tix/cmd"
+	"tix/logger"
 )
 
 var version = "0.0"
@@ -15,6 +16,7 @@ func main() {
 		if err == nil {
 			os.Exit(0)
 		} else {
+			logger.Error("%v", err)
 			os.Exit(1)
 		}
 	}

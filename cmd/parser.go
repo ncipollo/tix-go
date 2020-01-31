@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
+	"tix/env"
 )
 
 const versionUsage = "prints tix version"
@@ -34,8 +36,14 @@ func (parser *Parser) Parse() Command {
 	_ = parser.flag.Parse(os.Args[1:])
 	if *version {
 		return NewVersionCommand(parser.version)
+	} else {
+		if parser.flag.NArg() < 1 {
+			parser.printUsageAndExit()
+		}
+		path, _ := parser.localPath()
+
+		return NewTixCommand(env.Map(), path)
 	}
-	return nil
 }
 
 func (parser *Parser) setupVersion() *bool {
@@ -43,4 +51,14 @@ func (parser *Parser) setupVersion() *bool {
 	parser.flag.BoolVar(&verbose, "version", false, versionUsage)
 
 	return &verbose
+}
+
+func (parser *Parser) printUsageAndExit() {
+	parser.flag.Usage()
+	os.Exit(2)
+}
+
+func (parser *Parser) localPath() (string, error) {
+	relativePath := parser.flag.Arg(1)
+	return filepath.Abs(relativePath)
 }
