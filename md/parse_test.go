@@ -22,7 +22,9 @@ func TestParse(t *testing.T) {
 	fields := map[string]interface{}{
 		"foo": "bar",
 	}
-	parser := NewParser(fields)
+	fieldState := NewFieldState()
+	fieldState.SetDefaultFields(fields)
+	parser := NewParser(fieldState)
 	tickets, err := parser.Parse(source)
 
 	expectedTickets := []*ticket.Ticket{

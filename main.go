@@ -31,13 +31,25 @@ func main() {
 }
 
 func withMarkDown() {
-	ticketFields := map[string]interface{}{
+	defaultFields := map[string]interface{}{
 		"components": []string{"Android SDK"},
 		"labels":     []string{"higgs-pod"},
 		"project":    "SDK",
 	}
+	epicFields := map[string]interface{}{
+		"epic name": "Nick Test Epic",
+		"labels":     []string{"higgs-pod"},
+		"project":    "SDK",
+	}
+	issueFields := map[string]interface{}{
+		"design review type": "No design review required",
+	}
+	fieldState := md2.NewFieldState()
+	fieldState.SetDefaultFields(defaultFields)
+	fieldState.SetFieldsForLevel(epicFields, 1)
+	fieldState.SetFieldsForLevel(issueFields, 2)
 
-	parser := md2.NewParser(ticketFields)
+	parser := md2.NewParser(fieldState)
 	tickets, _ := parser.Parse([]byte(md))
 
 	envMap := env.Map()
