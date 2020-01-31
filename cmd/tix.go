@@ -64,7 +64,7 @@ func (t TixCommand) generateJiraTickets(markdownData []byte, settings settings.S
 		return err
 	}
 
-	fieldState := md.NewFieldState()
+	fieldState := t.jiraFieldState(settings)
 	markdownParser := md.NewParser(fieldState)
 	tickets, err := markdownParser.Parse(markdownData)
 
@@ -97,4 +97,22 @@ func (t TixCommand) checkJiraEnvironment() error {
 		return errors.New(message)
 	}
 	return nil
+}
+
+func (t TixCommand) jiraFieldState(settings settings.Settings) *md.FieldState {
+	fieldState := md.NewFieldState()
+	ticketSettings := settings.Jira.Tickets
+	if ticketSettings.Default != nil {
+		fieldState.SetDefaultFields(ticketSettings.Default)
+	}
+	if ticketSettings.Epic != nil {
+		fieldState.SetFieldsForLevel(ticketSettings.Default, 0)
+	}
+	if ticketSettings.Issue != nil {
+		fieldState.SetFieldsForLevel(ticketSettings.Issue, 1)
+	}
+	if ticketSettings.Task != nil {
+		fieldState.SetFieldsForLevel(ticketSettings.Task, 2)
+	}
+	return fieldState
 }

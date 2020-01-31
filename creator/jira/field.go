@@ -54,13 +54,17 @@ func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name s
 }
 
 func (i *IssueFields) Components() []*jira.Component {
-	components, ok := i.ticket.Fields("jira")[KeyComponents].([]string)
+	components, ok := i.ticket.Fields("jira")[KeyComponents].([]interface{})
 	if !ok {
-		components = make([]string, 0)
+		components = make([]interface{}, 0)
 	}
 	jiraComps := make([]*jira.Component, 0)
 	for _, component := range components {
-		jiraComp := &jira.Component{Name: component}
+		compString, ok := component.(string)
+		if !ok {
+			compString = ""
+		}
+		jiraComp := &jira.Component{Name: compString}
 		jiraComps = append(jiraComps, jiraComp)
 	}
 	return jiraComps
@@ -81,9 +85,16 @@ func (i *IssueFields) EpicType() jira.IssueType {
 }
 
 func (i *IssueFields) Labels() []string {
-	labels, ok := i.ticket.Fields("jira")[KeyLabels].([]string)
+	labels, ok := i.ticket.Fields("jira")[KeyLabels].([]interface{})
 	if ok {
-		return labels
+		labelStrings := make([]string,0)
+		for _, label := range labels {
+			labelString, ok := label.(string)
+			if ok {
+				labelStrings = append(labelStrings, labelString)
+			}
+		}
+		return labelStrings
 	} else {
 		return make([]string, 0)
 	}

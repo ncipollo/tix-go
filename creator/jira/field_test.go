@@ -63,7 +63,7 @@ func TestIssueFields_Components_EmptyForInvalidType(t *testing.T) {
 
 func TestIssueFields_Components_WithComponents(t *testing.T) {
 	ticketFields := map[string]interface{}{
-		"components": []string{"one", "two"},
+		"components": []interface{}{"one", "two"},
 	}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
@@ -129,7 +129,7 @@ func TestIssueFields_Labels_EmptyForInvalidType(t *testing.T) {
 
 func TestIssueFields_Labels_WithLabels(t *testing.T) {
 	ticketFields := map[string]interface{}{
-		"labels": []string{"label1", "label2"},
+		"labels": []interface{}{"label1", "label2"},
 	}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 

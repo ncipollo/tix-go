@@ -68,7 +68,7 @@ func TestIssues_FromTicket_Story(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(newTicket, &jira.Issue{Key:"parent"}, 2)
+	newIssue := issues.FromTicket(newTicket, &jira.Issue{Key: "parent"}, 2)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -96,7 +96,7 @@ func TestIssues_FromTicket_Task(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(newTicket, &jira.Issue{ID:"1"}, 3)
+	newIssue := issues.FromTicket(newTicket, &jira.Issue{ID: "1"}, 3)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -131,8 +131,8 @@ func createIssues() *Issues {
 
 func createTicket() *ticket.Ticket {
 	ticketFields := map[string]interface{}{
-		"components": []string{"component1", "component2"},
-		"labels":     []string{"label1", "label2"},
+		"components": []interface{}{"component1", "component2"},
+		"labels":     []interface{}{"label1", "label2"},
 		"epic name":  "epic",
 		"project":    "project",
 		"random":     "random",
