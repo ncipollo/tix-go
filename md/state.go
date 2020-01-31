@@ -8,12 +8,12 @@ type State struct {
 	ListState    *ListState
 	RootTickets  []*ticket.Ticket
 	SourceData   []byte
-	TicketFields map[string]interface{}
+	ticketFields map[string]interface{}
 	TicketPath   []*ticket.Ticket
 }
 
 func newState(sourceData []byte, ticketFields map[string]interface{}) *State {
-	return &State{ListState: NewListState(), SourceData: sourceData, TicketFields: ticketFields}
+	return &State{ListState: NewListState(), SourceData: sourceData, ticketFields: ticketFields}
 }
 
 func (s *State) CurrentTicket() *ticket.Ticket {
@@ -39,7 +39,7 @@ func (s *State) NeedsTicketTitle() bool {
 
 func (s *State) StartTicket() {
 	currentTicket := s.CurrentTicket()
-	newTicket := ticket.NewTicketWithFields(s.TicketFields)
+	newTicket := ticket.NewTicketWithFields(s.ticketFields)
 
 	if currentTicket != nil {
 		currentTicket.AddSubticket(newTicket)
