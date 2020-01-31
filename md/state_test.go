@@ -26,9 +26,13 @@ func Test_state_CompleteTicket_AddsToRootTickets(t *testing.T) {
 	state.CurrentTicket().Title = "2"
 	state.CompleteTicket()
 
+	expectedTicket1 := ticket.NewTicketWithFields(make(map[string]interface {}))
+	expectedTicket1.Title = "1"
+	expectedTicket2 := ticket.NewTicketWithFields(make(map[string]interface {}))
+	expectedTicket2.Title = "2"
 	assert.Len(t, state.RootTickets, 2)
-	assert.Equal(t, &ticket.Ticket{Title: "1", DefaultFields: make(map[string]interface{})}, state.RootTickets[0])
-	assert.Equal(t, &ticket.Ticket{Title: "2", DefaultFields: make(map[string]interface{})}, state.RootTickets[1])
+	assert.Equal(t, expectedTicket1, state.RootTickets[0])
+	assert.Equal(t, expectedTicket2, state.RootTickets[1])
 }
 
 func Test_state_CompleteTicket_PopsAllTickets(t *testing.T) {
@@ -122,10 +126,14 @@ func Test_state_StartTicket_LinksTickets(t *testing.T) {
 	state.StartTicket()
 	state.CurrentTicket().Title = "2"
 
+	expectedTicket1 := ticket.NewTicketWithFields(make(map[string]interface {}))
+	expectedTicket1.Title = "1"
+	expectedTicket2 := ticket.NewTicketWithFields(make(map[string]interface {}))
+	expectedTicket2.Title = "2"
 	rootTicket := state.TicketPath[0]
 	assert.Len(t, rootTicket.Subtickets, 2)
-	assert.Equal(t, &ticket.Ticket{Title: "1", DefaultFields: make(map[string]interface{})}, rootTicket.Subtickets[0])
-	assert.Equal(t, &ticket.Ticket{Title: "2", DefaultFields: make(map[string]interface{})}, rootTicket.Subtickets[1])
+	assert.Equal(t, expectedTicket1, rootTicket.Subtickets[0])
+	assert.Equal(t, expectedTicket2, rootTicket.Subtickets[1])
 }
 
 func TestState_TicketLevel(t *testing.T) {

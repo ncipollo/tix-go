@@ -4,7 +4,7 @@ import "tix/ticket/body"
 
 type Ticket struct {
 	DefaultFields        map[string]interface{}
-	FieldsByTicketSystem map[string]map[string]interface{}
+	fieldsByTicketSystem map[string]map[string]interface{}
 	Metadata             interface{}
 	Title                string
 	Body                 []body.Segment
@@ -12,7 +12,7 @@ type Ticket struct {
 }
 
 func NewTicketWithFields(fields map[string]interface{}) *Ticket {
-	return &Ticket{DefaultFields: fields}
+	return &Ticket{DefaultFields: fields, fieldsByTicketSystem: make(map[string]map[string]interface{})}
 }
 
 func NewTicket() *Ticket {
@@ -30,7 +30,7 @@ func (t *Ticket) AddBodyLineBreak() {
 
 func (t *Ticket) AddFieldsForTicketSystem(fields map[string]interface{}, ticketSystem string) {
 	combinedFields := MergeFields(t.DefaultFields, fields)
-	t.FieldsByTicketSystem[ticketSystem] = combinedFields
+	t.fieldsByTicketSystem[ticketSystem] = combinedFields
 }
 
 func (t *Ticket) AddSubticket(ticket *Ticket) {
@@ -38,7 +38,7 @@ func (t *Ticket) AddSubticket(ticket *Ticket) {
 }
 
 func (t *Ticket) Fields(ticketSystem string) map[string]interface{} {
-	fields := t.FieldsByTicketSystem[ticketSystem]
+	fields := t.fieldsByTicketSystem[ticketSystem]
 	if fields != nil {
 		return fields
 	}

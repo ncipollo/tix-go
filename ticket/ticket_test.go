@@ -31,3 +31,40 @@ func TestTicket_AddSubticket(t *testing.T) {
 
 	assert.Equal(t, []*Ticket{subticket}, ticket.Subtickets)
 }
+
+func TestTicket_Fields_ReturnsDefaultFields(t *testing.T) {
+	defaultFields := map[string]interface{}{
+		"default": "default",
+	}
+	jiraFields := map[string]interface{}{
+		"jira": "jira",
+	}
+	ticket := NewTicketWithFields(defaultFields)
+
+	ticket.AddFieldsForTicketSystem(jiraFields, "jira")
+	combinedFields := ticket.Fields("github")
+
+	expected := map[string]interface{}{
+		"default": "default",
+	}
+	assert.Equal(t, expected, combinedFields)
+}
+
+func TestTicket_Fields_ReturnsTicketSystemSpecificFields(t *testing.T) {
+	defaultFields := map[string]interface{}{
+		"default": "default",
+	}
+	jiraFields := map[string]interface{}{
+		"jira": "jira",
+	}
+	ticket := NewTicketWithFields(defaultFields)
+
+	ticket.AddFieldsForTicketSystem(jiraFields, "jira")
+	combinedFields := ticket.Fields("jira")
+
+	expected := map[string]interface{}{
+		"default": "default",
+		"jira":    "jira",
+	}
+	assert.Equal(t, expected, combinedFields)
+}

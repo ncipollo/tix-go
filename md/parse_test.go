@@ -27,24 +27,15 @@ func TestParse(t *testing.T) {
 	parser := NewParser(fieldState)
 	tickets, err := parser.Parse(source)
 
-	expectedTickets := []*ticket.Ticket{
-		{
-			DefaultFields: fields,
-			Title:         "Epic 1",
-			Body: []body.Segment{
-				body.NewTextSegment("Body 1"),
-				body.NewLineBreakSegment(),
-			},
-		},
-		{
-			DefaultFields: fields,
-			Title:         "Epic 2",
-			Body: []body.Segment{
-				body.NewTextSegment("Body 2"),
-				body.NewLineBreakSegment(),
-			},
-		},
-	}
+	expectedTicket1 := ticket.NewTicketWithFields(fields)
+	expectedTicket1.Title = "Epic 1"
+	expectedTicket1.AddBodySegment(body.NewTextSegment("Body 1"))
+	expectedTicket1.AddBodyLineBreak()
+	expectedTicket2 := ticket.NewTicketWithFields(fields)
+	expectedTicket2.Title = "Epic 2"
+	expectedTicket2.AddBodySegment(body.NewTextSegment("Body 2"))
+	expectedTicket2.AddBodyLineBreak()
+	expectedTickets := []*ticket.Ticket{expectedTicket1,expectedTicket2}
 	assert.NoError(t, err)
 	assert.Equal(t, expectedTickets, tickets)
 }
