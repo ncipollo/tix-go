@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build:
+    name: Release
+    runs-on: ubuntu-latest
+    env:
+      GOPATH: ${{ github.workspace }}
+    steps:
+
+    - name: Set up Go 1.13.1
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13.1
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      with:
+        path: tix/src/tix
+
+    - name: Get version information
+      id: version
+      uses: ncipollo/semantic-version-action@v1
+
+    - name: Run make
+      env:
+        VERSION: ${{ steps.version.outputs.tag }}
+      run: make all
+
+    - name: Generate release diff
+      env:
+        BEGIN_COMMIT: ${{ steps.version.outputs.previous_tag }}
+        END_COMMIT: ${{ steps.version.outputs.tag }}
+      run: git diff ${BEGIN_COMMIT}..${END_COMMIT} > release_notes.txt
+
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        artifact: build/release.tar.gz
+        allowUpdates: true
+        bodyFile: release_notes.txt
+        draft: true
+        token: ${{ secrets.GITHUB_TOKEN }}
