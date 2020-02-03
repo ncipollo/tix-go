@@ -5,8 +5,8 @@ MAC_64_OUTPUT=$(BUILD_FOLDER)/mac64/$(BINARY_NAME)
 
 GO_BUILD=go build -ldflags "-X main.version=${VERSION}" -o
 
-all: deps test build tar
-build: build-linux build-mac
+all: deps test build
+build: build-linux build-mac tar
 clean:
 	go clean
 	rm -rf build
