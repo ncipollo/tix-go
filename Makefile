@@ -1,13 +1,16 @@
 BINARY_NAME=tix
 BUILD_FOLDER=build/release
 LINUX_64_OUTPUT=$(BUILD_FOLDER)/linux64/$(BINARY_NAME)
+LOCAL_OUTPUT="$(BUILD_FOLDER)/$(BINARY_NAME)
 MAC_64_OUTPUT=$(BUILD_FOLDER)/mac64/$(BINARY_NAME)
-WINDOWS_64_OUTPUT=$(BUILD_FOLDER)/windows64/$(BINARY_NAME)
+WINDOWS_64_OUTPUT=$(BUILD_FOLDER)/windows64/$(BINARY_NAME).exe
 
 GO_BUILD=go build -ldflags "-X main.version=${VERSION}" -o
 
-all: deps test build
-build: build-linux build-mac build-windows tar
+all: deps test build-linux build-mac build-windows tar
+brew: deps build
+build:
+	$(GO_BUILD) $(LOCAL_OUTPUT)
 clean:
 	go clean
 	rm -rf build
