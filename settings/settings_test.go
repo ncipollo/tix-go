@@ -16,6 +16,7 @@ func TestFromData_Empty(t *testing.T) {
 func TestFromData_NoError(t *testing.T) {
 	yaml := `
 jira:
+  no_epics: true
   url: https://api.example.com
   tickets:
     default: 
@@ -34,7 +35,8 @@ variables:
 	expected := Settings{
 		Github: Github{},
 		Jira: Jira{
-			Url: "https://api.example.com",
+			NoEpics: true,
+			Url:     "https://api.example.com",
 			Tickets: JiraTicketFields{
 				Default: map[string]interface{}{"default": "default",},
 				Epic:    map[string]interface{}{"epic": "epic",},

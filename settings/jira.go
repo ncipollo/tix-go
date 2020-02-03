@@ -1,6 +1,7 @@
 package settings
 
 type Jira struct {
+	NoEpics bool  `yaml:"no_epics"`
 	Url string
 	Tickets JiraTicketFields
 }
