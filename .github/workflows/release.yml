@@ -38,7 +38,7 @@ jobs:
       env:
         BEGIN_COMMIT: ${{ steps.version.outputs.previous_tag }}
         END_COMMIT: ${{ steps.version.outputs.tag }}
-      run: git diff ${BEGIN_COMMIT}..${END_COMMIT} > release_notes.txt
+      run: git log --all --graph --oneline ${BEGIN_COMMIT}..${END_COMMIT} > release_notes.txt
 
     - name: Create release
       uses: ncipollo/release-action@v1
