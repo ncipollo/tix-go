@@ -8,6 +8,7 @@ import (
 	"tix/creator/jira"
 	"tix/md"
 	"tix/settings"
+	"tix/transform"
 )
 
 const EnvJiraApiToken = "JIRA_API_TOKEN"
@@ -36,6 +37,11 @@ func (t TixCommand) Run() error {
 		return err
 	}
 	markdownData, err := t.loadMarkDownData()
+	if err != nil {
+		return err
+	}
+
+	markdownData = t.transformMarkDownData(markdownData, tixSettings)
 
 	return t.generateJiraTickets(markdownData, tixSettings)
 }
@@ -52,6 +58,10 @@ func (t TixCommand) loadSettings() (settings.Settings, error) {
 
 func (t TixCommand) loadMarkDownData() ([]byte, error) {
 	return ioutil.ReadFile(t.markdownPath)
+}
+
+func (t TixCommand) transformMarkDownData(markdownData []byte, settings settings.Settings) []byte {
+	return transform.ApplyVariableTransform(markdownData, t.envMap, settings.Variables)
 }
 
 func (t TixCommand) generateJiraTickets(markdownData []byte, settings settings.Settings) error {
