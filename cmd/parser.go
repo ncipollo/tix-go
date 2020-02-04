@@ -6,9 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"tix/env"
+	"tix/logger"
 )
 
+const quietUsage = "suppresses all log output except errors"
+const verboseUsage = "enables verbose output"
 const versionUsage = "prints tix version"
+const shortHandSuffix = " (shorthand)"
 
 type Parser struct {
 	env     []string
@@ -31,9 +35,14 @@ func NewParser(env []string, version string) *Parser {
 
 
 func (parser *Parser) Parse() Command {
+	quiet := parser.setupQuiet()
+	verbose := parser.setupVerbose()
 	version := parser.setupVersion()
 
 	_ = parser.flag.Parse(os.Args[1:])
+
+	parser.adjustLogLevel(*quiet, *verbose)
+
 	if *version {
 		return NewVersionCommand(parser.version)
 	} else {
@@ -43,6 +52,22 @@ func (parser *Parser) Parse() Command {
 		path, _ := parser.localPath()
 		return NewTixCommand(env.Map(), path)
 	}
+}
+
+func (parser *Parser) setupQuiet() *bool {
+	var verbose bool
+	parser.flag.BoolVar(&verbose, "quiet", false, quietUsage)
+	parser.flag.BoolVar(&verbose, "q", false, quietUsage+shortHandSuffix)
+
+	return &verbose
+}
+
+func (parser *Parser) setupVerbose() *bool {
+	var verbose bool
+	parser.flag.BoolVar(&verbose, "verbose", false, verboseUsage)
+	parser.flag.BoolVar(&verbose, "v", false, verboseUsage+shortHandSuffix)
+
+	return &verbose
 }
 
 func (parser *Parser) setupVersion() *bool {
@@ -55,6 +80,16 @@ func (parser *Parser) setupVersion() *bool {
 func (parser *Parser) printUsageAndExit() {
 	parser.flag.Usage()
 	os.Exit(2)
+}
+
+func (parser Parser) adjustLogLevel(quiet bool, verbose bool) {
+	if quiet {
+		logger.SetLogLevel(logger.LogLevelQuiet)
+	} else if verbose {
+		logger.SetLogLevel(logger.LogLevelVerbose)
+	} else {
+		logger.SetLogLevel(logger.LogLevelNormal)
+	}
 }
 
 func (parser *Parser) localPath() (string, error) {
