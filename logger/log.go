@@ -15,6 +15,10 @@ const (
 
 var currentLogLevel LogLevel = LogLevelNormal
 
+func CurrentLogLevel() LogLevel {
+	return currentLogLevel;
+}
+
 func SetLogLevel(level LogLevel) {
 	currentLogLevel = level
 }
