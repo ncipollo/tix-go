@@ -26,7 +26,10 @@ func (p *TicketParser) Parse(state *State, rootNode ast.Node) error {
 			if state.TicketLevel() == 0 {
 				return errors.New(":scream: ticket information must be under a heading")
 			}
-			ParseBody(state, node)
+			err := ParseBody(state, node)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
