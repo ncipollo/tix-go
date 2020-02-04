@@ -3,6 +3,7 @@ package jira
 import (
 	"errors"
 	"github.com/andygrunwald/go-jira"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
 	"tix/ticket"
@@ -22,7 +23,7 @@ var jiraFields = []jira.Field{
 
 func TestCreator_CreateTickets_NoFieldsError(t *testing.T) {
 	api := NewMockApi(nil)
-	creator := NewCreator(api, 0)
+	creator := NewCreatorWithEpics(api)
 	rootTicket1 := ticket.NewTicket()
 	rootTicket2 := ticket.NewTicket()
 	childTicket := ticket.NewTicket()
@@ -37,7 +38,7 @@ func TestCreator_CreateTickets_NoFieldsError(t *testing.T) {
 
 func TestCreator_CreateTickets_WithFieldsError(t *testing.T) {
 	api := NewMockApi(errors.New("oh noes"))
-	creator := NewCreator(api, 0)
+	creator := NewCreatorWithEpics(api)
 	rootTicket1 := ticket.NewTicket()
 	rootTicket2 := ticket.NewTicket()
 	childTicket := ticket.NewTicket()
@@ -47,6 +48,18 @@ func TestCreator_CreateTickets_WithFieldsError(t *testing.T) {
 	creator.CreateTickets(tickets)
 	api.AssertCalled(t, "GetIssueFieldList")
 	api.AssertNotCalled(t, "CreateIssue", mock.AnythingOfType("*jira.Issue"))
+}
+
+func TestNewCreatorWithEpics(t *testing.T) {
+	api := NewMockApi(nil)
+	creator := NewCreatorWithEpics(api)
+	assert.Equal(t, creator.startingTicketLevel, 0)
+}
+
+func TestNewCreatorWithoutEpics(t *testing.T) {
+	api := NewMockApi(nil)
+	creator := NewCreatorWithoutEpics(api)
+	assert.Equal(t, creator.startingTicketLevel, 1)
 }
 
 type MockApi struct {

@@ -141,11 +141,9 @@ func (t TixCommand) jiraFieldStateWithoutEpics(settings settings.Settings) *md.F
 
 func (t TixCommand) jiraCreator(settings settings.Settings) *jira.Creator {
 	api := jira.NewApi(t.envMap[EnvJiraUsername], t.envMap[EnvJiraApiToken], settings.Jira.Url)
-	var startingLevel int
 	if settings.Jira.NoEpics {
-		startingLevel = 1
+		return jira.NewCreatorWithoutEpics(api)
 	} else {
-		startingLevel = 0
+		return jira.NewCreatorWithEpics(api)
 	}
-	return jira.NewCreator(api, startingLevel)
 }

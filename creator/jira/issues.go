@@ -49,9 +49,11 @@ func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 func (i *Issues) story(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issue {
 	description := i.renderBody(ticket)
 	issueFields := NewIssueFields(i.jiraFields, ticket)
-	// Add epic link to unknowns
 	unknowns := issueFields.Unknowns()
-	unknowns[issueFields.EpicLinkKey()] = parentIssue.Key
+	if parentIssue != nil {
+		// Add epic link to unknowns
+		unknowns[issueFields.EpicLinkKey()] = parentIssue.Key
+	}
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -75,7 +77,7 @@ func (i *Issues) task(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issu
 			Components:  issueFields.Components(),
 			Description: description,
 			Labels:      issueFields.Labels(),
-			Type:        issueFields.IssueType(),
+			Type:        issueFields.TaskType(),
 			Project:     issueFields.Project(),
 			Parent:      &jira.Parent{ID: parentIssue.ID},
 			Summary:     ticket.Title,

@@ -14,8 +14,12 @@ type Creator struct {
 	startingTicketLevel int
 }
 
-func NewCreator(api Api, startingTicketLevel int) *Creator {
-	return &Creator{api, startingTicketLevel}
+func NewCreatorWithEpics(api Api) *Creator {
+	return &Creator{api, 0}
+}
+
+func NewCreatorWithoutEpics(api Api) *Creator {
+	return &Creator{api, 1}
 }
 
 func (j Creator) CreateTickets(tickets []*ticket.Ticket) {
@@ -52,7 +56,7 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 
 func (j Creator) reportFailedTicketCreate(err error, level int) {
 	var builder strings.Builder
-	for ii := 0; ii < level-1; ii++ {
+	for ii := j.startingTicketLevel; ii < level; ii++ {
 		builder.WriteString("\t")
 	}
 	builder.WriteString("- ")
@@ -63,7 +67,7 @@ func (j Creator) reportFailedTicketCreate(err error, level int) {
 
 func (j Creator) reportSuccessfulTicketCreate(issue *jira.Issue, level int) {
 	var builder strings.Builder
-	for ii := 0; ii < level-1; ii++ {
+	for ii := j.startingTicketLevel; ii < level; ii++ {
 		builder.WriteString("\t")
 	}
 	message := fmt.Sprintf("- :tada: %v created", issue.Key)
