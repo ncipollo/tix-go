@@ -14,6 +14,7 @@ func NewThematicBreakSegmentParser() *ThematicBreakSegmentParser {
 func (b ThematicBreakSegmentParser) Parse(state *State, node ast.Node) error {
 	currentTicket := state.CurrentTicket()
 
+	currentTicket.AddBodyLineBreak()
 	currentTicket.AddBodySegment(body.NewThematicBreakSegment())
 	currentTicket.AddBodyLineBreak()
 

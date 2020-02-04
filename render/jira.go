@@ -46,7 +46,7 @@ func (j JiraBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 }
 
 func (j JiraBodyRenderer) renderBlockQuoteItem() string {
-	return "bq. "
+	return "{quote}"
 }
 
 func (j JiraBodyRenderer) renderBulletListItem(segment *body.BulletListItemSegment) string {

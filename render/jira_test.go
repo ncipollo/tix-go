@@ -32,7 +32,7 @@ func TestJiraBodyRenderer_RenderSegment_BlockQuote(t *testing.T) {
 
 	text := renderer.RenderSegment(segment)
 
-	expected := "bq. "
+	expected := "{quote}"
 	assert.Equal(t, expected, text)
 }
 

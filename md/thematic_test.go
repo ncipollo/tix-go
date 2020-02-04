@@ -16,6 +16,7 @@ func TestThematicBreakSegmentParser_Parse(t *testing.T) {
 	err := parser.Parse(state, node)
 
 	expectedBody := []body.Segment{
+		body.NewLineBreakSegment(),
 		body.NewThematicBreakSegment(),
 		body.NewLineBreakSegment(),
 	}

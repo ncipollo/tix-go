@@ -24,6 +24,7 @@ func TestBlockQuoteSegmentParser_Parse(t *testing.T) {
 		body.NewLineBreakSegment(),
 		body.NewTextSegment("line2"),
 		body.NewLineBreakSegment(),
+		body.NewBlockQuoteSegment(),
 	}
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)

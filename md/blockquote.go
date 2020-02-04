@@ -17,6 +17,7 @@ func (b BlockQuoteSegmentParser) Parse(state *State, node ast.Node) error {
 
 	currentTicket.AddBodySegment(body.NewBlockQuoteSegment())
 	err := ParseBodyChildren(state, block)
+	currentTicket.AddBodySegment(body.NewBlockQuoteSegment())
 
 	return err
 }
