@@ -14,6 +14,8 @@ func NewJiraBodyRenderer() *JiraBodyRenderer {
 
 func (j JiraBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 	switch segment := bodySegment.(type) {
+	case *body.BlockQuoteSegment:
+		return j.renderBlockQuoteItem()
 	case *body.BulletListItemSegment:
 		return j.renderBulletListItem(segment)
 	case *body.CodeBlockSegment:
@@ -36,9 +38,15 @@ func (j JiraBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 		return segment.Value()
 	case *body.TextSegment:
 		return segment.Value()
+	case *body.ThematicBreakSegment:
+		return j.renderThematicBreak()
 	default:
 		return segment.Value()
 	}
+}
+
+func (j JiraBodyRenderer) renderBlockQuoteItem() string {
+	return "bq. "
 }
 
 func (j JiraBodyRenderer) renderBulletListItem(segment *body.BulletListItemSegment) string {
@@ -96,4 +104,8 @@ func (j JiraBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemSeg
 
 func (j JiraBodyRenderer) renderStrongEmphasis(segment *body.StrongEmphasisSegment) string {
 	return fmt.Sprintf("*%s*", segment.Value())
+}
+
+func (j JiraBodyRenderer) renderThematicBreak() string {
+	return "----"
 }

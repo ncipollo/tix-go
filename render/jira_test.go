@@ -26,6 +26,16 @@ func TestJiraBodyRenderer_RenderSegment_BulletListItem_LevelTwo(t *testing.T) {
 	assert.Equal(t, expected, text)
 }
 
+func TestJiraBodyRenderer_RenderSegment_BlockQuote(t *testing.T) {
+	segment := body.NewBlockQuoteSegment()
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "bq. "
+	assert.Equal(t, expected, text)
+}
+
 func TestJiraBodyRenderer_RenderSegment_CodeBlockSegment_NoLanguage(t *testing.T) {
 	segment := body.NewCodeBlockSegment("println()\n", "")
 	renderer := NewJiraBodyRenderer()
@@ -147,5 +157,15 @@ func TestJiraBodyRenderer_RenderSegment_Text(t *testing.T) {
 	text := renderer.RenderSegment(segment)
 
 	expected := "text"
+	assert.Equal(t, expected, text)
+}
+
+func TestJiraBodyRenderer_RenderSegment_ThematicBreak(t *testing.T) {
+	segment := body.NewThematicBreakSegment()
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "----"
 	assert.Equal(t, expected, text)
 }
