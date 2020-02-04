@@ -14,6 +14,18 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestParser_Parse_HelpCommand(t *testing.T) {
+	parser := setupParser("-help")
+	cmd := parser.Parse()
+	assert.IsType(t, &HelpCommand{}, cmd)
+}
+
+func TestParser_Parse_HelpCommand_Shorthand(t *testing.T) {
+	parser := setupParser("-h")
+	cmd := parser.Parse()
+	assert.IsType(t, &HelpCommand{}, cmd)
+}
+
 func TestParser_Parse_QuietLogLevel(t *testing.T) {
 	parser := setupParser("-quiet", "foo.md")
 	parser.Parse()
@@ -51,6 +63,6 @@ func TestParser_Parse_VersionCommand(t *testing.T) {
 }
 
 func setupParser(args ...string) *Parser {
-	os.Args = append([]string{"fnew"}, args...)
+	os.Args = append([]string{"tix"}, args...)
 	return NewParser([]string{}, TixVersion)
 }
