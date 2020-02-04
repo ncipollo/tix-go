@@ -12,6 +12,8 @@ type BodySegmentParser interface {
 
 func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 	switch kind {
+	case ast.KindBlockquote:
+		return NewBlockQuoteSegmentParser(), nil
 	case ast.KindCodeBlock:
 		return NewCodeBlockSegmentParser(false), nil
 	case ast.KindFencedCodeBlock:
@@ -40,7 +42,6 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 
 func UnsupportedMarkdownKinds() []ast.NodeKind {
 	return []ast.NodeKind{
-		ast.KindBlockquote,
 		ast.KindHTMLBlock,
 		ast.KindThematicBreak,
 		ast.KindAutoLink,
