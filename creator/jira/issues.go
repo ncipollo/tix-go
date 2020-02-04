@@ -17,9 +17,9 @@ func NewIssues(jiraFields []jira.Field, renderer render.BodyRenderer) *Issues {
 
 func (i *Issues) FromTicket(ticket *ticket.Ticket, parentIssue *jira.Issue, ticketLevel int) *jira.Issue {
 	switch ticketLevel {
-	case 1:
+	case 0:
 		return i.epic(ticket)
-	case 2:
+	case 1:
 		return i.story(ticket, parentIssue)
 	default:
 		return i.task(ticket, parentIssue)

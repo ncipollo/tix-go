@@ -22,7 +22,7 @@ var jiraFields = []jira.Field{
 
 func TestCreator_CreateTickets_NoFieldsError(t *testing.T) {
 	api := NewMockApi(nil)
-	creator := NewCreator(api)
+	creator := NewCreator(api, 0)
 	rootTicket1 := ticket.NewTicket()
 	rootTicket2 := ticket.NewTicket()
 	childTicket := ticket.NewTicket()
@@ -37,7 +37,7 @@ func TestCreator_CreateTickets_NoFieldsError(t *testing.T) {
 
 func TestCreator_CreateTickets_WithFieldsError(t *testing.T) {
 	api := NewMockApi(errors.New("oh noes"))
-	creator := NewCreator(api)
+	creator := NewCreator(api, 0)
 	rootTicket1 := ticket.NewTicket()
 	rootTicket2 := ticket.NewTicket()
 	childTicket := ticket.NewTicket()

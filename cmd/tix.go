@@ -72,8 +72,7 @@ func (t TixCommand) generateJiraTickets(markdownData []byte, settings settings.S
 		return err
 	}
 
-	api := jira.NewApi(t.envMap[EnvJiraUsername], t.envMap[EnvJiraApiToken], settings.Jira.Url)
-	creator := jira.NewCreator(api)
+	creator := t.jiraCreator(settings)
 	creator.CreateTickets(tickets)
 
 	return nil
@@ -100,13 +99,21 @@ func (t TixCommand) checkJiraEnvironment() error {
 }
 
 func (t TixCommand) jiraFieldState(settings settings.Settings) *md.FieldState {
+	if settings.Jira.NoEpics {
+		return t.jiraFieldStateWithoutEpics(settings)
+	} else {
+		return t.jiraFieldStateWithEpics(settings)
+	}
+}
+
+func (t TixCommand) jiraFieldStateWithEpics(settings settings.Settings) *md.FieldState {
 	fieldState := md.NewFieldState()
 	ticketSettings := settings.Jira.Tickets
 	if ticketSettings.Default != nil {
 		fieldState.SetDefaultFields(ticketSettings.Default)
 	}
 	if ticketSettings.Epic != nil {
-		fieldState.SetFieldsForLevel(ticketSettings.Default, 0)
+		fieldState.SetFieldsForLevel(ticketSettings.Epic, 0)
 	}
 	if ticketSettings.Issue != nil {
 		fieldState.SetFieldsForLevel(ticketSettings.Issue, 1)
@@ -115,4 +122,30 @@ func (t TixCommand) jiraFieldState(settings settings.Settings) *md.FieldState {
 		fieldState.SetFieldsForLevel(ticketSettings.Task, 2)
 	}
 	return fieldState
+}
+
+func (t TixCommand) jiraFieldStateWithoutEpics(settings settings.Settings) *md.FieldState {
+	fieldState := md.NewFieldState()
+	ticketSettings := settings.Jira.Tickets
+	if ticketSettings.Default != nil {
+		fieldState.SetDefaultFields(ticketSettings.Default)
+	}
+	if ticketSettings.Issue != nil {
+		fieldState.SetFieldsForLevel(ticketSettings.Issue, 0)
+	}
+	if ticketSettings.Task != nil {
+		fieldState.SetFieldsForLevel(ticketSettings.Task, 1)
+	}
+	return fieldState
+}
+
+func (t TixCommand) jiraCreator(settings settings.Settings) *jira.Creator {
+	api := jira.NewApi(t.envMap[EnvJiraUsername], t.envMap[EnvJiraApiToken], settings.Jira.Url)
+	var startingLevel int
+	if settings.Jira.NoEpics {
+		startingLevel = 1
+	} else {
+		startingLevel = 0
+	}
+	return jira.NewCreator(api, startingLevel)
 }

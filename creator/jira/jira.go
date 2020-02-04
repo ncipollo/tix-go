@@ -10,11 +10,12 @@ import (
 )
 
 type Creator struct {
-	api Api
+	api                 Api
+	startingTicketLevel int
 }
 
-func NewCreator(api Api) *Creator {
-	return &Creator{api: api}
+func NewCreator(api Api, startingTicketLevel int) *Creator {
+	return &Creator{api, startingTicketLevel}
 }
 
 func (j Creator) CreateTickets(tickets []*ticket.Ticket) {
@@ -22,7 +23,7 @@ func (j Creator) CreateTickets(tickets []*ticket.Ticket) {
 	if err != nil {
 		logger.Error("%v", err)
 	} else {
-		j.createTicketsForLevel(tickets, issues, 1, nil)
+		j.createTicketsForLevel(tickets, issues, j.startingTicketLevel, nil)
 	}
 }
 

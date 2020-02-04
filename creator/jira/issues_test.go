@@ -13,7 +13,7 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(newTicket, nil, 1)
+	newIssue := issues.FromTicket(newTicket, nil, 0)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -41,7 +41,7 @@ func TestIssues_FromTicket_Epic_DefaultEpicName(t *testing.T) {
 	newTicket := createTicket()
 	newTicket.DefaultFields["epic name"] = ""
 
-	newIssue := issues.FromTicket(newTicket, nil, 1)
+	newIssue := issues.FromTicket(newTicket, nil, 0)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -68,7 +68,7 @@ func TestIssues_FromTicket_Story(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(newTicket, &jira.Issue{Key: "parent"}, 2)
+	newIssue := issues.FromTicket(newTicket, &jira.Issue{Key: "parent"}, 1)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
@@ -96,7 +96,7 @@ func TestIssues_FromTicket_Task(t *testing.T) {
 	issues := createIssues()
 	newTicket := createTicket()
 
-	newIssue := issues.FromTicket(newTicket, &jira.Issue{ID: "1"}, 3)
+	newIssue := issues.FromTicket(newTicket, &jira.Issue{ID: "1"}, 2)
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
