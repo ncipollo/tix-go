@@ -34,6 +34,8 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 		return NewTextSegmentParser(), nil
 	case ast.KindTextBlock:
 		return NewTextBlockSegmentParser(), nil
+	case ast.KindThematicBreak:
+		return NewThematicBreakSegmentParser(), nil
 	default:
 		message := fmt.Sprintf("no body parser for markdown element type %v", kind)
 		return nil, errors.New(message)
@@ -43,7 +45,6 @@ func BodyParserForKind(kind ast.NodeKind) (BodySegmentParser, error) {
 func UnsupportedMarkdownKinds() []ast.NodeKind {
 	return []ast.NodeKind{
 		ast.KindHTMLBlock,
-		ast.KindThematicBreak,
 		ast.KindAutoLink,
 		ast.KindImage,
 		ast.KindRawHTML,
