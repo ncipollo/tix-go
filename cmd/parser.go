@@ -9,6 +9,7 @@ import (
 	"tix/logger"
 )
 
+const helpUsage = "prints help for tix"
 const quietUsage = "suppresses all log output except errors"
 const verboseUsage = "enables verbose output"
 const versionUsage = "prints tix version"
@@ -19,7 +20,6 @@ type Parser struct {
 	flag    *flag.FlagSet
 	version string
 }
-
 
 func NewParser(env []string, version string) *Parser {
 	name := os.Args[0]
@@ -33,9 +33,9 @@ func NewParser(env []string, version string) *Parser {
 	return &Parser{env: env, flag: flagSet, version: version}
 }
 
-
 func (parser *Parser) Parse() Command {
 	quiet := parser.setupQuiet()
+	help := parser.setupHelp()
 	verbose := parser.setupVerbose()
 	version := parser.setupVersion()
 
@@ -45,6 +45,8 @@ func (parser *Parser) Parse() Command {
 
 	if *version {
 		return NewVersionCommand(parser.version)
+	} else if *help {
+		return NewHelpCommand()
 	} else {
 		if parser.flag.NArg() < 1 {
 			parser.printUsageAndExit()
@@ -52,6 +54,14 @@ func (parser *Parser) Parse() Command {
 		path, _ := parser.localPath()
 		return NewTixCommand(env.Map(), path)
 	}
+}
+
+func (parser *Parser) setupHelp() *bool {
+	var verbose bool
+	parser.flag.BoolVar(&verbose, "help", false, helpUsage)
+	parser.flag.BoolVar(&verbose, "h", false, helpUsage+shortHandSuffix)
+
+	return &verbose
 }
 
 func (parser *Parser) setupQuiet() *bool {

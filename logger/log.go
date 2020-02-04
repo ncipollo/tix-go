@@ -33,6 +33,11 @@ func Message(message string, args ...interface{})  {
 	}
 }
 
+// Prints regardless of level
+func Output(message string, args ...interface{})  {
+	printLog(message, args...)
+}
+
 func Verbose(message string, args ...interface{})  {
 	if currentLogLevel == LogLevelVerbose {
 		printLog(message, args...)
