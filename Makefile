@@ -8,7 +8,6 @@ WINDOWS_64_OUTPUT=$(BUILD_FOLDER)/windows64/$(BINARY_NAME).exe
 GO_BUILD=go build -ldflags "-X main.version=${VERSION}" -o
 
 all: deps test build-linux build-mac build-windows tar
-brew: deps build
 build:
 	$(GO_BUILD) $(LOCAL_OUTPUT)
 clean:
