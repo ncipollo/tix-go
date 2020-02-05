@@ -6,7 +6,4 @@ _arguments '-h[prints help]' \
 '-q[suppresses all log output except errors]' \
 '-v[enables verbose output]' \
 '-version[prints tix version]' \
- '*:: :->args' \
- && ret=0
-
-return 1
+ '::optional arg:_files'
