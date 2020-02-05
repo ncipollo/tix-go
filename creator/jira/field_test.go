@@ -94,6 +94,27 @@ func TestIssueFields_Components_WithComponents(t *testing.T) {
 	assert.Equal(t, expected, jiraComps)
 }
 
+func TestIssueFields_FixVersions_EmptyForInvalidType(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	versions := issueFields.FixVersions()
+
+	assert.Empty(t, versions)
+}
+
+func TestIssueFields_FixVersions_WithComponents(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"fix versions": []interface{}{"1", "2"},
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	versions := issueFields.FixVersions()
+
+	expected := []*jira.FixVersion{{Name: "1"}, {Name: "2"}}
+	assert.Equal(t, expected, versions)
+}
+
 func TestIssueFields_EpicLinkKey(t *testing.T) {
 	ticketFields := map[string]interface{}{}
 	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))

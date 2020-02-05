@@ -56,16 +56,16 @@ func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name s
 }
 
 func (i *IssueFields) AffectsVersions() []*jira.AffectsVersion {
-	versions, ok := i.ticket.Fields("jira")[KeyAffectsVersions].([]interface{})
+	rawVersions, ok := i.ticket.Fields("jira")[KeyAffectsVersions].([]interface{})
 	if ok {
-		versionStrings := make([]*jira.AffectsVersion, 0)
-		for _, label := range versions {
+		versions := make([]*jira.AffectsVersion, 0)
+		for _, label := range rawVersions {
 			versionString, ok := label.(string)
 			if ok {
-				versionStrings = append(versionStrings, &jira.AffectsVersion{Name: versionString})
+				versions = append(versions, &jira.AffectsVersion{Name: versionString})
 			}
 		}
-		return versionStrings
+		return versions
 	} else {
 		return make([]*jira.AffectsVersion, 0)
 	}
@@ -99,6 +99,22 @@ func (i *IssueFields) EpicType() jira.IssueType {
 	}
 	return jira.IssueType{
 		Name: issueType,
+	}
+}
+
+func (i *IssueFields) FixVersions() []*jira.FixVersion {
+	rawVersions, ok := i.ticket.Fields("jira")[KeyFixVersions].([]interface{})
+	if ok {
+		versions := make([]*jira.FixVersion, 0)
+		for _, label := range rawVersions {
+			versionString, ok := label.(string)
+			if ok {
+				versions = append(versions, &jira.FixVersion{Name: versionString})
+			}
+		}
+		return versions
+	} else {
+		return make([]*jira.FixVersion, 0)
 	}
 }
 
