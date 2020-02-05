@@ -1,6 +1,15 @@
 # tix
 A command line utility for generating jira, etc tickets from a markdown document.
 
+# Installation
+If you are on macOS you can install via homebrew:
+```
+brew tap ncipollo/tools
+brew install tix`
+```
+
+You can also download the binary from the releases page.
+
 # Usage
 ```
 Usage: tix [OPTIONS] <markdown file> 
