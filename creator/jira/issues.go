@@ -35,13 +35,14 @@ func (i *Issues) epic(ticket *ticket.Ticket) *jira.Issue {
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Components:  issueFields.Components(),
-			Description: description,
-			Labels:      issueFields.Labels(),
-			Type:        issueFields.EpicType(),
-			Project:     issueFields.Project(),
-			Summary:     ticket.Title,
-			Unknowns:    unknowns,
+			AffectsVersions: issueFields.AffectsVersions(),
+			Components:      issueFields.Components(),
+			Description:     description,
+			Labels:          issueFields.Labels(),
+			Type:            issueFields.EpicType(),
+			Project:         issueFields.Project(),
+			Summary:         ticket.Title,
+			Unknowns:        unknowns,
 		},
 	}
 }
@@ -57,6 +58,7 @@ func (i *Issues) story(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Iss
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: issueFields.AffectsVersions(),
 			Components:  issueFields.Components(),
 			Description: description,
 			Labels:      issueFields.Labels(),
@@ -74,6 +76,7 @@ func (i *Issues) task(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Issu
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: issueFields.AffectsVersions(),
 			Components:  issueFields.Components(),
 			Description: description,
 			Labels:      issueFields.Labels(),

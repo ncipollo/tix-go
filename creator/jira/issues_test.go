@@ -17,6 +17,7 @@ func TestIssues_FromTicket_Epic(t *testing.T) {
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: []*jira.AffectsVersion{{Name: "1"}},
 			Components: []*jira.Component{
 				{Name: "component1"},
 				{Name: "component2"},
@@ -45,6 +46,7 @@ func TestIssues_FromTicket_Epic_DefaultEpicName(t *testing.T) {
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: []*jira.AffectsVersion{{Name: "1"}},
 			Components: []*jira.Component{
 				{Name: "component1"},
 				{Name: "component2"},
@@ -72,6 +74,7 @@ func TestIssues_FromTicket_Story_NoParent(t *testing.T) {
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: []*jira.AffectsVersion{{Name: "1"}},
 			Components: []*jira.Component{
 				{Name: "component1"},
 				{Name: "component2"},
@@ -99,6 +102,7 @@ func TestIssues_FromTicket_Story_WithParent(t *testing.T) {
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: []*jira.AffectsVersion{{Name: "1"}},
 			Components: []*jira.Component{
 				{Name: "component1"},
 				{Name: "component2"},
@@ -127,6 +131,7 @@ func TestIssues_FromTicket_Task(t *testing.T) {
 
 	expected := &jira.Issue{
 		Fields: &jira.IssueFields{
+			AffectsVersions: []*jira.AffectsVersion{{Name: "1"}},
 			Components: []*jira.Component{
 				{Name: "component1"},
 				{Name: "component2"},
@@ -158,12 +163,13 @@ func createIssues() *Issues {
 
 func createTicket() *ticket.Ticket {
 	ticketFields := map[string]interface{}{
-		"components": []interface{}{"component1", "component2"},
-		"labels":     []interface{}{"label1", "label2"},
-		"epic name":  "epic",
-		"project":    "project",
-		"random":     "random",
-		"type":       "type",
+		"affects versions": []interface{}{"1"},
+		"components":      []interface{}{"component1", "component2"},
+		"labels":          []interface{}{"label1", "label2"},
+		"epic name":       "epic",
+		"project":         "project",
+		"random":          "random",
+		"type":            "type",
 	}
 	newTicket := ticket.NewTicketWithFields(ticketFields)
 

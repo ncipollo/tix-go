@@ -50,6 +50,27 @@ func TestIssueFields_AddDefaultEpicName_DoNothingIfEpicNameExists(t *testing.T) 
 	assert.Equal(t, expected, unknowns)
 }
 
+func TestIssueFields_AffectsVersions_EmptyForInvalidType(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	versions := issueFields.AffectsVersions()
+
+	assert.Empty(t, versions)
+}
+
+func TestIssueFields_AffectsVersions_WithComponents(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"affects versions": []interface{}{"1", "2"},
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	versions := issueFields.AffectsVersions()
+
+	expected := []*jira.AffectsVersion{{Name: "1"}, {Name: "2"}}
+	assert.Equal(t, expected, versions)
+}
+
 func TestIssueFields_Components_EmptyForInvalidType(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"components": "lol nope",

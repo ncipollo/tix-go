@@ -7,10 +7,12 @@ import (
 )
 
 const (
-	KeyComponents = "components"
-	KeyLabels     = "labels"
-	KeyProject    = "project"
-	KeyType       = "type"
+	KeyAffectsVersions = "affects versions"
+	KeyComponents      = "components"
+	KeyFixVersions     = "fix versions"
+	KeyLabels          = "labels"
+	KeyProject         = "project"
+	KeyType            = "type"
 )
 
 type FieldInfo struct {
@@ -53,6 +55,22 @@ func (i *IssueFields) AddDefaultEpicName(unknowns map[string]interface{}, name s
 	}
 }
 
+func (i *IssueFields) AffectsVersions() []*jira.AffectsVersion {
+	versions, ok := i.ticket.Fields("jira")[KeyAffectsVersions].([]interface{})
+	if ok {
+		versionStrings := make([]*jira.AffectsVersion, 0)
+		for _, label := range versions {
+			versionString, ok := label.(string)
+			if ok {
+				versionStrings = append(versionStrings, &jira.AffectsVersion{Name: versionString})
+			}
+		}
+		return versionStrings
+	} else {
+		return make([]*jira.AffectsVersion, 0)
+	}
+}
+
 func (i *IssueFields) Components() []*jira.Component {
 	components, ok := i.ticket.Fields("jira")[KeyComponents].([]interface{})
 	if !ok {
@@ -87,7 +105,7 @@ func (i *IssueFields) EpicType() jira.IssueType {
 func (i *IssueFields) Labels() []string {
 	labels, ok := i.ticket.Fields("jira")[KeyLabels].([]interface{})
 	if ok {
-		labelStrings := make([]string,0)
+		labelStrings := make([]string, 0)
 		for _, label := range labels {
 			labelString, ok := label.(string)
 			if ok {
@@ -132,10 +150,12 @@ func (i *IssueFields) TaskType() jira.IssueType {
 
 func (i *IssueFields) Unknowns() map[string]interface{} {
 	keysToSkip := map[string]bool{
-		KeyComponents: true,
-		KeyLabels:     true,
-		KeyProject:    true,
-		KeyType:       true,
+		KeyAffectsVersions: true,
+		KeyComponents:      true,
+		KeyFixVersions:     true,
+		KeyLabels:          true,
+		KeyProject:         true,
+		KeyType:            true,
 	}
 
 	unknown := make(map[string]interface{})
