@@ -100,6 +100,26 @@ func TestJiraBodyRenderer_RenderSegment_List(t *testing.T) {
 	assert.Equal(t, expected, text)
 }
 
+func TestJiraBodyRenderer_RenderSegment_ListEnd_NoNewline(t *testing.T) {
+	segment := body.NewBulletListEndSegment(2)
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := ""
+	assert.Equal(t, expected, text)
+}
+
+func TestJiraBodyRenderer_RenderSegment_ListEnd_WithNewline(t *testing.T) {
+	segment := body.NewBulletListEndSegment(1)
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "\n"
+	assert.Equal(t, expected, text)
+}
+
 func TestJiraBodyRenderer_RenderSegment_LineBreaks(t *testing.T) {
 	segment := body.NewLineBreakSegment()
 	renderer := NewJiraBodyRenderer()

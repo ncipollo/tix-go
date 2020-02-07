@@ -26,6 +26,8 @@ func (j JiraBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 		return j.renderEmphasis(segment)
 	case *body.LinkSegment:
 		return j.renderLink(segment)
+	case *body.ListEndSegment:
+		return j.renderListEnd(segment)
 	case *body.ListStartSegment:
 		return segment.Value()
 	case *body.LineBreakSegment:
@@ -100,6 +102,14 @@ func (j JiraBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemSeg
 	builder.WriteString(" ")
 
 	return builder.String()
+}
+
+func (j JiraBodyRenderer) renderListEnd(segment *body.ListEndSegment) string {
+	if segment.Attributes().Level == 1 {
+		return "\n"
+	} else {
+		return ""
+	}
 }
 
 func (j JiraBodyRenderer) renderStrongEmphasis(segment *body.StrongEmphasisSegment) string {

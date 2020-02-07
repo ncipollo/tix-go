@@ -26,9 +26,15 @@ func (l ListSegmentParser) parseOrderedList(state *State, node *ast.List) error 
 	listState := state.ListState
 
 	listState.StartOrderedList(node.Start)
-	list := body.NewOrderedListStartSegment(listState.ListLevel(), node.Start)
-	currentTicket.AddBodySegment(list)
+
+	listStart := body.NewOrderedListStartSegment(listState.ListLevel(), node.Start)
+	currentTicket.AddBodySegment(listStart)
+
 	err := ParseBodyChildren(state, node)
+
+	listEnd := body.NewOrderedListEndSegment(listState.ListLevel())
+	currentTicket.AddBodySegment(listEnd)
+
 	listState.CompleteList()
 
 	return err
@@ -40,9 +46,15 @@ func (l ListSegmentParser) parseBulletList(state *State, node *ast.List) error {
 	marker := string(node.Marker)
 
 	listState.StartBulletList(marker)
-	list := body.NewBulletListStartSegment(listState.ListLevel(), marker)
-	currentTicket.AddBodySegment(list)
+
+	listStart := body.NewBulletListStartSegment(listState.ListLevel(), marker)
+	currentTicket.AddBodySegment(listStart)
+
 	err := ParseBodyChildren(state, node)
+
+	listEnd := body.NewBulletListEndSegment(listState.ListLevel())
+	currentTicket.AddBodySegment(listEnd)
+
 	listState.CompleteList()
 
 	return err

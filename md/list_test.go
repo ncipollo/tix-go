@@ -26,7 +26,9 @@ func TestListSegmentParser_Parse_MixedList(t *testing.T) {
 	expectedBody = appendOrderedList(expectedBody, 2, 1)
 	expectedBody = appendOrderedLineSegments(expectedBody, 2, 1, "Sub 1")
 	expectedBody = appendOrderedLineSegments(expectedBody, 2, 2, "Sub 2")
+	expectedBody = appendOrderedListEnd(expectedBody, 2)
 	expectedBody = appendBulletLineSegments(expectedBody, 1, "-", "Bullet 2")
+	expectedBody = appendBulletListEnd(expectedBody, 1)
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
 	assert.Equal(t, expectedBody, ticketBody)
@@ -53,7 +55,10 @@ func TestListSegmentParser_Parse_NestedBulletList(t *testing.T) {
 	expectedBody = appendBulletLineSegments(expectedBody, 2, "-", "Sub 1")
 	expectedBody = appendBulletList(expectedBody, 3, "+")
 	expectedBody = appendBulletLineSegments(expectedBody, 3, "+", "Deep")
+	expectedBody = appendBulletListEnd(expectedBody, 3)
 	expectedBody = appendBulletLineSegments(expectedBody, 2, "-", "Sub 2")
+	expectedBody = appendBulletListEnd(expectedBody, 2)
+	expectedBody = appendBulletListEnd(expectedBody, 1)
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
 	assert.Equal(t, expectedBody, ticketBody)
@@ -80,7 +85,10 @@ func TestListSegmentParser_Parse_NestedOrderedList(t *testing.T) {
 	expectedBody = appendOrderedLineSegments(expectedBody, 2, 1, "Sub 1")
 	expectedBody = appendOrderedList(expectedBody, 3, 1)
 	expectedBody = appendOrderedLineSegments(expectedBody, 3, 1, "Deep")
+	expectedBody = appendOrderedListEnd(expectedBody, 3)
 	expectedBody = appendOrderedLineSegments(expectedBody, 2, 2, "Sub 2")
+	expectedBody = appendOrderedListEnd(expectedBody, 2)
+	expectedBody = appendOrderedListEnd(expectedBody, 1)
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
 	assert.Equal(t, expectedBody, ticketBody)
@@ -102,6 +110,7 @@ func TestListSegmentParser_Parse_WithInlineElements(t *testing.T) {
 	expectedBody = appendBulletList(expectedBody, 1, "-")
 	expectedBody = appendBulletEmphasisSegments(expectedBody, 1, "-", "Strong")
 	expectedBody = appendBulletLinkSegments(expectedBody, 1, "-", "link", "api.example.com")
+	expectedBody = appendBulletListEnd(expectedBody, 1)
 
 	ticketBody := state.CurrentTicket().Body
 	assert.NoError(t, err)
@@ -110,6 +119,11 @@ func TestListSegmentParser_Parse_WithInlineElements(t *testing.T) {
 
 func appendBulletList(expectedBody []body.Segment, level int, marker string) []body.Segment {
 	list := body.NewBulletListStartSegment(level, marker)
+	return append(expectedBody, list)
+}
+
+func appendBulletListEnd(expectedBody []body.Segment, level int) []body.Segment {
+	list := body.NewBulletListEndSegment(level)
 	return append(expectedBody, list)
 }
 
@@ -145,6 +159,11 @@ func appendBulletLinkSegments(expectedBody []body.Segment, level int, marker str
 
 func appendOrderedList(expectedBody []body.Segment, level int, start int) []body.Segment {
 	list := body.NewOrderedListStartSegment(level, start)
+	return append(expectedBody, list)
+}
+
+func appendOrderedListEnd(expectedBody []body.Segment, level int) []body.Segment {
+	list := body.NewOrderedListEndSegment(level)
 	return append(expectedBody, list)
 }
 

@@ -16,9 +16,30 @@ func NewOrderedListStartSegment(level int, startingNumber int) *ListStartSegment
 }
 
 func (l ListStartSegment) Attributes() Attributes {
-	return Attributes{}
+	return Attributes{Level: l.level, Number: l.startingNumber}
 }
 
 func (l ListStartSegment) Value() string {
+	return ""
+}
+
+type ListEndSegment struct {
+	isOrdered bool
+	level     int
+}
+
+func NewBulletListEndSegment(level int) *ListEndSegment {
+	return &ListEndSegment{level: level}
+}
+
+func NewOrderedListEndSegment(level int) *ListEndSegment {
+	return &ListEndSegment{isOrdered: true, level: level}
+}
+
+func (l ListEndSegment) Attributes() Attributes {
+	return Attributes{Level: l.level}
+}
+
+func (l ListEndSegment) Value() string {
 	return ""
 }
