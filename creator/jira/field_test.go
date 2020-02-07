@@ -50,13 +50,13 @@ func TestIssueFields_AddDefaultEpicName_DoNothingIfEpicNameExists(t *testing.T) 
 	assert.Equal(t, expected, unknowns)
 }
 
-func TestIssueFields_AffectsVersions_EmptyForInvalidType(t *testing.T) {
+func TestIssueFields_AffectsVersions_NilForInvalidType(t *testing.T) {
 	ticketFields := map[string]interface{}{}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
 	versions := issueFields.AffectsVersions()
 
-	assert.Empty(t, versions)
+	assert.Nil(t, versions)
 }
 
 func TestIssueFields_AffectsVersions_WithComponents(t *testing.T) {
@@ -94,13 +94,13 @@ func TestIssueFields_Components_WithComponents(t *testing.T) {
 	assert.Equal(t, expected, jiraComps)
 }
 
-func TestIssueFields_FixVersions_EmptyForInvalidType(t *testing.T) {
+func TestIssueFields_FixVersions_NilForInvalidType(t *testing.T) {
 	ticketFields := map[string]interface{}{}
 	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
 
 	versions := issueFields.FixVersions()
 
-	assert.Empty(t, versions)
+	assert.Nil(t, versions)
 }
 
 func TestIssueFields_FixVersions_WithComponents(t *testing.T) {

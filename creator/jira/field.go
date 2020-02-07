@@ -67,7 +67,7 @@ func (i *IssueFields) AffectsVersions() []*jira.AffectsVersion {
 		}
 		return versions
 	} else {
-		return make([]*jira.AffectsVersion, 0)
+		return nil
 	}
 }
 
@@ -114,7 +114,7 @@ func (i *IssueFields) FixVersions() []*jira.FixVersion {
 		}
 		return versions
 	} else {
-		return make([]*jira.FixVersion, 0)
+		return nil
 	}
 }
 
