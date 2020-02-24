@@ -84,19 +84,16 @@ abstractions to generate representations which are specific to a ticketing syste
 
 ## Special Blocks
 Tix supports special code blocks which may be used to add fields for a ticket. For example:
-```
 # Ticket
-(Remove the backslashes)
-\```tix
-// Adds fields to the ticket, regardless of ticket system
-field: value
-\```
+    ```tix
+    // Adds fields to the ticket, regardless of ticket system
+    field: value
+    ```
 
-\```jira
-// Adds field to the ticket only if the ticketing system is jira.
-field: value
-\```
-```
+    ```jira
+    // Adds field to the ticket only if the ticketing system is jira.
+    field: value
+    ```
 # Jira
 Tix expects your jira account information to be stored in your environment. Specifically, it will look for the following
 variables:  
