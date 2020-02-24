@@ -13,7 +13,6 @@ const md = `
 Body 1
 
 # Epic 2
-
 Body 2
 `
 
@@ -29,6 +28,7 @@ func TestParse(t *testing.T) {
 
 	expectedTicket1 := ticket.NewTicketWithFields(fields)
 	expectedTicket1.Title = "Epic 1"
+	expectedTicket1.AddBodyLineBreak()
 	expectedTicket1.AddBodySegment(body.NewTextSegment("Body 1"))
 	expectedTicket1.AddBodyLineBreak()
 	expectedTicket2 := ticket.NewTicketWithFields(fields)

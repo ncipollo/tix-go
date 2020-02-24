@@ -20,6 +20,7 @@ func TestBlockQuoteSegmentParser_Parse(t *testing.T) {
 
 	expectedBody := []body.Segment{
 		body.NewBlockQuoteSegment(),
+		body.NewLineBreakSegment(),
 		body.NewTextSegment("line1"),
 		body.NewLineBreakSegment(),
 		body.NewTextSegment("line2"),

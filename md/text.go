@@ -17,7 +17,6 @@ func NewTextSegmentParser() *TextSegmentParser {
 func (t TextSegmentParser) Parse(state *State, node ast.Node) error {
 	currentTicket := state.CurrentTicket()
 	text := node.(*ast.Text)
-	text.SoftLineBreak()
 	data := text.Segment.Value(state.SourceData)
 
 	bodyText := body.NewTextSegment(string(data))

@@ -15,6 +15,9 @@ func (t ParagraphSegmentParser) Parse(state *State, node ast.Node) error {
 	currentTicket := state.CurrentTicket()
 	paragraph := node.(*ast.Paragraph)
 
+	if paragraph.HasBlankPreviousLines() {
+		currentTicket.AddBodyLineBreak()
+	}
 	err := ParseBodyChildren(state, paragraph)
 	currentTicket.AddBodyLineBreak()
 
