@@ -70,7 +70,7 @@ func (j Creator) reportSuccessfulTicketCreate(issue *jira.Issue, level int) {
 	for ii := j.startingTicketLevel; ii < level; ii++ {
 		builder.WriteString("\t")
 	}
-	message := fmt.Sprintf("- :tada: %v created", issue.Key)
+	message := fmt.Sprintf("- :tada: %v: %v created", issue.Key, issue.Fields.Summary)
 	builder.WriteString(message)
 
 	logger.Message(builder.String())
