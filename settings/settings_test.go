@@ -15,6 +15,17 @@ func TestFromData_Empty(t *testing.T) {
 
 func TestFromData_NoError(t *testing.T) {
 	yaml := `
+github:
+  no_projects: true
+  owner: owner
+  repo: repo 
+  tickets:
+    default: 
+      default: default
+    project:
+      project: project
+    issue:
+      issue: issue
 jira:
   no_epics: true
   url: https://api.example.com
@@ -33,7 +44,16 @@ variables:
 	settings, err := FromData([]byte(yaml))
 
 	expected := Settings{
-		Github: Github{},
+		Github: Github{
+			NoProjects: true,
+			Owner: "owner",
+			Repo: "repo",
+			Tickets:GithubTicketFields{
+				Default: map[string]interface{}{"default": "default",},
+				Project: map[string]interface{}{"project": "project",},
+				Issue:   map[string]interface{}{"issue": "issue",},
+			},
+		},
 		Jira: Jira{
 			NoEpics: true,
 			Url:     "https://api.example.com",
