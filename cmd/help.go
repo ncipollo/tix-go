@@ -88,7 +88,7 @@ Jira tickets have the following relationship with heading indent levels:
 - ##: Story / issue
 - ###: Task
 
-For up to date documentation check out https://github.com/ncipollo/tix/blob/master/README.md
+For up to date documentation check out https://github.com/ncipollo/tix/blob/main/README.md
 `
 
 const specialBlocks  =
