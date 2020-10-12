@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"tix/md"
+	"tix/runner"
 	"tix/settings"
 	"tix/transform"
 )
@@ -39,7 +39,8 @@ func (t TixCommand) Run() error {
 
 	markdownData = t.transformMarkDownData(markdownData, tixSettings)
 
-	return t.generateJiraTickets(markdownData, tixSettings)
+	jiraRunner := runner.NewJiraRunner(t.envMap, &tixSettings)
+	return jiraRunner.Run(markdownData)
 }
 
 func (t TixCommand) loadSettings() (settings.Settings, error) {
@@ -58,29 +59,4 @@ func (t TixCommand) loadMarkDownData() ([]byte, error) {
 
 func (t TixCommand) transformMarkDownData(markdownData []byte, settings settings.Settings) []byte {
 	return transform.ApplyVariableTransform(markdownData, t.envMap, settings.Variables)
-}
-
-func (t TixCommand) generateJiraTickets(markdownData []byte, settings settings.Settings) error {
-	if len(settings.Jira.Url) == 0 {
-		return nil
-	}
-
-	err := checkJiraEnvironment(t.envMap)
-	if err != nil {
-		return err
-	}
-
-	fieldState := jiraFieldState(settings)
-	markdownParser := md.NewParser(fieldState)
-	tickets, err := markdownParser.Parse(markdownData)
-
-	if err != nil {
-		return err
-	}
-
-	api := createJiraApi(t.envMap, settings)
-	creator := jiraCreator(api, settings)
-	creator.CreateTickets(tickets)
-
-	return nil
 }

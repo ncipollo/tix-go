@@ -1,4 +1,4 @@
-package cmd
+package field
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -6,35 +6,10 @@ import (
 	"tix/settings"
 )
 
-func Test_checkJiraEnvironment_MissingApiToken(t *testing.T) {
-	envMap := map[string]string{
-		EnvJiraUsername : "jira",
-	}
-	err := checkJiraEnvironment(envMap)
-	assert.Error(t, err)
-}
-
-func Test_checkJiraEnvironment_MissingUserName(t *testing.T) {
-	envMap := map[string]string{
-		EnvJiraApiToken : "token",
-	}
-	err := checkJiraEnvironment(envMap)
-	assert.Error(t, err)
-}
-
-func Test_checkJiraEnvironment_NoMissingVariables(t *testing.T) {
-	envMap := map[string]string{
-		EnvJiraUsername : "jira",
-		EnvJiraApiToken : "token",
-	}
-	err := checkJiraEnvironment(envMap)
-	assert.NoError(t, err)
-}
-
 func Test_jiraFieldState_noEpics_allFieldLevels(t *testing.T) {
 	tixSettings := settingsWithAllFieldLevels(true)
 
-	fieldState := jiraFieldState(tixSettings)
+	fieldState := JiraFieldState(tixSettings)
 
 	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue",}, fieldState.FieldsForLevel(0))
 	assert.Equal(t, map[string]interface{}{"default": "default", "task": "task",}, fieldState.FieldsForLevel(1))
@@ -43,7 +18,7 @@ func Test_jiraFieldState_noEpics_allFieldLevels(t *testing.T) {
 func Test_jiraFieldState_withEpics_allFieldLevels(t *testing.T) {
 	tixSettings := settingsWithAllFieldLevels(false)
 
-	fieldState := jiraFieldState(tixSettings)
+	fieldState := JiraFieldState(tixSettings)
 
 	assert.Equal(t, map[string]interface{}{"default": "default", "epic": "epic",}, fieldState.FieldsForLevel(0))
 	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue",}, fieldState.FieldsForLevel(1))
@@ -53,7 +28,7 @@ func Test_jiraFieldState_withEpics_allFieldLevels(t *testing.T) {
 func Test_jiraFieldState_noFieldLevels(t *testing.T) {
 	tixSettings := settingsWithNoFields()
 
-	fieldState := jiraFieldState(tixSettings)
+	fieldState := JiraFieldState(tixSettings)
 
 	assert.Equal(t, map[string]interface{}{}, fieldState.FieldsForLevel(0))
 	assert.Equal(t, map[string]interface{}{}, fieldState.FieldsForLevel(1))
