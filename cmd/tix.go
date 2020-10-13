@@ -11,16 +11,18 @@ import (
 )
 
 type TixCommand struct {
+	dryRun       bool
 	envMap       map[string]string
 	markdownPath string
 	settingsPath string
 }
 
-func NewTixCommand(envMap map[string]string, markdownPath string) *TixCommand {
+func NewTixCommand(dryRun bool, envMap map[string]string, markdownPath string) *TixCommand {
 	directory := filepath.Dir(markdownPath)
 	settingsPath := filepath.Join(directory, "tix.yml")
 
 	return &TixCommand{
+		dryRun:       dryRun,
 		envMap:       envMap,
 		markdownPath: markdownPath,
 		settingsPath: settingsPath,
@@ -40,7 +42,11 @@ func (t TixCommand) Run() error {
 	markdownData = t.transformMarkDownData(markdownData, tixSettings)
 
 	jiraRunner := runner.NewJiraRunner(t.envMap, &tixSettings)
-	return jiraRunner.Run(markdownData)
+	if t.dryRun {
+		return jiraRunner.DryRun(markdownData)
+	} else {
+		return jiraRunner.Run(markdownData)
+	}
 }
 
 func (t TixCommand) loadSettings() (settings.Settings, error) {

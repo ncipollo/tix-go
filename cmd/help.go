@@ -4,7 +4,9 @@ import "tix/logger"
 
 const helpMessage =
 `Tix -A command line utility for generating jira, etc tickets from a markdown document.
-Usage: tix [OPTIONS] <markdown file> 
+Usage: tix [OPTIONS] <markdown file>
+  -d    prints out ticket information instead of creating tickets (shorthand)
+  -dry-run prints out ticket information instead of creating tickets
   -h	prints help for tix (shorthand)
   -help
     	prints help for tix

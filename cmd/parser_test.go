@@ -44,6 +44,18 @@ func TestParser_Parse_TixCommand(t *testing.T) {
 	assert.IsType(t, &TixCommand{}, cmd)
 }
 
+func TestParser_Parse_TixCommand_DryRun(t *testing.T) {
+	parser := setupParser("-dry-run","foo.md")
+	cmd := parser.Parse()
+	assert.IsType(t, &TixCommand{}, cmd)
+}
+
+func TestParser_Parse_TixCommand_DryRun_Shorthand(t *testing.T) {
+	parser := setupParser("-d","foo.md")
+	cmd := parser.Parse()
+	assert.IsType(t, &TixCommand{}, cmd)
+}
+
 func TestParser_Parse_VerboseLogLevel(t *testing.T) {
 	parser := setupParser("-verbose", "foo.md")
 	parser.Parse()

@@ -66,5 +66,30 @@ func (r JiraRunner) createJiraApi() jira.Api {
 }
 
 func (r JiraRunner) DryRun(markdownData []byte) error {
-	panic("implement me")
+	if len(r.settings.Jira.Url) == 0 {
+		return nil
+	}
+
+	err := env.CheckJiraEnvironment(r.envMap)
+	if err != nil {
+		return err
+	}
+
+	tickets, err := r.parseMarkdown(markdownData)
+
+	if err != nil {
+		return err
+	}
+
+	r.dryRunCreator().CreateTickets(tickets)
+
+	return nil
+}
+
+func (r JiraRunner) dryRunCreator() creator.TicketCreator {
+	if r.settings.Jira.NoEpics {
+		return jira.NewDryRunCreatorWithoutEpics()
+	} else {
+		return jira.NewDryRunCreatorWithEpics()
+	}
 }

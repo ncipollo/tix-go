@@ -9,6 +9,7 @@ import (
 	"tix/logger"
 )
 
+const dryRunUsage = "prints out ticket information instead of creating tickets"
 const helpUsage = "prints help for tix"
 const quietUsage = "suppresses all log output except errors"
 const verboseUsage = "enables verbose output"
@@ -34,8 +35,9 @@ func NewParser(env []string, version string) *Parser {
 }
 
 func (parser *Parser) Parse() Command {
-	quiet := parser.setupQuiet()
+	dryRun := parser.setupDryRun()
 	help := parser.setupHelp()
+	quiet := parser.setupQuiet()
 	verbose := parser.setupVerbose()
 	version := parser.setupVersion()
 
@@ -52,8 +54,16 @@ func (parser *Parser) Parse() Command {
 			parser.printUsageAndExit()
 		}
 		path, _ := parser.localPath()
-		return NewTixCommand(env.Map(), path)
+		return NewTixCommand(*dryRun, env.Map(), path)
 	}
+}
+
+func (parser *Parser) setupDryRun() *bool {
+	var verbose bool
+	parser.flag.BoolVar(&verbose, "dry-run", false, dryRunUsage)
+	parser.flag.BoolVar(&verbose, "d", false, dryRunUsage+shortHandSuffix)
+
+	return &verbose
 }
 
 func (parser *Parser) setupHelp() *bool {
