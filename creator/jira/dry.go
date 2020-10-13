@@ -10,14 +10,23 @@ import (
 type DryRunCreator struct {
 	builder             *strings.Builder
 	startingTicketLevel int
+	stats               *TicketStats
 }
 
 func NewDryRunCreatorWithEpics(builder *strings.Builder) *DryRunCreator {
-	return &DryRunCreator{builder: builder, startingTicketLevel: 0}
+	return &DryRunCreator{
+		builder:             builder,
+		startingTicketLevel: 0,
+		stats: NewTicketStats(),
+	}
 }
 
 func NewDryRunCreatorWithoutEpics(builder *strings.Builder) *DryRunCreator {
-	return &DryRunCreator{builder: builder, startingTicketLevel: 1}
+	return &DryRunCreator{
+		builder:             builder,
+		startingTicketLevel: 1,
+		stats: NewTicketStats(),
+	}
 }
 
 func (d DryRunCreator) CreateTickets(tickets []*ticket.Ticket) {
@@ -25,6 +34,7 @@ func (d DryRunCreator) CreateTickets(tickets []*ticket.Ticket) {
 
 	d.builder.WriteString("Would have created tickets: :point_down:\n\n")
 	d.renderTicketsForLevel(tickets, d.startingTicketLevel, renderer)
+	d.stats.Render(d.builder)
 }
 
 func (d DryRunCreator) renderTicketsForLevel(tickets []*ticket.Ticket,
@@ -35,11 +45,13 @@ func (d DryRunCreator) renderTicketsForLevel(tickets []*ticket.Ticket,
 
 		d.builder.WriteString("-----------------\n")
 		d.builder.WriteString(d.title(currentTicket, level))
+		d.renderFields(currentTicket)
 		d.builder.WriteString(ticketString)
 		d.builder.WriteString("\n")
 		d.builder.WriteString("-----------------\n\n")
 
 		d.renderTicketsForLevel(currentTicket.Subtickets, level+1, renderer)
+		d.stats.CountTicket(level)
 	}
 }
 
@@ -58,4 +70,18 @@ func (d DryRunCreator) ticketType(level int) string {
 	default:
 		return "Unknown Ticket Type"
 	}
+}
+
+func (d DryRunCreator) renderFields(ticket *ticket.Ticket) {
+	fields := ticket.Fields("jira")
+	if len(fields) == 0 {
+		return
+	}
+
+	d.builder.WriteString("\nJira Fields:\n")
+	for key, value := range fields {
+		fieldString := fmt.Sprintf("- %s: %v\n", key, value)
+		d.builder.WriteString(fieldString)
+	}
+	d.builder.WriteString("\n")
 }
