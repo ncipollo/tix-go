@@ -12,9 +12,6 @@ import (
 	"tix/ticket"
 )
 
-const EnvJiraApiToken = "JIRA_API_TOKEN"
-const EnvJiraUsername = "JIRA_USERNAME"
-
 type JiraRunner struct {
 	envMap   map[string]string
 	settings *settings.Settings
@@ -64,7 +61,7 @@ func (r JiraRunner) jiraCreator() creator.TicketCreator {
 }
 
 func (r JiraRunner) createJiraApi() jira.Api {
-	return jira.NewApi(r.envMap[EnvJiraUsername], r.envMap[EnvJiraApiToken], r.settings.Jira.Url)
+	return jira.NewApi(r.envMap[env.JiraUsername], r.envMap[env.JiraApiToken], r.settings.Jira.Url)
 }
 
 func (r JiraRunner) DryRun(markdownData []byte) error {

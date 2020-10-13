@@ -5,24 +5,24 @@ import (
 	"fmt"
 )
 
-const EnvJiraApiToken = "JIRA_API_TOKEN"
-const EnvJiraUsername = "JIRA_USERNAME"
+const JiraApiToken = "JIRA_API_TOKEN"
+const JiraUsername = "JIRA_USERNAME"
 
 func CheckJiraEnvironment(envMap map[string]string) error {
-	username := envMap[EnvJiraUsername]
-	apiToken := envMap[EnvJiraApiToken]
+	username := envMap[JiraUsername]
+	apiToken := envMap[JiraApiToken]
 
 	if len(username) == 0 {
 		message := fmt.Sprintf(
 			":scream: missing jira user name, please set the %v environment variable",
-			EnvJiraUsername)
+			JiraUsername)
 		return errors.New(message)
 	}
 
 	if len(apiToken) == 0 {
 		message := fmt.Sprintf(
 			":scream: missing jira api token, please set the %v environment variable",
-			EnvJiraUsername)
+			JiraUsername)
 		return errors.New(message)
 	}
 	return nil
