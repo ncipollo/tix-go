@@ -54,7 +54,7 @@ func (d DryRunCreator) ticketType(level int) string {
 	case 1:
 		return "Issue"
 	case 2:
-		return "Subtask"
+		return "Task"
 	default:
 		return "Unknown Ticket Type"
 	}
