@@ -3,46 +3,43 @@ package jira
 import (
 	"fmt"
 	"strings"
-	"tix/logger"
 	"tix/render"
 	"tix/ticket"
 )
 
 type DryRunCreator struct {
+	builder             *strings.Builder
 	startingTicketLevel int
 }
 
-func NewDryRunCreatorWithEpics() *DryRunCreator {
-	return &DryRunCreator{0}
+func NewDryRunCreatorWithEpics(builder *strings.Builder) *DryRunCreator {
+	return &DryRunCreator{builder: builder, startingTicketLevel: 0}
 }
 
-func NewDryRunCreatorWithoutEpics() *DryRunCreator {
-	return &DryRunCreator{1}
+func NewDryRunCreatorWithoutEpics(builder *strings.Builder) *DryRunCreator {
+	return &DryRunCreator{builder: builder, startingTicketLevel: 1}
 }
 
 func (d DryRunCreator) CreateTickets(tickets []*ticket.Ticket) {
-	var builder strings.Builder
 	var renderer = render.NewJiraBodyRenderer()
 
-	builder.WriteString("Would have created tickets: :point_down:\n\n")
-	d.renderTicketsForLevel(tickets, &builder, d.startingTicketLevel, renderer)
-	logger.Message(builder.String())
+	d.builder.WriteString("Would have created tickets: :point_down:\n\n")
+	d.renderTicketsForLevel(tickets, d.startingTicketLevel, renderer)
 }
 
 func (d DryRunCreator) renderTicketsForLevel(tickets []*ticket.Ticket,
-	builder *strings.Builder,
 	level int,
 	renderer render.BodyRenderer) {
 	for _, currentTicket := range tickets {
 		ticketString := render.Ticket(currentTicket, renderer)
 
-		builder.WriteString("-----------------\n")
-		builder.WriteString(d.title(currentTicket, level))
-		builder.WriteString(ticketString)
-		builder.WriteString("\n")
-		builder.WriteString("-----------------\n\n")
+		d.builder.WriteString("-----------------\n")
+		d.builder.WriteString(d.title(currentTicket, level))
+		d.builder.WriteString(ticketString)
+		d.builder.WriteString("\n")
+		d.builder.WriteString("-----------------\n\n")
 
-		d.renderTicketsForLevel(currentTicket.Subtickets, builder, level+1, renderer)
+		d.renderTicketsForLevel(currentTicket.Subtickets, level+1, renderer)
 	}
 }
 

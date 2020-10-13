@@ -1,8 +1,10 @@
 package runner
 
 import (
+	"strings"
 	"tix/creator"
 	"tix/creator/jira"
+	"tix/logger"
 	"tix/md"
 	"tix/runner/env"
 	"tix/runner/field"
@@ -81,15 +83,17 @@ func (r JiraRunner) DryRun(markdownData []byte) error {
 		return err
 	}
 
-	r.dryRunCreator().CreateTickets(tickets)
+	var builder strings.Builder
+	r.dryRunCreator(&builder).CreateTickets(tickets)
+	logger.Message(builder.String())
 
 	return nil
 }
 
-func (r JiraRunner) dryRunCreator() creator.TicketCreator {
+func (r JiraRunner) dryRunCreator(builder *strings.Builder) creator.TicketCreator {
 	if r.settings.Jira.NoEpics {
-		return jira.NewDryRunCreatorWithoutEpics()
+		return jira.NewDryRunCreatorWithoutEpics(builder)
 	} else {
-		return jira.NewDryRunCreatorWithEpics()
+		return jira.NewDryRunCreatorWithEpics(builder)
 	}
 }
