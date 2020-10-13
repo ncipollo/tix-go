@@ -2,7 +2,8 @@
 
 typeset -A opt_args
 
-_arguments '-h[prints help]' \
+_arguments '-d[prints out ticket information instead of creating tickets]' \
+'-h[prints help]' \
 '-q[suppresses all log output except errors]' \
 '-v[enables verbose output]' \
 '-version[prints tix version]' \
