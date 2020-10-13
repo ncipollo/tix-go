@@ -1,6 +1,7 @@
 package body
 
 type TextSegment struct {
+	linkedSegmentTraversal
 	text string
 }
 

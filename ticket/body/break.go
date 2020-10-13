@@ -1,6 +1,7 @@
 package body
 
 type LineBreakSegment struct {
+	linkedSegmentTraversal
 }
 
 func NewLineBreakSegment() *LineBreakSegment {

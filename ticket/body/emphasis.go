@@ -1,6 +1,7 @@
 package body
 
 type EmphasisSegment struct {
+	linkedSegmentTraversal
 	text string
 }
 

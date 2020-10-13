@@ -1,6 +1,7 @@
 package body
 
 type BulletListItemSegment struct {
+	linkedSegmentTraversal
 	level  int
 	marker string
 }

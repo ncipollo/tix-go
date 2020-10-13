@@ -50,6 +50,24 @@ func (t *Ticket) UpdateDefaultFields(fields map[string]interface{}) {
 	t.DefaultFields = combinedFields
 }
 
+func (t *Ticket) BuildTraversal() {
+	for index, _ := range t.Body {
+		current := t.getOptionalSegment(index)
+		next := t.getOptionalSegment(index+1)
+		previous := t.getOptionalSegment(index-1)
+
+		current.SetNext(next)
+		current.SetPrevious(previous)
+	}
+}
+
+func (t *Ticket) getOptionalSegment(index int) body.Segment {
+	if index < 0 || index >= len(t.Body) {
+		return nil
+	}
+	return t.Body[index]
+}
+
 func MergeFields(
 	baseFields map[string]interface{},
 	overlayFields map[string]interface{}) map[string]interface{} {

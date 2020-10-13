@@ -1,6 +1,7 @@
 package body
 
 type CodeSpanSegment struct {
+	linkedSegmentTraversal
 	text string
 }
 

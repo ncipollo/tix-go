@@ -60,13 +60,46 @@ println()
 	assert.Equal(t, expected, text)
 }
 
-func TestJiraBodyRenderer_RenderSegment_CodeSpan(t *testing.T) {
+func TestJiraBodyRenderer_RenderSegment_CodeSpan_NoSibling_NoSuffix(t *testing.T) {
 	segment := body.NewCodeSpanSegment("code")
 	renderer := NewJiraBodyRenderer()
 
 	text := renderer.RenderSegment(segment)
 
 	expected := "{{code}}"
+	assert.Equal(t, expected, text)
+}
+
+func TestJiraBodyRenderer_RenderSegment_CodeSpan_WithLineBreakSibling_NoSuffix(t *testing.T) {
+	segment := body.NewCodeSpanSegment("code")
+	segment.SetNext(body.NewLineBreakSegment())
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "{{code}}"
+	assert.Equal(t, expected, text)
+}
+
+func TestJiraBodyRenderer_RenderSegment_CodeSpan_WithTextSibling_NoSuffix(t *testing.T) {
+	segment := body.NewCodeSpanSegment("code")
+	segment.SetNext(body.NewTextSegment(" more text"))
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "{{code}}"
+	assert.Equal(t, expected, text)
+}
+
+func TestJiraBodyRenderer_RenderSegment_CodeSpan_WithTextSibling_WithSuffix(t *testing.T) {
+	segment := body.NewCodeSpanSegment("code")
+	segment.SetNext(body.NewTextSegment("more text"))
+	renderer := NewJiraBodyRenderer()
+
+	text := renderer.RenderSegment(segment)
+
+	expected := "{{code}} "
 	assert.Equal(t, expected, text)
 }
 

@@ -51,6 +51,8 @@ func (s *State) StartTicket() {
 }
 
 func (s *State) CompleteTicket() {
+	s.buildTraversal()
+
 	index := len(s.TicketPath) - 1
 
 	if index > 0 {
@@ -59,6 +61,14 @@ func (s *State) CompleteTicket() {
 		s.RootTickets = append(s.RootTickets, s.CurrentTicket())
 		s.TicketPath = s.TicketPath[:index]
 	}
+}
+
+func (s *State) buildTraversal() {
+	currentTicket := s.CurrentTicket()
+	if currentTicket == nil {
+		return
+	}
+	currentTicket.BuildTraversal()
 }
 
 func (s *State) CompleteAllTickets() {

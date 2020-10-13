@@ -1,6 +1,7 @@
 package body
 
 type TextBlockSegment struct {
+	linkedSegmentTraversal
 }
 
 func NewTextBlockSegment() *TextBlockSegment {

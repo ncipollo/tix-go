@@ -1,6 +1,7 @@
 package body
 
 type ListStartSegment struct {
+	linkedSegmentTraversal
 	isOrdered      bool
 	level          int
 	marker         string
@@ -24,6 +25,7 @@ func (l ListStartSegment) Value() string {
 }
 
 type ListEndSegment struct {
+	linkedSegmentTraversal
 	isOrdered bool
 	level     int
 }

@@ -3,6 +3,7 @@ package body
 import "strconv"
 
 type OrderedListItemSegment struct {
+	linkedSegmentTraversal
 	level  int
 	number int
 }

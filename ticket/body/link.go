@@ -1,6 +1,7 @@
 package body
 
 type LinkSegment struct {
+	linkedSegmentTraversal
 	text string
 	url  string
 }

@@ -1,6 +1,8 @@
 package body
 
-type ThematicBreakSegment struct {}
+type ThematicBreakSegment struct {
+	linkedSegmentTraversal
+}
 
 func NewThematicBreakSegment() *ThematicBreakSegment {
 	return &ThematicBreakSegment{}

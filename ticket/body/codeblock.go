@@ -1,6 +1,7 @@
 package body
 
 type CodeBlockSegment struct {
+	linkedSegmentTraversal
 	code     string
 	language string
 }

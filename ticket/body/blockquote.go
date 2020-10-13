@@ -1,6 +1,8 @@
 package body
 
-type BlockQuoteSegment struct {}
+type BlockQuoteSegment struct {
+	linkedSegmentTraversal
+}
 
 func NewBlockQuoteSegment() *BlockQuoteSegment {
 	return &BlockQuoteSegment{}

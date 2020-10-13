@@ -80,7 +80,18 @@ func (j JiraBodyRenderer) renderCodeBlock(segment *body.CodeBlockSegment) string
 }
 
 func (j JiraBodyRenderer) renderCodeSpan(segment *body.CodeSpanSegment) string {
-	return fmt.Sprintf("{{%s}}", segment.Value())
+	suffix := j.codeSpanSuffix(segment)
+	return fmt.Sprintf("{{%s}}%s", segment.Value(), suffix)
+}
+
+// Jira has a hard time formatting spans which are followed immediately with a non-empty string (ex - {{span}}text).
+// This function will add a space suffix in these cases to prevent super funky Jira formatting.
+func (j JiraBodyRenderer) codeSpanSuffix(segment *body.CodeSpanSegment) string {
+	textSegment, ok := segment.Next().(*body.TextSegment)
+	if ok && !strings.HasPrefix(textSegment.Value(), " ") {
+		return " "
+	}
+	return ""
 }
 
 func (j JiraBodyRenderer) renderEmphasis(segment *body.EmphasisSegment) string {

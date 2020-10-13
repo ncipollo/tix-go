@@ -31,10 +31,14 @@ func TestParse(t *testing.T) {
 	expectedTicket1.AddBodyLineBreak()
 	expectedTicket1.AddBodySegment(body.NewTextSegment("Body 1"))
 	expectedTicket1.AddBodyLineBreak()
+	expectedTicket1.BuildTraversal()
+
 	expectedTicket2 := ticket.NewTicketWithFields(fields)
 	expectedTicket2.Title = "Epic 2"
 	expectedTicket2.AddBodySegment(body.NewTextSegment("Body 2"))
 	expectedTicket2.AddBodyLineBreak()
+	expectedTicket2.BuildTraversal()
+
 	expectedTickets := []*ticket.Ticket{expectedTicket1,expectedTicket2}
 	assert.NoError(t, err)
 	assert.Equal(t, expectedTickets, tickets)
