@@ -1,4 +1,4 @@
-package jira
+package dryrun
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -6,9 +6,13 @@ import (
 	"testing"
 )
 
-func TestTicketStats_Render(t *testing.T) {
+func TestTicketStats_RenderTicket(t *testing.T) {
 	var builder strings.Builder
-	stats := NewTicketStats()
+	stats := NewTicketStats([]*LevelLabel{
+		NewLevelLabel("epic", "epics"),
+		NewLevelLabel("story", "stories"),
+		NewLevelLabel("task", "tasks"),
+	})
 
 	stats.CountTicket(0)
 	stats.CountTicket(0)
@@ -21,7 +25,7 @@ func TestTicketStats_Render(t *testing.T) {
 	expected := `Ticket Stats:
 - Total Tickets: 6
 - Epics: 3
-- Issues: 2
+- Stories: 2
 - Tasks: 1
 `
 	assert.Equal(t, expected, builder.String())

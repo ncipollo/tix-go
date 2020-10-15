@@ -1,9 +1,8 @@
 package jira
 
 import (
-	"fmt"
 	"github.com/andygrunwald/go-jira"
-	"strings"
+	"tix/creator/reporter"
 	"tix/logger"
 	"tix/render"
 	"tix/ticket"
@@ -46,32 +45,10 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 		issue := issues.FromTicket(currentTicket, parentIssue, level)
 		resultIssue, err := j.api.CreateIssue(issue)
 		if err != nil {
-			j.reportFailedTicketCreate(err, level)
+			reporter.ReportFailedTicketCreate(err, j.startingTicketLevel, level)
 		} else {
-			j.reportSuccessfulTicketCreate(resultIssue, level, currentTicket.Title)
+			reporter.ReportSuccessfulTicketCreate(resultIssue.Key, j.startingTicketLevel, level, currentTicket.Title)
 			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue)
 		}
 	}
-}
-
-func (j Creator) reportFailedTicketCreate(err error, level int) {
-	var builder strings.Builder
-	for ii := j.startingTicketLevel; ii < level; ii++ {
-		builder.WriteString("\t")
-	}
-	builder.WriteString("- ")
-	builder.WriteString(err.Error())
-
-	logger.Error(builder.String())
-}
-
-func (j Creator) reportSuccessfulTicketCreate(issue *jira.Issue, level int, title string) {
-	var builder strings.Builder
-	for ii := j.startingTicketLevel; ii < level; ii++ {
-		builder.WriteString("\t")
-	}
-	message := fmt.Sprintf("- :tada: %v: %v created", issue.Key, title)
-	builder.WriteString(message)
-
-	logger.Message(builder.String())
 }

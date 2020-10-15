@@ -6,6 +6,10 @@ type Jira struct {
 	Tickets JiraTicketFields
 }
 
+func (j Jira) Configured() bool {
+	return len(j.Url) > 0
+}
+
 type JiraTicketFields struct {
 	Default map[string]interface{}
 	Epic map[string]interface{}

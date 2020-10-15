@@ -1,17 +1,18 @@
-package jira
+package dryrun
 
 import (
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+	"tix/creator"
+	"tix/render"
 	"tix/ticket"
 	"tix/ticket/body"
 )
 
-func TestDryRunCreator_CreateTickets_WithEpics(t *testing.T) {
+func TestCreator_CreateTickets_StartingLevelZero(t *testing.T) {
 	var builder strings.Builder
-
-	dryCreator := NewDryRunCreatorWithEpics(&builder)
+	dryCreator := createDryRunCreator(&builder, 0)
 	dryCreator.CreateTickets(createDryRunTickets())
 
 	const expected = `Would have created tickets: :point_down:
@@ -32,29 +33,28 @@ body 2
 -----------------
 
 -----------------
-:rocket:Issue - sub-ticket
+:rocket:Story - sub-ticket
 sub-body
 -----------------
 
 Ticket Stats:
 - Total Tickets: 3
 - Epics: 2
-- Issues: 1
+- Stories: 1
 - Tasks: 0
 `
 	assert.Equal(t, expected, builder.String())
 }
 
-func TestDryRunCreator_CreateTickets_WithoutEpics(t *testing.T) {
+func TestCreator_CreateTickets_StartingLevelOne(t *testing.T) {
 	var builder strings.Builder
-
-	dryCreator := NewDryRunCreatorWithoutEpics(&builder)
+	dryCreator := createDryRunCreator(&builder, 1)
 	dryCreator.CreateTickets(createDryRunTickets())
 
 	const expected = `Would have created tickets: :point_down:
 
 -----------------
-:rocket:Issue - ticket 1
+:rocket:Story - ticket 1
 
 Jira Fields:
 - field1: 1
@@ -64,7 +64,7 @@ body 1
 -----------------
 
 -----------------
-:rocket:Issue - ticket 2
+:rocket:Story - ticket 2
 body 2
 -----------------
 
@@ -76,10 +76,25 @@ sub-body
 Ticket Stats:
 - Total Tickets: 3
 - Epics: 0
-- Issues: 2
+- Stories: 2
 - Tasks: 1
 `
 	assert.Equal(t, expected, builder.String())
+}
+
+func createDryRunCreator(builder *strings.Builder, startingTicketLevel int) creator.TicketCreator {
+	labels := []*LevelLabel{
+		NewLevelLabel("epic", "epics"),
+		NewLevelLabel("story", "stories"),
+		NewLevelLabel("task", "tasks"),
+	}
+	return NewCreator(
+		builder,
+		labels,
+		render.NewJiraBodyRenderer(),
+		startingTicketLevel,
+		"jira",
+	)
 }
 
 func createDryRunTickets() []*ticket.Ticket {

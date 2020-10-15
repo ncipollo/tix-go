@@ -47,11 +47,11 @@ func (g GithubBodyRenderer) RenderSegment(bodySegment body.Segment) string {
 	}
 }
 
-func (j GithubBodyRenderer) renderBlockQuoteItem() string {
+func (g GithubBodyRenderer) renderBlockQuoteItem() string {
 	return "> "
 }
 
-func (j GithubBodyRenderer) renderBulletListItem(segment *body.BulletListItemSegment) string {
+func (g GithubBodyRenderer) renderBulletListItem(segment *body.BulletListItemSegment) string {
 	var builder strings.Builder
 	level := segment.Attributes().Level
 
@@ -64,7 +64,7 @@ func (j GithubBodyRenderer) renderBulletListItem(segment *body.BulletListItemSeg
 	return builder.String()
 }
 
-func (j GithubBodyRenderer) renderCodeBlock(segment *body.CodeBlockSegment) string {
+func (g GithubBodyRenderer) renderCodeBlock(segment *body.CodeBlockSegment) string {
 	var builder strings.Builder
 	lang := segment.Attributes().Language
 
@@ -80,20 +80,20 @@ func (j GithubBodyRenderer) renderCodeBlock(segment *body.CodeBlockSegment) stri
 	return builder.String()
 }
 
-func (j GithubBodyRenderer) renderCodeSpan(segment *body.CodeSpanSegment) string {
+func (g GithubBodyRenderer) renderCodeSpan(segment *body.CodeSpanSegment) string {
 	return fmt.Sprintf("`%s`", segment.Value())
 }
 
-func (j GithubBodyRenderer) renderEmphasis(segment *body.EmphasisSegment) string {
+func (g GithubBodyRenderer) renderEmphasis(segment *body.EmphasisSegment) string {
 	return fmt.Sprintf("*%s*", segment.Value())
 }
 
-func (j GithubBodyRenderer) renderLink(segment *body.LinkSegment) string {
+func (g GithubBodyRenderer) renderLink(segment *body.LinkSegment) string {
 	url := segment.Attributes().Url
 	return fmt.Sprintf("[%s](%s)", segment.Value(), url)
 }
 
-func (j GithubBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemSegment) string {
+func (g GithubBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemSegment) string {
 	var builder strings.Builder
 	level := segment.Attributes().Level
 
@@ -106,7 +106,7 @@ func (j GithubBodyRenderer) renderOrderedListItem(segment *body.OrderedListItemS
 	return builder.String()
 }
 
-func (j GithubBodyRenderer) renderListEnd(segment *body.ListEndSegment) string {
+func (g GithubBodyRenderer) renderListEnd(segment *body.ListEndSegment) string {
 	if segment.Attributes().Level == 1 {
 		return "\n"
 	} else {
@@ -114,10 +114,10 @@ func (j GithubBodyRenderer) renderListEnd(segment *body.ListEndSegment) string {
 	}
 }
 
-func (j GithubBodyRenderer) renderStrongEmphasis(segment *body.StrongEmphasisSegment) string {
+func (g GithubBodyRenderer) renderStrongEmphasis(segment *body.StrongEmphasisSegment) string {
 	return fmt.Sprintf("**%s**", segment.Value())
 }
 
-func (j GithubBodyRenderer) renderThematicBreak() string {
+func (g GithubBodyRenderer) renderThematicBreak() string {
 	return "---"
 }

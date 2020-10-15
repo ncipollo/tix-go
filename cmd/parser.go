@@ -60,7 +60,7 @@ func (parser *Parser) Parse() Command {
 
 func (parser *Parser) setupDryRun() *bool {
 	var verbose bool
-	parser.flag.BoolVar(&verbose, "dry-run", false, dryRunUsage)
+	parser.flag.BoolVar(&verbose, "dryrun-run", false, dryRunUsage)
 	parser.flag.BoolVar(&verbose, "d", false, dryRunUsage+shortHandSuffix)
 
 	return &verbose

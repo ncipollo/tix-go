@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_checkJiraEnvironment_MissingApiToken(t *testing.T) {
+func TestCheckJiraEnvironment_MissingApiToken(t *testing.T) {
 	envMap := map[string]string{
 		JiraUsername: "jira",
 	}
@@ -13,7 +13,7 @@ func Test_checkJiraEnvironment_MissingApiToken(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func Test_checkJiraEnvironment_MissingUserName(t *testing.T) {
+func TestCheckJiraEnvironment_MissingUserName(t *testing.T) {
 	envMap := map[string]string{
 		JiraApiToken: "token",
 	}
@@ -21,7 +21,7 @@ func Test_checkJiraEnvironment_MissingUserName(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func Test_checkJiraEnvironment_NoMissingVariables(t *testing.T) {
+func TestCheckJiraEnvironment_NoMissingVariables(t *testing.T) {
 	envMap := map[string]string{
 		JiraUsername: "jira",
 		JiraApiToken: "token",

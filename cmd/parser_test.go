@@ -45,7 +45,7 @@ func TestParser_Parse_TixCommand(t *testing.T) {
 }
 
 func TestParser_Parse_TixCommand_DryRun(t *testing.T) {
-	parser := setupParser("-dry-run","foo.md")
+	parser := setupParser("-dryrun-run","foo.md")
 	cmd := parser.Parse()
 	assert.IsType(t, &TixCommand{}, cmd)
 }

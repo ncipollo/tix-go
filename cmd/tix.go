@@ -41,12 +41,23 @@ func (t TixCommand) Run() error {
 
 	markdownData = t.transformMarkDownData(markdownData, tixSettings)
 
-	jiraRunner := runner.NewJiraRunner(t.envMap, &tixSettings)
+	runners := t.createRunners(tixSettings)
 	if t.dryRun {
-		return jiraRunner.DryRun(markdownData)
+		for _, tixRunner := range runners {
+			err := tixRunner.DryRun(markdownData)
+			if err != nil {
+				return err
+			}
+		}
 	} else {
-		return jiraRunner.Run(markdownData)
+		for _, tixRunner := range runners {
+			err := tixRunner.Run(markdownData)
+			if err != nil {
+				return err
+			}
+		}
 	}
+	return nil
 }
 
 func (t TixCommand) loadSettings() (settings.Settings, error) {
@@ -65,4 +76,11 @@ func (t TixCommand) loadMarkDownData() ([]byte, error) {
 
 func (t TixCommand) transformMarkDownData(markdownData []byte, settings settings.Settings) []byte {
 	return transform.ApplyVariableTransform(markdownData, t.envMap, settings.Variables)
+}
+
+func (t TixCommand) createRunners(tixSettings settings.Settings) []runner.TixRunner {
+	return []runner.TixRunner{
+		runner.NewGithubRunner(t.envMap, &tixSettings),
+		runner.NewJiraRunner(t.envMap, &tixSettings),
+	}
 }

@@ -7,26 +7,26 @@ import (
 )
 
 func Test_jiraFieldState_noEpics_allFieldLevels(t *testing.T) {
-	tixSettings := settingsWithAllFieldLevels(true)
+	tixSettings := jiraWithAllFieldLevels(true)
 
 	fieldState := JiraFieldState(tixSettings)
 
-	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue",}, fieldState.FieldsForLevel(0))
-	assert.Equal(t, map[string]interface{}{"default": "default", "task": "task",}, fieldState.FieldsForLevel(1))
+	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue"}, fieldState.FieldsForLevel(0))
+	assert.Equal(t, map[string]interface{}{"default": "default", "task": "task"}, fieldState.FieldsForLevel(1))
 }
 
 func Test_jiraFieldState_withEpics_allFieldLevels(t *testing.T) {
-	tixSettings := settingsWithAllFieldLevels(false)
+	tixSettings := jiraWithAllFieldLevels(false)
 
 	fieldState := JiraFieldState(tixSettings)
 
-	assert.Equal(t, map[string]interface{}{"default": "default", "epic": "epic",}, fieldState.FieldsForLevel(0))
-	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue",}, fieldState.FieldsForLevel(1))
-	assert.Equal(t, map[string]interface{}{"default": "default", "task": "task",}, fieldState.FieldsForLevel(2))
+	assert.Equal(t, map[string]interface{}{"default": "default", "epic": "epic"}, fieldState.FieldsForLevel(0))
+	assert.Equal(t, map[string]interface{}{"default": "default", "issue": "issue"}, fieldState.FieldsForLevel(1))
+	assert.Equal(t, map[string]interface{}{"default": "default", "task": "task"}, fieldState.FieldsForLevel(2))
 }
 
 func Test_jiraFieldState_noFieldLevels(t *testing.T) {
-	tixSettings := settingsWithNoFields()
+	tixSettings := jiraSettingsWithNoFields()
 
 	fieldState := JiraFieldState(tixSettings)
 
@@ -35,11 +35,11 @@ func Test_jiraFieldState_noFieldLevels(t *testing.T) {
 	assert.Equal(t, map[string]interface{}{}, fieldState.FieldsForLevel(2))
 }
 
-func settingsWithNoFields() settings.Settings {
+func jiraSettingsWithNoFields() settings.Settings {
 	return settings.Settings{}
 }
 
-func settingsWithAllFieldLevels(noEpics bool) settings.Settings {
+func jiraWithAllFieldLevels(noEpics bool) settings.Settings {
 	return settings.Settings{
 		Jira: settings.Jira{
 			NoEpics: noEpics,
