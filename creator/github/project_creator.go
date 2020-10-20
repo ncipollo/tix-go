@@ -1,12 +1,16 @@
 package github
 
 import (
+	"errors"
+	"fmt"
 	"github.com/google/go-github/v29/github"
+	"strconv"
 	"tix/ticket"
 )
 
 type ProjectCreator interface {
 	CreateProject(ticket *ticket.Ticket) (*github.Project, error)
+	UpdateProject(ticket *ticket.Ticket, updateKey string) (*github.Project, error)
 }
 
 type ApiProjectCreator struct {
@@ -73,4 +77,29 @@ func (c ApiProjectCreator) createColumns(fields *Fields, project *github.Project
 		columnCache.AddColumn(column)
 	}
 	return nil
+}
+
+func (c ApiProjectCreator) UpdateProject(ticket *ticket.Ticket, updateKey string) (*github.Project, error) {
+	projectNumber, err := strconv.Atoi(updateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	project, err := c.cache.Project.ProjectByNumber(projectNumber)
+	if err != nil {
+		return nil, err
+	}
+	if project == nil {
+		return nil, errors.New(fmt.Sprintf("No project #%d", projectNumber))
+	}
+
+	projectOptions := c.options.Project(ticket)
+	updatedProject, err := c.api.UpdateProject(project, projectOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	c.cache.Project.AddProject(updatedProject)
+
+	return project, nil
 }

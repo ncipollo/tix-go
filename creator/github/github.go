@@ -31,7 +31,16 @@ func (c Creator) CreateTickets(tickets []*ticket.Ticket) {
 
 func (c Creator) createProjects(tickets []*ticket.Ticket) {
 	for _, currentTicket := range tickets {
-		project, err := c.projectCreator.CreateProject(currentTicket)
+		var project *github.Project
+		var err error
+
+		updateKey := currentTicket.TicketUpdateKey("github")
+		if len(updateKey) > 0 {
+			project, err = c.projectCreator.UpdateProject(currentTicket, updateKey)
+		} else {
+			project, err = c.projectCreator.CreateProject(currentTicket)
+		}
+
 		if err != nil {
 			reporter.ReportFailedTicketCreate(err, c.startingTicketLevel, 0)
 		} else {
@@ -46,12 +55,14 @@ func (c Creator) createIssues(tickets []*ticket.Ticket, project *github.Project)
 	for _, currentTicket := range tickets {
 		var issue *github.Issue
 		var err error
+
 		updateKey := currentTicket.TicketUpdateKey("github")
 		if len(updateKey) > 0 {
 			issue, err = c.issueCreator.UpdateIssue(currentTicket, updateKey)
 		} else {
 			issue, err = c.issueCreator.CreateIssue(currentTicket, project)
 		}
+
 		if err != nil {
 			reporter.ReportFailedTicketCreate(err, c.startingTicketLevel, 1)
 		} else {

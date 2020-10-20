@@ -21,7 +21,9 @@ func (p *ProjectCache) AddProject(project *github.Project) {
 		return
 	}
 
-	p.columnCacheById[*project.ID] = NewColumnCache(p.api, project)
+	if p.columnCacheById[*project.ID] == nil {
+		p.columnCacheById[*project.ID] = NewColumnCache(p.api, project)
+	}
 	p.projectsByNumber[*project.Number] = project
 }
 
