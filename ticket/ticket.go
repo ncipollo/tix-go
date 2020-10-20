@@ -2,6 +2,8 @@ package ticket
 
 import "tix/ticket/body"
 
+const KeyUpdateTicket = "update_ticket"
+
 type Ticket struct {
 	DefaultFields        map[string]interface{}
 	fieldsByTicketSystem map[string]map[string]interface{}
@@ -53,12 +55,20 @@ func (t *Ticket) UpdateDefaultFields(fields map[string]interface{}) {
 func (t *Ticket) BuildTraversal() {
 	for index, _ := range t.Body {
 		current := t.getOptionalSegment(index)
-		next := t.getOptionalSegment(index+1)
-		previous := t.getOptionalSegment(index-1)
+		next := t.getOptionalSegment(index + 1)
+		previous := t.getOptionalSegment(index - 1)
 
 		current.SetNext(next)
 		current.SetPrevious(previous)
 	}
+}
+
+func (t *Ticket) TicketUpdateKey(ticketSystem string) string {
+	key, ok := t.Fields(ticketSystem)[KeyUpdateTicket].(string)
+	if ok {
+		return key
+	}
+	return ""
 }
 
 func (t *Ticket) getOptionalSegment(index int) body.Segment {
