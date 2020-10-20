@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/google/go-github/v29/github"
 	"github.com/stretchr/testify/assert"
+	"strconv"
 	"testing"
 	"tix/render"
 	"tix/ticket"
@@ -96,6 +97,54 @@ func TestIssueCreator_CreateIssue_WithParentProject_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestIssueCreator_UpdateIssue_ApiError(t *testing.T) {
+	issueCreator, api, _, options := setupIssueCreatorTest()
+	issueTicket := createIssueCreatorTicket()
+	issueNumber := 42
+	issue := &github.Issue{Number: &issueNumber}
+	issueRequest := options.Issue(issueTicket, nil, nil, nil)
+	updateKey := strconv.Itoa(issueNumber)
+	err := errors.New("api error")
+
+	api.On("UpdateIssue", issue, issueRequest).Return(nil, err)
+
+	result, err := issueCreator.UpdateIssue(issueTicket, updateKey)
+
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestIssueCreator_UpdateIssue_NonNumericKeyError(t *testing.T) {
+	issueCreator, _, _, _ := setupIssueCreatorTest()
+	issueTicket := createIssueCreatorTicket()
+	updateKey := "barf"
+	err := errors.New("api error")
+
+	result, err := issueCreator.UpdateIssue(issueTicket, updateKey)
+
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestIssueCreator_UpdateIssue_Success(t *testing.T) {
+	issueCreator, api, _, options := setupIssueCreatorTest()
+	issueTicket := createIssueCreatorTicket()
+	issueNumber := 42
+	issue := &github.Issue{Number: &issueNumber}
+	updatedTitle := "title"
+	updatedIssue := createIssueCreatorIssue()
+	updatedIssue.Title = &updatedTitle
+	issueRequest := options.Issue(issueTicket, nil, nil, nil)
+	updateKey := strconv.Itoa(issueNumber)
+
+	api.On("UpdateIssue", issue, issueRequest).Return(updatedIssue, nil)
+
+	result, err := issueCreator.UpdateIssue(issueTicket, updateKey)
+
+	assert.Equal(t, updatedIssue, result)
+	assert.NoError(t, err)
+}
+
 func setupIssueCreatorTest() (IssueCreator, *mockApi, *Cache, *Options) {
 	api := newMockApi()
 	cache := NewCache(api)
@@ -132,7 +181,7 @@ func createIssueCreatorTicket() *ticket.Ticket {
 	return newTicket
 }
 
-func setupIssueCreatorColumn(cache *Cache,project *github.Project) *github.ProjectColumn {
+func setupIssueCreatorColumn(cache *Cache, project *github.Project) *github.ProjectColumn {
 	columnId := int64(3)
 	columnName := "To do"
 	column := github.ProjectColumn{ID: &columnId, Name: &columnName}

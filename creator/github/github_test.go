@@ -83,6 +83,16 @@ func (m *mockIssueCreator) CreateIssue(ticket *ticket.Ticket, parentProject *git
 	return nil, err
 }
 
+func (m *mockIssueCreator) UpdateIssue(ticket *ticket.Ticket, updateKey string) (*github.Issue, error) {
+	args := m.Called(ticket, updateKey)
+	result := args.Get(0)
+	err := args.Error(1)
+	if result != nil {
+		return result.(*github.Issue), err
+	}
+	return nil, err
+}
+
 type mockProjectCreator struct {
 	mock.Mock
 }
