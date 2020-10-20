@@ -14,7 +14,7 @@ You can also download the binary from the releases page.
 ```
 Usage: tix [OPTIONS] <markdown file> 
   -d	prints out ticket information instead of creating tickets (shorthand)
-  -dryrun-run
+  -dryrun
     	prints out ticket information instead of creating tickets
   -h	prints help for tix (shorthand)
   -help
@@ -98,7 +98,6 @@ abstractions to generate representations which are specific to a ticketing syste
 
 ## Special Blocks
 Tix supports special code blocks which may be used to add fields for a ticket. For example:
-# Ticket
     ```tix
     // Adds fields to the ticket, regardless of ticket system
     field: value
