@@ -94,3 +94,23 @@ func (m *mockApi) ListMilestones() ([]*github.Milestone, error) {
 	}
 	return nil, err
 }
+
+func (m *mockApi) UpdateIssue(issue *github.Issue, issueRequest *github.IssueRequest) (*github.Issue, error) {
+	args := m.Called(issue, issueRequest)
+	result := args.Get(0)
+	err := args.Error(1)
+	if result != nil {
+		return result.(*github.Issue), err
+	}
+	return nil, err
+}
+
+func (m *mockApi) UpdateProject(project *github.Project, projectOptions *github.ProjectOptions) (*github.Project, error) {
+	args := m.Called(project, projectOptions)
+	result := args.Get(0)
+	err := args.Error(1)
+	if result != nil {
+		return result.(*github.Project), err
+	}
+	return nil, err
+}
