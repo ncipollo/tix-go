@@ -13,6 +13,9 @@ You can also download the binary from the releases page.
 # Usage
 ```
 Usage: tix [OPTIONS] <markdown file> 
+  -d	prints out ticket information instead of creating tickets (shorthand)
+  -dryrun-run
+    	prints out ticket information instead of creating tickets
   -h	prints help for tix (shorthand)
   -help
     	prints help for tix
@@ -33,8 +36,19 @@ file contains information needed by tix in order to communicate with ticketing s
 
 The following is the expected format of the settings file:
 ```yml
+github:
+  no_projects: true // Indicates if tix should use projects or treat root tickets as issues. Defaults to false.
+  owner: owner // The owner of the github repo (ex - ncipollo)
+  repo: repo  // The github repo (ex - tix)
+  tickets:
+    default: 
+      default: default // Fields to be added to both projets and issues
+    project:
+      project: project // Fields to be added to projects
+    issue:
+      labels: [label1, label2] // Fields to be added to issues
 jira:
-    no_epics: false // Indicates if tix should use epics or treat root ticket as a story / issue. Defaults to false. 
+    no_epics: false // Indicates if tix should use epics or treat root tickets as stories / issues. Defaults to false. 
     url: https://url.to.your.jira.instance.com
     tickets: 
         // All fields should be lower case. Field name spaces should be included (ex- epic name)
@@ -106,3 +120,22 @@ Jira tickets have the following relationship with heading indent levels:
 - `#`: Epic, if epics are allowed via settings. Story otherwise.
 - `##`: Story / issue
 - `###`: Task
+
+# Github
+Tix expects your github account information to be stored in your environment. Specifically, it will look for the following variable:
+
+- `GITHUB_API_TOKEN`: This should be set to your github access token. Access token's may be generated here: [Github API Tokens](https://github.com/settings/tokens)
+
+Github tickets have the following relationship with heading indent levels:
+- `#`: Project, if projects are allowed via settings. Issue otherwise.
+- `##`: Issue
+
+## Github Settings
+The following settings properties effect the issue type tickets.
+
+- `assignee`: (string) Sets the assignee of the ticket. Should match a github account name (ex - `ncipollo`).
+- `assignees`: (array) Sets multiple assignees for the ticket. Should match a github account name (ex - `[ncipollo, etc]`).
+- `column`: (string) Specifies the column the issue should be placed in when it's within a project (ex - `To do`). Defaults to `To do`.
+- `labels`: (array) Specifies the labels to apply to the issue (ex - `[label1, label2]`).
+- `milestone`: (string) Specifies the milestone to add this issue to (ex - `v1.0.0`). Note: This will create a milestone if it doesn't yet exist. This can cause tix to fail if the milestone already exists but is closed.
+- `project`: (number) The project the issue should be added to (ex - `13`). The project should exist and be in the open state. This only takes effect if `no_projects` is `true`.
