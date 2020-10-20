@@ -15,6 +15,8 @@ type Api interface {
 	ListProjectColumns(project *github.Project) ([]*github.ProjectColumn, error)
 	ListRepoProjects() ([]*github.Project, error)
 	ListMilestones() ([]*github.Milestone, error)
+	UpdateIssue(issue *github.Issue, issueRequest *github.IssueRequest, ) (*github.Issue, error)
+	UpdateProject(project *github.Project, projectOptions *github.ProjectOptions, ) (*github.Project, error)
 }
 
 type githubApi struct {
@@ -118,4 +120,20 @@ func (g githubApi) ListMilestones() ([]*github.Milestone, error) {
 		opt.Page = resp.NextPage
 	}
 	return allMilestones, nil
+}
+
+func (g githubApi) UpdateIssue(
+	issue *github.Issue,
+	issueRequest *github.IssueRequest,
+) (*github.Issue, error) {
+	issue, _, err := g.client.Issues.Edit(g.ctx, g.owner, g.repo, *issue.Number, issueRequest)
+	return issue, err
+}
+
+func (g githubApi) UpdateProject(
+	project *github.Project,
+	projectOptions *github.ProjectOptions,
+) (*github.Project, error) {
+	project, _, err := g.client.Projects.UpdateProject(g.ctx, *project.ID, projectOptions)
+	return project, err
 }
