@@ -15,7 +15,7 @@ type Api interface {
 	ListProjectColumns(project *github.Project) ([]*github.ProjectColumn, error)
 	ListRepoProjects() ([]*github.Project, error)
 	ListMilestones() ([]*github.Milestone, error)
-	UpdateIssue(issue *github.Issue, issueRequest *github.IssueRequest, ) (*github.Issue, error)
+	UpdateIssue(issue *github.Issue, issueRequest *github.IssueRequest) (*github.Issue, error)
 	UpdateProject(project *github.Project, projectOptions *github.ProjectOptions, ) (*github.Project, error)
 }
 

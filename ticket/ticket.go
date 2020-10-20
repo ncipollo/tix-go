@@ -1,6 +1,9 @@
 package ticket
 
-import "tix/ticket/body"
+import (
+	"strconv"
+	"tix/ticket/body"
+)
 
 const KeyUpdateTicket = "update_ticket"
 
@@ -67,6 +70,10 @@ func (t *Ticket) TicketUpdateKey(ticketSystem string) string {
 	key, ok := t.Fields(ticketSystem)[KeyUpdateTicket].(string)
 	if ok {
 		return key
+	}
+	number, ok := t.Fields(ticketSystem)[KeyUpdateTicket].(int)
+	if ok {
+		return strconv.Itoa(number)
 	}
 	return ""
 }
