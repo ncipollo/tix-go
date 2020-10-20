@@ -98,11 +98,17 @@ abstractions to generate representations which are specific to a ticketing syste
 
 ## Special Blocks
 Tix supports special code blocks which may be used to add fields for a ticket. For example:
+
     ```tix
     // Adds fields to the ticket, regardless of ticket system
     field: value
     ```
 
+    ```github
+    // Adds field to the ticket only if the ticketing system is github.
+    field: value
+    ```
+    
     ```jira
     // Adds field to the ticket only if the ticketing system is jira.
     field: value
