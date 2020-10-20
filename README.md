@@ -136,7 +136,7 @@ Github tickets have the following relationship with heading indent levels:
 - `##`: Issue
 
 ## Github Settings
-The following settings properties effect the issue type tickets.
+The following settings effect issue type tickets:
 
 - `assignee`: (string) Sets the assignee of the ticket. Should match a github account name (ex - `ncipollo`).
 - `assignees`: (array) Sets multiple assignees for the ticket. Should match a github account name (ex - `[ncipollo, etc]`).
@@ -144,3 +144,6 @@ The following settings properties effect the issue type tickets.
 - `labels`: (array) Specifies the labels to apply to the issue (ex - `[label1, label2]`).
 - `milestone`: (string) Specifies the milestone to add this issue to (ex - `v1.0.0`). Note: This will create a milestone if it doesn't yet exist. This can cause tix to fail if the milestone already exists but is closed.
 - `project`: (number) The project the issue should be added to (ex - `13`). The project should exist and be in the open state. This only takes effect if `no_projects` is `true`.
+
+The following settings effect project type tickets:
+- `columns`: (array) Specifies the columns which should be created with the project (ex - `[todo, working on it, done]`). Defaults to `[To do, In progress, Done]`.
