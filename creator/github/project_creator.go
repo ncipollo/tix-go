@@ -101,5 +101,5 @@ func (c ApiProjectCreator) UpdateProject(ticket *ticket.Ticket, updateKey string
 
 	c.cache.Project.AddProject(updatedProject)
 
-	return project, nil
+	return updatedProject, nil
 }

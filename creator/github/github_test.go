@@ -106,3 +106,13 @@ func (m *mockProjectCreator) CreateProject(ticket *ticket.Ticket) (*github.Proje
 	}
 	return nil, err
 }
+
+func (m *mockProjectCreator) UpdateProject(ticket *ticket.Ticket, updateKey string) (*github.Project, error) {
+	args := m.Called(ticket, updateKey)
+	result := args.Get(0)
+	err := args.Error(1)
+	if result != nil {
+		return result.(*github.Project), err
+	}
+	return nil, err
+}
