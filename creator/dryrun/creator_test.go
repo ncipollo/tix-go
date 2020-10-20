@@ -15,25 +15,26 @@ func TestCreator_CreateTickets_StartingLevelZero(t *testing.T) {
 	dryCreator := createDryRunCreator(&builder, 0)
 	dryCreator.CreateTickets(createDryRunTickets())
 
-	const expected = `Would have created tickets: :point_down:
+	const expected = `Would have processed tickets: :point_down:
 
 -----------------
-:rocket:Epic - ticket 1
+:rocket:Epic - ticket 1 updated
 
 Jira Fields:
 - field1: 1
 - field2: 2
+- update_ticket: 1
 
 body 1
 -----------------
 
 -----------------
-:rocket:Epic - ticket 2
+:rocket:Epic - ticket 2 created
 body 2
 -----------------
 
 -----------------
-:rocket:Story - sub-ticket
+:rocket:Story - sub-ticket created
 sub-body
 -----------------
 
@@ -51,25 +52,26 @@ func TestCreator_CreateTickets_StartingLevelOne(t *testing.T) {
 	dryCreator := createDryRunCreator(&builder, 1)
 	dryCreator.CreateTickets(createDryRunTickets())
 
-	const expected = `Would have created tickets: :point_down:
+	const expected = `Would have processed tickets: :point_down:
 
 -----------------
-:rocket:Story - ticket 1
+:rocket:Story - ticket 1 updated
 
 Jira Fields:
 - field1: 1
 - field2: 2
+- update_ticket: 1
 
 body 1
 -----------------
 
 -----------------
-:rocket:Story - ticket 2
+:rocket:Story - ticket 2 created
 body 2
 -----------------
 
 -----------------
-:rocket:Task - sub-ticket
+:rocket:Task - sub-ticket created
 sub-body
 -----------------
 
@@ -101,6 +103,7 @@ func createDryRunTickets() []*ticket.Ticket {
 	ticketFields := map[string]interface{}{
 		"field1": 1,
 		"field2": 2,
+		"update_ticket": "1",
 	}
 
 	ticket1 := ticket.NewTicketWithFields(ticketFields)

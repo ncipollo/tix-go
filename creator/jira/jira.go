@@ -45,9 +45,9 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 		issue := issues.FromTicket(currentTicket, parentIssue, level)
 		resultIssue, err := j.api.CreateIssue(issue)
 		if err != nil {
-			reporter.ReportFailedTicketCreate(err, j.startingTicketLevel, level)
+			reporter.ReportFailedTicket(err, j.startingTicketLevel, level)
 		} else {
-			reporter.ReportSuccessfulTicketCreate(resultIssue.Key, j.startingTicketLevel, level, currentTicket.Title)
+			reporter.ReportSuccessfulTicket(resultIssue.Key, j.startingTicketLevel, level, currentTicket.Title, "")
 			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue)
 		}
 	}

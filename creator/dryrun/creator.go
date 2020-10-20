@@ -36,7 +36,7 @@ func NewCreator(
 }
 
 func (c *Creator) CreateTickets(tickets []*ticket.Ticket) {
-	c.builder.WriteString("Would have created tickets: :point_down:\n\n")
+	c.builder.WriteString("Would have processed tickets: :point_down:\n\n")
 	c.renderTicketsForLevel(tickets, c.startingTicketLevel)
 	c.stats.Render(c.builder)
 }
@@ -59,7 +59,13 @@ func (c Creator) renderTicketsForLevel(tickets []*ticket.Ticket,
 }
 
 func (c Creator) title(ticket *ticket.Ticket, level int) string {
-	return fmt.Sprintf(":rocket:%s - %s\n", c.ticketType(level), ticket.Title)
+	var verb string
+	if len(ticket.TicketUpdateKey(c.ticketSystem)) > 0 {
+		verb = "updated"
+	} else {
+		verb = "created"
+	}
+	return fmt.Sprintf(":rocket:%s - %s %s\n", c.ticketType(level), ticket.Title, verb)
 }
 
 func (c Creator) ticketType(level int) string {

@@ -64,6 +64,27 @@ func TestProjectCache_ColumnCacheById_PopulatesCache_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestProjectCache_ColumnCacheById_PreservesColumnCacheWhenProjectUpdated(t *testing.T) {
+	api := newMockApi()
+	number := 1
+	id := int64(number)
+	name := "name"
+	project := &github.Project{ID: &id, Number: &number}
+	cache := NewProjectCache(api)
+	column := &github.ProjectColumn{ID: &id, Name: &name}
+
+	cache.AddProject(project)
+	columnCache, _ := cache.ColumnCacheById(id)
+	columnCache.AddColumn(column)
+	cache.AddProject(project)
+
+	columnCache, _ = cache.ColumnCacheById(id)
+	result, err := columnCache.GetByName(name)
+
+	assert.Equal(t, column, result)
+	assert.NoError(t, err)
+}
+
 func TestProjectCache_ProjectByNumber_CacheMiss(t *testing.T) {
 	api := newMockApi()
 	number := 1

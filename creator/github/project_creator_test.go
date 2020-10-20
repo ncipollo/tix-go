@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/google/go-github/v29/github"
 	"github.com/stretchr/testify/assert"
+	"strconv"
 	"testing"
 	"tix/render"
 	"tix/ticket"
@@ -68,6 +69,65 @@ func TestProjectCreator_CreateProject_Success(t *testing.T) {
 		assert.Equal(t, expected, column)
 	}
 	assert.Equal(t, project, result)
+	assert.NoError(t, err)
+}
+
+func TestProjectCreator_UpdateProject_ApiError(t *testing.T) {
+	projectCreator, api, cache, options := setupProjectCreatorTest()
+	projectTicket := createProjectCreatorTicket()
+	project := createProjectCreatorProject()
+	updateKey := strconv.Itoa(*project.Number)
+	cache.Project.AddProject(project)
+	err := errors.New("api error")
+	api.On("UpdateProject", project, options.Project(projectTicket)).Return(nil, err)
+
+	result, err := projectCreator.UpdateProject(projectTicket, updateKey)
+
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestProjectCreator_UpdateProject_NonNumericKeyError(t *testing.T) {
+	projectCreator, _, cache, _ := setupProjectCreatorTest()
+	projectTicket := createProjectCreatorTicket()
+	project := createProjectCreatorProject()
+	cache.Project.AddProject(project)
+
+	result, err := projectCreator.UpdateProject(projectTicket, "barf")
+
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestProjectCreator_UpdateProject_NoProject(t *testing.T) {
+	projectCreator, api, _, _ := setupProjectCreatorTest()
+	projectTicket := createProjectCreatorTicket()
+	project := createProjectCreatorProject()
+	updateKey := strconv.Itoa(*project.Number)
+	api.On("ListRepoProjects").Return([]*github.Project{}, nil)
+
+	result, err := projectCreator.UpdateProject(projectTicket, updateKey)
+
+	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+
+func TestProjectCreator_UpdateProject_Success(t *testing.T) {
+	projectCreator, api, cache, options := setupProjectCreatorTest()
+	projectTicket := createProjectCreatorTicket()
+	project := createProjectCreatorProject()
+	updateKey := strconv.Itoa(*project.Number)
+	updatedNumber := 42
+	updatedProject := createProjectCreatorProject()
+	updatedProject.Number = &updatedNumber
+	cache.Project.AddProject(project)
+	api.On("UpdateProject", project, options.Project(projectTicket)).Return(updatedProject, nil)
+
+	result, err := projectCreator.UpdateProject(projectTicket, updateKey)
+	cachedProject, _ := cache.Project.ProjectByNumber(42)
+
+	assert.Equal(t, updatedProject, result)
+	assert.Equal(t, updatedProject, cachedProject)
 	assert.NoError(t, err)
 }
 

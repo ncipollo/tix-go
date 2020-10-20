@@ -1,12 +1,15 @@
 package github
 
+import "C"
 import (
 	"github.com/google/go-github/v29/github"
+	"strconv"
 	"tix/ticket"
 )
 
 type IssueCreator interface {
 	CreateIssue(ticket *ticket.Ticket, parentProject *github.Project) (*github.Issue, error)
+	UpdateIssue(ticket *ticket.Ticket, updateKey string) (*github.Issue, error)
 }
 
 type ApiIssueCreator struct {
@@ -51,6 +54,15 @@ func (c ApiIssueCreator) createFields(ticket *ticket.Ticket) *Fields {
 }
 
 func (c ApiIssueCreator) createIssue(ticket *ticket.Ticket, fields *Fields) (*github.Issue, error) {
+	request, err := c.createRequest(ticket, fields)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.api.CreateIssue(request)
+}
+
+func (c ApiIssueCreator) createRequest(ticket *ticket.Ticket, fields *Fields) (*github.IssueRequest, error) {
 	assignees := fields.Assignees()
 	labels := fields.Labels()
 	milestone, err := fields.Milestone()
@@ -63,9 +75,7 @@ func (c ApiIssueCreator) createIssue(ticket *ticket.Ticket, fields *Fields) (*gi
 		milestoneId = &value
 	}
 
-	request := c.options.Issue(ticket, assignees, labels, milestoneId)
-
-	return c.api.CreateIssue(request)
+	return c.options.Issue(ticket, assignees, labels, milestoneId), nil
 }
 
 func (c ApiIssueCreator) addIssueToProject(issue *github.Issue, project *github.Project, fields *Fields) error {
@@ -86,4 +96,24 @@ func (c ApiIssueCreator) projectToUse(parentProject *github.Project, fields *Fie
 		return parentProject, nil
 	}
 	return fields.Project()
+}
+
+func (c ApiIssueCreator) UpdateIssue(ticket *ticket.Ticket, ticketKey string) (*github.Issue, error) {
+	fields := c.createFields(ticket)
+	return c.updateIssue(ticket, fields, ticketKey)
+}
+
+func (c ApiIssueCreator) updateIssue(ticket *ticket.Ticket, fields *Fields, updateKey string) (*github.Issue, error) {
+	issueNumber, err := strconv.Atoi(updateKey)
+	if err != nil {
+		return nil, err
+	}
+	updateIssue := &github.Issue{Number: &issueNumber}
+
+	request, err := c.createRequest(ticket, fields)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.api.UpdateIssue(updateIssue, request)
 }
