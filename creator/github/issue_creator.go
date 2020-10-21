@@ -1,6 +1,5 @@
 package github
 
-import "C"
 import (
 	"github.com/google/go-github/v29/github"
 	"strconv"
