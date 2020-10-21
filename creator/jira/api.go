@@ -45,6 +45,13 @@ func (j *jiraApi) UpdateIssue(issue *jira.Issue) (*jira.Issue, error) {
 	if err != nil {
 		return nil, j.generateError(":scream: unable to create jira issue", err, response)
 	}
+
+	issue, response, err = j.client.Issue.Get(issue.Key, nil)
+
+	if err != nil {
+		return nil, j.generateError(":scream: unable to update jira issue", err, response)
+	}
+
 	return issue, nil
 }
 
