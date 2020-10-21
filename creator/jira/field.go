@@ -166,12 +166,13 @@ func (i *IssueFields) TaskType() jira.IssueType {
 
 func (i *IssueFields) Unknowns() map[string]interface{} {
 	keysToSkip := map[string]bool{
-		KeyAffectsVersions: true,
-		KeyComponents:      true,
-		KeyFixVersions:     true,
-		KeyLabels:          true,
-		KeyProject:         true,
-		KeyType:            true,
+		KeyAffectsVersions:     true,
+		KeyComponents:          true,
+		KeyFixVersions:         true,
+		KeyLabels:              true,
+		KeyProject:             true,
+		KeyType:                true,
+		ticket.KeyUpdateTicket: true,
 	}
 
 	unknown := make(map[string]interface{})

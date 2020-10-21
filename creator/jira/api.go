@@ -11,6 +11,7 @@ import (
 type Api interface {
 	CreateIssue(issue *jira.Issue) (*jira.Issue, error)
 	GetIssueFieldList() ([]jira.Field, error)
+	UpdateIssue(issue *jira.Issue) (*jira.Issue, error)
 }
 
 type jiraApi struct {
@@ -33,6 +34,14 @@ func NewApi(userName string, apiToken string, baseUrl string) Api {
 
 func (j *jiraApi) CreateIssue(issue *jira.Issue) (*jira.Issue, error) {
 	issue, response, err := j.client.Issue.Create(issue)
+	if err != nil {
+		return nil, j.generateError(":scream: unable to create jira issue", err, response)
+	}
+	return issue, nil
+}
+
+func (j *jiraApi) UpdateIssue(issue *jira.Issue) (*jira.Issue, error) {
+	issue, response, err := j.client.Issue.Update(issue)
 	if err != nil {
 		return nil, j.generateError(":scream: unable to create jira issue", err, response)
 	}
