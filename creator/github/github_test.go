@@ -7,6 +7,29 @@ import (
 	"tix/ticket"
 )
 
+func TestCreator_CreateTickets_UpdateTickets(t *testing.T) {
+	id := int64(1)
+	number := 2
+	ticketCreator, issueCreator, projectCreator := setupCreatorTests(false)
+	tickets := ticketsForUpdater()
+	project := &github.Project{ID: &id, Number: &number}
+	issue := &github.Issue{ID: &id, Number: &number}
+	projectCreator.On(
+		"UpdateProject",
+		mock.AnythingOfType("*ticket.Ticket"),
+		mock.AnythingOfType("string"),
+	).Return(project, nil)
+	issueCreator.On(
+		"UpdateIssue",
+		mock.AnythingOfType("*ticket.Ticket"),
+		mock.AnythingOfType("string"),
+	).Return(issue, nil)
+
+	ticketCreator.CreateTickets(tickets)
+	projectCreator.AssertNumberOfCalls(t, "UpdateProject", 2)
+	issueCreator.AssertNumberOfCalls(t, "UpdateIssue", 1)
+}
+
 func TestCreator_CreateTickets_WithOutProjects(t *testing.T) {
 	id := int64(1)
 	number := 2
@@ -63,6 +86,20 @@ func ticketsForCreator() []*ticket.Ticket {
 	ticket2.Title = "ticket 1"
 
 	subTicket := ticket.NewTicket()
+	subTicket.Title = "subticket"
+	ticket1.AddSubticket(subTicket)
+
+	return []*ticket.Ticket{ticket1, ticket2}
+}
+
+func ticketsForUpdater() []*ticket.Ticket {
+	ticket1 := ticket.NewTicketWithFields(map[string]interface{}{"update_ticket": "1"})
+	ticket1.Title = "ticket 1"
+
+	ticket2 := ticket.NewTicketWithFields(map[string]interface{}{"update_ticket": "2"})
+	ticket2.Title = "ticket 1"
+
+	subTicket := ticket.NewTicketWithFields(map[string]interface{}{"update_ticket": "3"})
 	subTicket.Title = "subticket"
 	ticket1.AddSubticket(subTicket)
 
