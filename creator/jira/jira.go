@@ -42,12 +42,28 @@ func (j Creator) createIssues() (*Issues, error) {
 
 func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues, level int, parentIssue *jira.Issue) {
 	for _, currentTicket := range tickets {
+		var resultIssue *jira.Issue
+		var err error
+
+		updateKey := currentTicket.TicketUpdateKey("jira")
 		issue := issues.FromTicket(currentTicket, parentIssue, level)
-		resultIssue, err := j.api.CreateIssue(issue)
+
+		if len(updateKey) > 0 {
+			issue.Key = updateKey
+			resultIssue, err = j.api.UpdateIssue(issue)
+		} else {
+			resultIssue, err = j.api.CreateIssue(issue)
+		}
+
 		if err != nil {
 			reporter.ReportFailedTicket(err, j.startingTicketLevel, level)
 		} else {
-			reporter.ReportSuccessfulTicket(resultIssue.Key, j.startingTicketLevel, level, currentTicket.Title, "")
+			reporter.ReportSuccessfulTicket(
+				resultIssue.Key,
+				j.startingTicketLevel, level,
+				currentTicket.Title,
+				updateKey,
+			)
 			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue)
 		}
 	}

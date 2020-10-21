@@ -88,7 +88,15 @@ func TestTicket_Fields_ReturnsTicketSystemSpecificFields(t *testing.T) {
 	assert.Equal(t, expected, combinedFields)
 }
 
-func TestTicket_TicketUpdateKey_CorrectType(t *testing.T) {
+func TestTicket_TicketUpdateKey_CorrectType_Integer(t *testing.T) {
+	defaultFields := map[string]interface{}{
+		"update_ticket": 123,
+	}
+	ticket := NewTicketWithFields(defaultFields)
+	assert.Equal(t, "123", ticket.TicketUpdateKey("github"))
+}
+
+func TestTicket_TicketUpdateKey_CorrectType_String(t *testing.T) {
 	defaultFields := map[string]interface{}{
 		"update_ticket": "123",
 	}
@@ -103,7 +111,7 @@ func TestTicket_TicketUpdateKey_Omitted(t *testing.T) {
 
 func TestTicket_TicketUpdateKey_WrongType(t *testing.T) {
 	defaultFields := map[string]interface{}{
-		"update_ticket": 42,
+		"update_ticket": []string{},
 	}
 	ticket := NewTicketWithFields(defaultFields)
 	assert.Equal(t, "", ticket.TicketUpdateKey("github"))
@@ -122,7 +130,7 @@ func TestTicket_UpdateDefaultFields(t *testing.T) {
 
 	expected := map[string]interface{}{
 		"original": "foo",
-		"updated": "bar",
+		"updated":  "bar",
 	}
 	assert.Equal(t, expected, ticket.DefaultFields)
 }
