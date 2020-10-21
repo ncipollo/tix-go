@@ -45,7 +45,7 @@ func (c Creator) createProjects(tickets []*ticket.Ticket) {
 			reporter.ReportFailedTicket(err, c.startingTicketLevel, 0)
 		} else {
 			key := fmt.Sprintf("%d", *project.Number)
-			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 0, currentTicket.Title, "")
+			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 0, currentTicket.Title, updateKey)
 			c.createIssues(currentTicket.Subtickets, project)
 		}
 	}
@@ -67,7 +67,7 @@ func (c Creator) createIssues(tickets []*ticket.Ticket, project *github.Project)
 			reporter.ReportFailedTicket(err, c.startingTicketLevel, 1)
 		} else {
 			key := fmt.Sprintf("%d", *issue.Number)
-			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 1, currentTicket.Title, "")
+			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 1, currentTicket.Title, updateKey)
 		}
 	}
 }

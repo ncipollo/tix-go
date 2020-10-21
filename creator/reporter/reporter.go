@@ -22,7 +22,7 @@ func ReportSuccessfulTicket(issueKey string, startingLevel int, level int, title
 	for ii := startingLevel; ii < level; ii++ {
 		builder.WriteString("\t")
 	}
-	
+
 	var verb string
 	if len(updateKey) > 0 {
 		verb = "updated"
