@@ -113,6 +113,14 @@ Tix supports special code blocks which may be used to add fields for a ticket. F
     // Adds field to the ticket only if the ticketing system is jira.
     field: value
     ```
+
+# Updating Tickets
+Tickets can be updated by setting the `update_ticket` property to the ID of the ticket. The ID is dependent on the ticketing system:
+- `github`: This should be set to the project or issue number (ex - `42`).
+- `jira`: This should be set to the ticket key (ex - `JIRA-123`)
+
+The `update_ticket` should typically be set via a special code block (see above section).
+
 # Jira
 Tix expects your jira account information to be stored in your environment. Specifically, it will look for the following
 variables:  
