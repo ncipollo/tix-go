@@ -90,7 +90,7 @@ func (c ApiProjectCreator) UpdateProject(ticket *ticket.Ticket, updateKey string
 		return nil, err
 	}
 	if project == nil {
-		return nil, errors.New(fmt.Sprintf("No project #%d", projectNumber))
+		return nil, errors.New(fmt.Sprintf(":scream: no project #%d", projectNumber))
 	}
 
 	projectOptions := c.options.Project(ticket)
