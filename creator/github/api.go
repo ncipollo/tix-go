@@ -2,6 +2,8 @@ package github
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/google/go-github/v29/github"
 	"golang.org/x/oauth2"
 )
@@ -41,28 +43,28 @@ func NewGithubApi(token string, owner string, repo string) *githubApi {
 func (g githubApi) AddCardToProject(cardOptions *github.ProjectCardOptions,
 	column *github.ProjectColumn) (*github.ProjectCard, error) {
 	card, _, err := g.client.Projects.CreateProjectCard(g.ctx, *column.ID, cardOptions)
-	return card, err
+	return card, scream(err)
 }
 
 func (g githubApi) CreateIssue(issueRequest *github.IssueRequest) (*github.Issue, error) {
 	issue, _, err := g.client.Issues.Create(g.ctx, g.owner, g.repo, issueRequest)
-	return issue, err
+	return issue, scream(err)
 }
 
 func (g githubApi) CreateMilestone(milestone *github.Milestone) (*github.Milestone, error) {
 	milestone, _, err := g.client.Issues.CreateMilestone(g.ctx, g.owner, g.repo, milestone)
-	return milestone, err
+	return milestone, scream(err)
 }
 
 func (g githubApi) CreateProject(projectOptions *github.ProjectOptions) (*github.Project, error) {
 	project, _, err := g.client.Repositories.CreateProject(g.ctx, g.owner, g.repo, projectOptions)
-	return project, err
+	return project, scream(err)
 }
 
 func (g githubApi) CreateProjectColumn(columnOptions *github.ProjectColumnOptions,
 	project *github.Project) (*github.ProjectColumn, error) {
 	column, _, err := g.client.Projects.CreateProjectColumn(g.ctx, *project.ID, columnOptions)
-	return column, err
+	return column, scream(err)
 }
 
 func (g githubApi) ListProjectColumns(project *github.Project) ([]*github.ProjectColumn, error) {
@@ -73,7 +75,7 @@ func (g githubApi) ListProjectColumns(project *github.Project) ([]*github.Projec
 	for {
 		columns, resp, err := g.client.Projects.ListProjectColumns(g.ctx, *project.ID, opt)
 		if err != nil {
-			return nil, err
+			return nil, scream(err)
 		}
 		allColumns = append(allColumns, columns...)
 		if resp.NextPage == 0 {
@@ -92,7 +94,7 @@ func (g githubApi) ListRepoProjects() ([]*github.Project, error) {
 	for {
 		projects, resp, err := g.client.Repositories.ListProjects(g.ctx, g.owner, g.repo, opt)
 		if err != nil {
-			return nil, err
+			return nil, scream(err)
 		}
 		allProjects = append(allProjects, projects...)
 		if resp.NextPage == 0 {
@@ -111,7 +113,7 @@ func (g githubApi) ListMilestones() ([]*github.Milestone, error) {
 	for {
 		milestones, resp, err := g.client.Issues.ListMilestones(g.ctx, g.owner, g.repo, opt)
 		if err != nil {
-			return nil, err
+			return nil, scream(err)
 		}
 		allMilestones = append(allMilestones, milestones...)
 		if resp.NextPage == 0 {
@@ -127,7 +129,7 @@ func (g githubApi) UpdateIssue(
 	issueRequest *github.IssueRequest,
 ) (*github.Issue, error) {
 	issue, _, err := g.client.Issues.Edit(g.ctx, g.owner, g.repo, *issue.Number, issueRequest)
-	return issue, err
+	return issue, scream(err)
 }
 
 func (g githubApi) UpdateProject(
@@ -135,5 +137,9 @@ func (g githubApi) UpdateProject(
 	projectOptions *github.ProjectOptions,
 ) (*github.Project, error) {
 	project, _, err := g.client.Projects.UpdateProject(g.ctx, *project.ID, projectOptions)
-	return project, err
+	return project, scream(err)
+}
+
+func scream(err error) error {
+	return errors.New(fmt.Sprintf(":scream: %s", err.Error()))
 }

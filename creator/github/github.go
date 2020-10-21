@@ -42,10 +42,10 @@ func (c Creator) createProjects(tickets []*ticket.Ticket) {
 		}
 
 		if err != nil {
-			reporter.ReportFailedTicketCreate(err, c.startingTicketLevel, 0)
+			reporter.ReportFailedTicket(err, c.startingTicketLevel, 0)
 		} else {
 			key := fmt.Sprintf("%d", *project.Number)
-			reporter.ReportSuccessfulTicketCreate(key, c.startingTicketLevel, 0, currentTicket.Title)
+			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 0, currentTicket.Title)
 			c.createIssues(currentTicket.Subtickets, project)
 		}
 	}
@@ -64,10 +64,10 @@ func (c Creator) createIssues(tickets []*ticket.Ticket, project *github.Project)
 		}
 
 		if err != nil {
-			reporter.ReportFailedTicketCreate(err, c.startingTicketLevel, 1)
+			reporter.ReportFailedTicket(err, c.startingTicketLevel, 1)
 		} else {
 			key := fmt.Sprintf("%d", *issue.Number)
-			reporter.ReportSuccessfulTicketCreate(key, c.startingTicketLevel, 1, currentTicket.Title)
+			reporter.ReportSuccessfulTicket(key, c.startingTicketLevel, 1, currentTicket.Title)
 		}
 	}
 }
