@@ -49,7 +49,7 @@ github:
       labels: [label1, label2] # Fields to be added to issues
 jira:
     no_epics: false # Indicates if tix should use epics or treat root tickets as stories / issues. Defaults to false. 
-    url: https:#url.to.your.jira.instance.com
+    url: # https://url.to.your.jira.instance.com
     tickets: 
         # All fields should be lower case. Field name spaces should be included (ex- epic name)
         default:
