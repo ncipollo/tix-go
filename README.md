@@ -37,34 +37,34 @@ file contains information needed by tix in order to communicate with ticketing s
 The following is the expected format of the settings file:
 ```yml
 github:
-  no_projects: true // Indicates if tix should use projects or treat root tickets as issues. Defaults to false.
-  owner: owner // The owner of the github repo (ex - ncipollo)
-  repo: repo  // The github repo (ex - tix)
+  no_projects: true # Indicates if tix should use projects or treat root tickets as issues. Defaults to false.
+  owner: owner # The owner of the github repo (ex - ncipollo)
+  repo: repo  # The github repo (ex - tix)
   tickets:
     default: 
-      default: default // Fields to be added to both projets and issues
+      default: default # Fields to be added to both projets and issues
     project:
-      project: project // Fields to be added to projects
+      project: project # Fields to be added to projects
     issue:
-      labels: [label1, label2] // Fields to be added to issues
+      labels: [label1, label2] # Fields to be added to issues
 jira:
-    no_epics: false // Indicates if tix should use epics or treat root tickets as stories / issues. Defaults to false. 
-    url: https://url.to.your.jira.instance.com
+    no_epics: false # Indicates if tix should use epics or treat root tickets as stories / issues. Defaults to false. 
+    url: # https://url.to.your.jira.instance.com
     tickets: 
-        // All fields should be lower case. Field name spaces should be included (ex- epic name)
+        # All fields should be lower case. Field name spaces should be included (ex- epic name)
         default:
-            field: value // Fields to be added to any kind of jira issue
+            field: value # Fields to be added to any kind of jira issue
         epic:
-            field: value // Fields to be added to epics
+            field: value # Fields to be added to epics
         issue:
-            field: value // Fields to be added to issues
+            field: value # Fields to be added to issues
         task: 
-            field: value // Fields to be added to tasks (sub-issues of issues)
+            field: value # Fields to be added to tasks (sub-issues of issues)
 variables:
     key: value
     envKey: $ENVIRONMENT_VARIABLE
-    // tix will parse the markdown document and replace each occurance of "key" with it's value (or environment variable
-    // when a '$' preceeds the value)  
+    # tix will parse the markdown document and replace each occurance of "key" with it's value (or environment variable
+    # when a '$' preceeds the value)  
 ``` 
 
 # Markdown
