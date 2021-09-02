@@ -74,7 +74,7 @@ func (i *IssueFields) AffectsVersions() []*jira.AffectsVersion {
 func (i *IssueFields) Components() []*jira.Component {
 	components, ok := i.ticket.Fields("jira")[KeyComponents].([]interface{})
 	if !ok {
-		components = make([]interface{}, 0)
+		return nil
 	}
 	jiraComps := make([]*jira.Component, 0)
 	for _, component := range components {
