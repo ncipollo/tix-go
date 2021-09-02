@@ -101,7 +101,7 @@ func TestIssues_FromTicket_Story_WithParent_UsingProject(t *testing.T) {
     issues := createIssues()
     newTicket := createTicket(true)
 
-    newIssue := issues.FromTicket(newTicket, &jira.Issue{Key: "parent"}, 1)
+    newIssue := issues.FromTicket(newTicket, &jira.Issue{ID: "parent"}, 1)
 
     expected := &jira.Issue{
         Fields: &jira.IssueFields{
@@ -114,7 +114,7 @@ func TestIssues_FromTicket_Story_WithParent_UsingProject(t *testing.T) {
             FixVersions: []*jira.FixVersion{{Name: "2"}},
             Labels:      []string{"label1", "label2"},
             Type:        jira.IssueType{Name: "type"},
-            Parent:      &jira.Parent{Key: "parent"},
+            Parent:      &jira.Parent{ID: "parent"},
             Project:     jira.Project{Key: "project"},
             Summary:     "title",
             Unknowns: map[string]interface{}{
