@@ -12,7 +12,7 @@ func CheckGithubEnvironment(envMap map[string]string) error {
 	if len(apiToken) == 0 {
 		message := fmt.Sprintf(
 			":scream: missing github api token, please set the %v environment variable",
-			JiraUsername)
+			GithubApiToken)
 		return errors.New(message)
 	}
 	return nil
