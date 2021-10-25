@@ -47,6 +47,11 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 
 		updateKey := currentTicket.TicketUpdateKey("jira")
 		issue := issues.FromTicket(currentTicket, parentIssue, level)
+		err = j.expandParent(issue)
+		if err != nil {
+			reporter.ReportFailedTicket(err, j.startingTicketLevel, level)
+			return
+		}
 
 		if len(updateKey) > 0 {
 			issue.Key = updateKey
@@ -67,4 +72,18 @@ func (j Creator) createTicketsForLevel(tickets []*ticket.Ticket, issues *Issues,
 			j.createTicketsForLevel(currentTicket.Subtickets, issues, level+1, resultIssue)
 		}
 	}
+}
+
+func (j Creator) expandParent(issue *jira.Issue) error {
+	parent := issue.Fields.Parent
+	if parent != nil && parent.Key != "" {
+		issueFromAPI, err := j.api.GetIssue(parent.Key)
+		if err != nil {
+			return err
+		}
+		parent.ID = issueFromAPI.ID
+		parent.Key = ""
+	}
+
+	return nil
 }

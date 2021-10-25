@@ -59,6 +59,8 @@ func (i *Issues) story(ticket *ticket.Ticket, parentIssue *jira.Issue) *jira.Iss
             // Add epic link to unknowns
             unknowns[issueFields.EpicLinkKey()] = parentIssue.Key
         }
+    } else {
+        parent = issueFields.Parent()
     }
 
     return &jira.Issue{

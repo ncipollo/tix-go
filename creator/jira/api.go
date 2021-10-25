@@ -10,6 +10,7 @@ import (
 
 type Api interface {
 	CreateIssue(issue *jira.Issue) (*jira.Issue, error)
+	GetIssue(key string) (*jira.Issue, error)
 	GetIssueFieldList() ([]jira.Field, error)
 	UpdateIssue(issue *jira.Issue) (*jira.Issue, error)
 }
@@ -37,6 +38,18 @@ func (j *jiraApi) CreateIssue(issue *jira.Issue) (*jira.Issue, error) {
 	if err != nil {
 		return nil, j.generateError(":scream: unable to create jira issue", err, response)
 	}
+	return issue, nil
+}
+
+func (j *jiraApi) GetIssue(key string) (*jira.Issue, error) {
+
+	issue, response, err := j.client.Issue.Get(key, nil)
+
+	if err != nil {
+		message := fmt.Sprintf(":scream: unable to get jira issue %v", key)
+		return nil, j.generateError(message, err, response)
+	}
+
 	return issue, nil
 }
 
