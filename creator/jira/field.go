@@ -34,6 +34,9 @@ func fieldInfoByName(jiraFields []jira.Field) map[string]*FieldInfo {
 		}
 		key := strings.ToLower(info.Name)
 		fieldMap[key] = info
+		if strings.HasPrefix(jiraField.ID, "customfield_") {
+			fieldMap[jiraField.ID] = info
+		}
 	}
 	return fieldMap
 }

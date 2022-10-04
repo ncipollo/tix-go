@@ -56,6 +56,7 @@ func TestIssues_FromTicket_Story_NoParent(t *testing.T) {
 			FixVersions: []*jira.FixVersion{{Name: "2"}},
 			Labels:      []string{"label1", "label2"},
 			Type:        jira.IssueType{Name: "type"},
+			Priority:    &jira.Priority{Name: "P0"},
 			Project:     jira.Project{Key: "project"},
 			Summary:     "title",
 			Unknowns: map[string]interface{}{
@@ -85,6 +86,7 @@ func TestIssues_FromTicket_Story_WithParent_UsingEpicLink(t *testing.T) {
 			FixVersions: []*jira.FixVersion{{Name: "2"}},
 			Labels:      []string{"label1", "label2"},
 			Type:        jira.IssueType{Name: "type"},
+			Priority:    &jira.Priority{Name: "P0"},
 			Project:     jira.Project{Key: "project"},
 			Summary:     "title",
 			Unknowns: map[string]interface{}{
@@ -116,6 +118,7 @@ func TestIssues_FromTicket_Story_WithParent_UsingProject(t *testing.T) {
 			Labels:      []string{"label1", "label2"},
 			Type:        jira.IssueType{Name: "type"},
 			Parent:      &jira.Parent{ID: "parent"},
+			Priority:    &jira.Priority{Name: "P0"},
 			Project:     jira.Project{Key: "project"},
 			Summary:     "title",
 			Unknowns: map[string]interface{}{
@@ -146,6 +149,7 @@ func TestIssues_FromTicket_Task(t *testing.T) {
 			Labels:      []string{"label1", "label2"},
 			Type:        jira.IssueType{Name: "type"},
 			Parent:      &jira.Parent{ID: "1"},
+			Priority:    &jira.Priority{Name: "P0"},
 			Project:     jira.Project{Key: "project"},
 			Summary:     "title",
 			Unknowns: map[string]interface{}{
