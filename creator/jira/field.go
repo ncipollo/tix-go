@@ -12,6 +12,7 @@ const (
 	KeyFixVersions     = "fix versions"
 	KeyLabels          = "labels"
 	KeyParent          = "parent"
+	KeyPriority        = "priority"
 	KeyProject         = "project"
 	KeyType            = "type"
 	KeyUseParent       = "use_parent"
@@ -164,6 +165,16 @@ func (i *IssueFields) Parent() *jira.Parent {
 	return &jira.Parent{Key: parentKey}
 }
 
+func (i *IssueFields) Priority() *jira.Priority {
+	priority, ok := i.ticket.Fields("jira")[KeyPriority].(string)
+	if !ok {
+		return nil
+	}
+	return &jira.Priority{
+		Name: priority,
+	}
+}
+
 func (i *IssueFields) Project() jira.Project {
 	project, ok := i.ticket.Fields("jira")[KeyProject].(string)
 	if !ok {
@@ -191,6 +202,7 @@ func (i *IssueFields) Unknowns() map[string]interface{} {
 		KeyFixVersions:         true,
 		KeyLabels:              true,
 		KeyParent:              true,
+		KeyPriority:            true,
 		KeyProject:             true,
 		KeyType:                true,
 		ticket.KeyUpdateTicket: true,

@@ -224,6 +224,27 @@ func TestIssueFields_Project_WithProject(t *testing.T) {
 	assert.Equal(t, expected, project)
 }
 
+func TestIssueFields_Priority_DefinedType(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"priority": "P0",
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	priority := issueFields.Priority()
+
+	expected := &jira.Priority{Name: "P0"}
+	assert.Equal(t, expected, priority)
+}
+
+func TestIssueFields_Priority_NilIfMissing(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	priority := issueFields.Priority()
+
+	assert.Nil(t, priority)
+}
+
 func TestIssueFields_TaskType_DefinedType(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"type": "test",
@@ -271,7 +292,7 @@ func TestIssueFields_Unknowns(t *testing.T) {
 		"epic name": "epic",
 		"option":    "option",
 		"Random":    "random",
-		"type":      "type", // should be excluded since this is a known key
+		"type":      "type",   // should be excluded since this is a known key
 		"parent":    "key123", // should also be excluded
 	}
 	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
