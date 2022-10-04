@@ -224,6 +224,27 @@ func TestIssueFields_Project_WithProject(t *testing.T) {
 	assert.Equal(t, expected, project)
 }
 
+func TestIssueFields_Priority_DefinedType(t *testing.T) {
+	ticketFields := map[string]interface{}{
+		"priority": "P0",
+	}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	priority := issueFields.Priority()
+
+	expected := &jira.Priority{Name: "P0"}
+	assert.Equal(t, expected, priority)
+}
+
+func TestIssueFields_Priority_NilIfMissing(t *testing.T) {
+	ticketFields := map[string]interface{}{}
+	issueFields := NewIssueFields(nil, ticket.NewTicketWithFields(ticketFields))
+
+	priority := issueFields.Priority()
+
+	assert.Nil(t, priority)
+}
+
 func TestIssueFields_TaskType_DefinedType(t *testing.T) {
 	ticketFields := map[string]interface{}{
 		"type": "test",
@@ -268,11 +289,12 @@ func TestIssueFields_UseParent_DefaultType(t *testing.T) {
 
 func TestIssueFields_Unknowns(t *testing.T) {
 	ticketFields := map[string]interface{}{
-		"epic name": "epic",
-		"option":    "option",
-		"Random":    "random",
-		"type":      "type", // should be excluded since this is a known key
-		"parent":    "key123", // should also be excluded
+		"customfield_001": "001",
+		"epic name":       "epic",
+		"option":          "option",
+		"Random":          "random",
+		"type":            "type",   // should be excluded since this is a known key
+		"parent":          "key123", // should also be excluded
 	}
 	issueFields := NewIssueFields(createJiraFields(), ticket.NewTicketWithFields(ticketFields))
 
@@ -282,6 +304,9 @@ func TestIssueFields_Unknowns(t *testing.T) {
 		"field2": "epic",
 		"field4": map[string]interface{}{
 			"value": "option",
+		},
+		"customfield_001": map[string]interface{}{
+			"value": "001",
 		},
 		"Random": "random",
 	}
@@ -294,5 +319,6 @@ func createJiraFields() []jira.Field {
 		{ID: "field2", Name: "Epic Name"},
 		{ID: "field3", Name: "Type"},
 		{ID: "field4", Name: "Option", Schema: jira.FieldSchema{Type: "option"}},
+		{ID: "customfield_001", Name: "Custom", Schema: jira.FieldSchema{Type: "option"}},
 	}
 }
